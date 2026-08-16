@@ -22,8 +22,6 @@ body{
     color:#222;
 }
 
-/* الهيدر */
-
 header{
     background:#0d6efd;
     color:white;
@@ -43,8 +41,6 @@ header p{
     font-size:13px;
     opacity:.9;
 }
-
-/* زر السلة */
 
 .cart-button{
     display:block;
@@ -68,15 +64,11 @@ header p{
     margin-right:5px;
 }
 
-/* المحتوى */
-
 .container{
     max-width:900px;
     margin:auto;
     padding:20px 15px;
 }
-
-/* البحث */
 
 .search-box{
     background:white;
@@ -98,8 +90,6 @@ header p{
 .search-box input:focus{
     border-color:#0d6efd;
 }
-
-/* المنتجات */
 
 .products{
     display:grid;
@@ -169,8 +159,6 @@ header p{
     transform:scale(.98);
 }
 
-/* لا توجد منتجات */
-
 .empty{
     background:white;
     padding:30px;
@@ -180,7 +168,15 @@ header p{
     grid-column:1/-1;
 }
 
-/* زر الرجوع */
+.error-box{
+    background:#fff;
+    padding:25px 15px;
+    border-radius:15px;
+    text-align:center;
+    color:#dc3545;
+    grid-column:1/-1;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
 
 .back{
     display:block;
@@ -190,8 +186,6 @@ header p{
     text-decoration:none;
     font-size:15px;
 }
-
-/* الشاشات الصغيرة */
 
 @media(max-width:450px){
 
@@ -251,7 +245,6 @@ header p{
 type="search"
 id="search"
 placeholder="🔎 ابحث عن منتج..."
-oninput="searchProducts()"
 >
 
 </div>
@@ -285,76 +278,110 @@ class="back">
 </div>
 
 
+
 <script type="module">
+
+
+/* =========================================
+   Firebase
+========================================= */
 
 import { db } from "./firebase.js";
 
 import {
     collection,
     getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const productsBox =
-    document.getElementById("products");
 
-
-let allProducts = [];
-
-
-/* ==============================
+/* =========================================
    السلة
-============================== */
+========================================= */
 
 function getCart(){
 
-    return JSON.parse(
-        localStorage.getItem("souqMubasherCart") || "[]"
-    );
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                "souqMubasherCart"
+            ) || "[]"
+        );
+
+    }catch(error){
+
+        return [];
+
+    }
 
 }
 
 
+
 function updateCartCount(){
 
-    const cart = getCart();
+    const cart =
+        getCart();
 
     let count = 0;
 
     cart.forEach(item => {
 
-        count += Number(item.quantity || 1);
+        count += Number(
+            item.quantity || 1
+        );
 
     });
 
-    document.getElementById("cartCount").textContent = count;
+    document.getElementById(
+        "cartCount"
+    ).textContent = count;
 
 }
 
 
 
-/* ==============================
+/* =========================================
+   جميع المنتجات
+========================================= */
+
+let allProducts = [];
+
+
+
+/* =========================================
    تحميل المنتجات من Firebase
-============================== */
+========================================= */
 
 async function loadProducts(){
 
-    productsBox.innerHTML = `
-        <div class="empty">
-            ⏳
-            <h3 style="margin:12px 0;">
-                جاري تحميل المنتجات...
-            </h3>
-        </div>
-    `;
+    const container =
+        document.getElementById(
+            "products"
+        );
 
     try{
 
-        const ref =
-            collection(db, "products");
+        console.log(
+            "بدأ تحميل المنتجات..."
+        );
+
+
+        const productsRef =
+            collection(
+                db,
+                "products"
+            );
+
 
         const snapshot =
-            await getDocs(ref);
+            await getDocs(
+                productsRef
+            );
+
 
         console.log(
             "عدد المنتجات:",
@@ -365,45 +392,70 @@ async function loadProducts(){
         allProducts = [];
 
 
-        snapshot.forEach(doc => {
+        snapshot.forEach(
+            docSnapshot => {
 
-            allProducts.push({
-
-                id: doc.id,
-
-                ...doc.data()
-
-            });
-
-        });
+                const data =
+                    docSnapshot.data();
 
 
-        displayProducts(allProducts);
+                console.log(
+                    "منتج:",
+                    docSnapshot.id,
+                    data
+                );
+
+
+                allProducts.push({
+
+                    id:
+                        docSnapshot.id,
+
+                    ...data
+
+                });
+
+            }
+        );
+
+
+        displayProducts(
+            allProducts
+        );
 
 
     }catch(error){
 
         console.error(
-            "خطأ Firebase:",
+            "Firebase Products Error:",
             error
         );
 
 
-        productsBox.innerHTML = `
+        container.innerHTML = `
 
-            <div class="empty">
+        <div class="error-box">
 
-                ❌
+            ❌
 
-                <h3 style="margin:12px 0;">
-                    حدث خطأ في تحميل المنتجات
-                </h3>
+            <h3 style="margin:12px 0;">
+                تعذر تحميل المنتجات
+            </h3>
 
-                <p style="direction:ltr;font-size:12px;margin-top:10px;">
-                    ${error.code || "unknown-error"}
-                </p>
+            <p style="line-height:1.8;">
+                حدث خطأ أثناء الاتصال بقاعدة البيانات.
+            </p>
 
-            </div>
+            <p style="
+                margin-top:12px;
+                font-size:12px;
+                direction:ltr;
+                word-break:break-word;
+            ">
+                ${escapeHTML(error.message)}
+            </p>
+
+        </div>
 
         `;
 
@@ -413,29 +465,35 @@ async function loadProducts(){
 
 
 
-/* ==============================
+/* =========================================
    عرض المنتجات
-============================== */
+========================================= */
 
 function displayProducts(products){
 
-    if(products.length === 0){
+    const container =
+        document.getElementById(
+            "products"
+        );
 
-        productsBox.innerHTML = `
 
-            <div class="empty">
+    if(!products || products.length === 0){
 
-                🛒
+        container.innerHTML = `
 
-                <h3 style="margin:12px 0;">
-                    لا توجد منتجات
-                </h3>
+        <div class="empty">
 
-                <p>
-                    سيتم إضافة المنتجات قريبًا.
-                </p>
+            🛒
 
-            </div>
+            <h3 style="margin:12px 0;">
+                لا توجد منتجات
+            </h3>
+
+            <p>
+                سيتم إضافة المنتجات قريبًا.
+            </p>
+
+        </div>
 
         `;
 
@@ -449,9 +507,10 @@ function displayProducts(products){
 
     products.forEach(product => {
 
+
         const name =
-            product.name ||
-            product.اسم ||
+            product.name ??
+            product.اسم ??
             "منتج";
 
 
@@ -464,40 +523,62 @@ function displayProducts(products){
 
 
         const description =
-            product.description ||
-            product.الوصف ||
+            product.description ??
+            product.الوصف ??
             "";
 
 
         const image =
-            product.image ||
-            product.صورة ||
+            product.image ??
+            product.صورة ??
             "";
+
+
+        const safeName =
+            escapeHTML(name);
+
+
+        const safeDescription =
+            escapeHTML(description);
+
+
+        let imageHTML = "🛒";
+
+
+        if(image){
+
+            imageHTML = `
+
+            <img
+                src="${escapeAttribute(image)}"
+                alt="${safeName}"
+                onerror="
+                    this.onerror=null;
+                    this.style.display='none';
+                    this.parentElement.innerHTML='🛒';
+                "
+            >
+
+            `;
+
+        }
 
 
         html += `
 
         <div
             class="product"
-            data-name="${String(name).toLowerCase()}">
+            data-name="${escapeHTML(
+                String(name).toLowerCase()
+            )}"
+            data-description="${escapeHTML(
+                String(description).toLowerCase()
+            )}"
+        >
 
             <div class="product-image">
 
-                ${
-                    image
-
-                    ?
-
-                    `<img
-                        src="${image}"
-                        alt="${name}"
-                        onerror="this.style.display='none';"
-                    >`
-
-                    :
-
-                    `🛒`
-                }
+                ${imageHTML}
 
             </div>
 
@@ -505,26 +586,32 @@ function displayProducts(products){
             <div class="product-info">
 
                 <div class="product-name">
-                    ${name}
+
+                    ${safeName}
+
                 </div>
 
 
                 <div class="product-description">
-                    ${description}
+
+                    ${safeDescription}
+
                 </div>
 
 
                 <div class="price">
+
                     ${price} ريال
+
                 </div>
 
 
                 <button
                     class="add-btn"
-                    data-name="${name}"
-                    data-price="${price}"
-                    data-image="${image}"
-                    data-description="${description}">
+                    data-id="${escapeAttribute(
+                        product.id || ""
+                    )}"
+                >
 
                     🛒 إضافة للسلة
 
@@ -539,80 +626,130 @@ function displayProducts(products){
     });
 
 
-    productsBox.innerHTML = html;
+    container.innerHTML =
+        html;
 
 
-    /* ربط أزرار السلة */
+    /* =====================================
+       ربط أزرار السلة
+    ===================================== */
 
-    document
-        .querySelectorAll(".add-btn")
-        .forEach(button => {
+    const buttons =
+        container.querySelectorAll(
+            ".add-btn"
+        );
 
-            button.addEventListener(
-                "click",
-                () => {
+
+    buttons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                const productId =
+                    this.dataset.id;
+
+
+                const product =
+                    allProducts.find(
+                        item =>
+                        item.id === productId
+                    );
+
+
+                if(product){
 
                     addToCart(
-
-                        button.dataset.name,
-
-                        Number(
-                            button.dataset.price
-                        ),
-
-                        button.dataset.image,
-
-                        button.dataset.description
-
+                        product
                     );
 
                 }
-            );
 
-        });
+            }
+        );
+
+    });
 
 }
 
 
 
-/* ==============================
-   إضافة للسلة
-============================== */
+/* =========================================
+   إضافة المنتج للسلة
+========================================= */
 
-function addToCart(
-    name,
-    price,
-    image,
-    description
-){
+function addToCart(product){
 
-    let cart = getCart();
+    const name =
+        product.name ??
+        product.اسم ??
+        "منتج";
+
+
+    const price =
+        Number(
+            product.price ??
+            product.سعر ??
+            0
+        );
+
+
+    const image =
+        product.image ??
+        product.صورة ??
+        "";
+
+
+    const description =
+        product.description ??
+        product.الوصف ??
+        "";
+
+
+    let cart =
+        getCart();
 
 
     const existing =
         cart.find(
-            item => item.name === name
+            item =>
+            item.id === product.id
+            ||
+            (
+                !item.id &&
+                item.name === name
+            )
         );
 
 
     if(existing){
 
         existing.quantity =
-            Number(existing.quantity || 1) + 1;
+            Number(
+                existing.quantity || 1
+            ) + 1;
 
     }else{
 
         cart.push({
 
-            name: name,
+            id:
+                product.id,
 
-            price: price,
+            name:
+                name,
 
-            image: image,
+            price:
+                price,
 
-            description: description,
+            image:
+                image,
 
-            quantity: 1
+            description:
+                description,
+
+            quantity:
+                1
 
         });
 
@@ -620,8 +757,11 @@ function addToCart(
 
 
     localStorage.setItem(
+
         "souqMubasherCart",
+
         JSON.stringify(cart)
+
     );
 
 
@@ -638,15 +778,16 @@ function addToCart(
 
 
 
-/* ==============================
+/* =========================================
    البحث
-============================== */
+========================================= */
 
-window.searchProducts = function(){
+function searchProducts(){
 
     const search =
-        document
-        .getElementById("search")
+        document.getElementById(
+            "search"
+        )
         .value
         .toLowerCase()
         .trim();
@@ -654,7 +795,9 @@ window.searchProducts = function(){
 
     if(!search){
 
-        displayProducts(allProducts);
+        displayProducts(
+            allProducts
+        );
 
         return;
 
@@ -662,77 +805,109 @@ window.searchProducts = function(){
 
 
     const filtered =
-        allProducts.filter(product => {
+        allProducts.filter(
+            product => {
 
-            const name =
-                String(
-                    product.name ||
-                    product.اسم ||
-                    ""
-                ).toLowerCase();
-
-
-            const description =
-                String(
-                    product.description ||
-                    product.الوصف ||
-                    ""
-                ).toLowerCase();
+                const name =
+                    String(
+                        product.name ??
+                        product.اسم ??
+                        ""
+                    )
+                    .toLowerCase();
 
 
-            return (
-                name.includes(search) ||
-                description.includes(search)
-            );
-
-        });
-
-
-    if(filtered.length === 0){
-
-        productsBox.innerHTML = `
-
-            <div class="empty">
-
-                🔎
-
-                <h3 style="margin:12px 0;">
-                    لم يتم العثور على المنتج
-                </h3>
-
-                <p>
-                    جرّب البحث باسم آخر.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
+                const description =
+                    String(
+                        product.description ??
+                        product.الوصف ??
+                        ""
+                    )
+                    .toLowerCase();
 
 
-    displayProducts(filtered);
+                const category =
+                    String(
+                        product.category ??
+                        product.القسم ??
+                        ""
+                    )
+                    .toLowerCase();
 
-};
+
+                return (
+
+                    name.includes(search)
+
+                    ||
+
+                    description.includes(search)
+
+                    ||
+
+                    category.includes(search)
+
+                );
+
+            }
+        );
+
+
+    displayProducts(
+        filtered
+    );
+
+}
+
+
+document.getElementById(
+    "search"
+).addEventListener(
+    "input",
+    searchProducts
+);
 
 
 
-/* ==============================
-   تشغيل
-============================== */
+/* =========================================
+   حماية النصوص
+========================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/"/g,"&quot;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+
+/* =========================================
+   تشغيل الصفحة
+========================================= */
 
 updateCartCount();
 
 loadProducts();
 
-        </script>
+</script>
 
-    
-                    
-                    
-        
 </body>
 
 </html>
