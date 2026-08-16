@@ -53,6 +53,10 @@ h2{
     margin-bottom:15px;
 }
 
+h3{
+    margin-bottom:10px;
+}
+
 label{
     display:block;
     font-weight:bold;
@@ -178,6 +182,64 @@ button{
     font-size:25px;
     color:#0d6efd;
     margin-top:8px;
+}
+
+.analytics{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:15px;
+}
+
+.analytics-card{
+    background:white;
+    padding:18px;
+    border-radius:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.analytics-title{
+    color:#555;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.analytics-value{
+    font-size:20px;
+    font-weight:bold;
+    color:#0d6efd;
+    line-height:1.7;
+}
+
+.analytics-number{
+    font-size:28px;
+    font-weight:bold;
+    color:#0d6efd;
+}
+
+.rank-list{
+    margin-top:10px;
+}
+
+.rank-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+}
+
+.rank-item:last-child{
+    border-bottom:none;
+}
+
+.rank-name{
+    font-weight:bold;
+}
+
+.rank-count{
+    color:#0d6efd;
+    font-weight:bold;
 }
 
 .product-card{
@@ -315,8 +377,20 @@ button{
         grid-template-columns:1fr 1fr;
     }
 
+    .analytics{
+        grid-template-columns:1fr 1fr;
+    }
+
     .menu{
         grid-template-columns:1fr 1fr;
+    }
+
+    .analytics-card{
+        padding:14px;
+    }
+
+    .analytics-value{
+        font-size:16px;
     }
 
 }
@@ -458,7 +532,7 @@ onclick="showSection('add')">
 
 <div class="box">
 
-<h2>📊 الإحصائيات</h2>
+<h2>📊 الإحصائيات العامة</h2>
 
 <div class="stats">
 
@@ -484,12 +558,161 @@ onclick="showSection('add')">
 
 <div class="stat">
 إجمالي المبيعات
-<strong id="statSales">0</strong>
+<strong id="statSales">0 ريال</strong>
 </div>
 
 <div class="stat">
 الأرشيف
 <strong id="statArchive">0</strong>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     التحليلات الجديدة
+========================= -->
+
+<div class="box">
+
+<h2>📈 تحليلات سوق مباشر</h2>
+
+<div class="analytics">
+
+<div class="analytics-card">
+
+<div class="analytics-title">
+👁️ إجمالي المشاهدات
+</div>
+
+<div
+id="statViews"
+class="analytics-number">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<div class="analytics-title">
+🔥 الأكثر مشاهدة
+</div>
+
+<div
+id="mostViewed"
+class="analytics-value">
+
+لا توجد بيانات
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<div class="analytics-title">
+🛒 الأكثر مبيعًا
+</div>
+
+<div
+id="bestSelling"
+class="analytics-value">
+
+لا توجد بيانات
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<div class="analytics-title">
+📍 أكثر منطقة طلبًا
+</div>
+
+<div
+id="topDistrict"
+class="analytics-value">
+
+لا توجد بيانات
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     قائمة الأكثر مشاهدة
+========================= -->
+
+<div class="box">
+
+<h2>👁️ أكثر المنتجات مشاهدة</h2>
+
+<div
+id="viewsRanking"
+class="rank-list">
+
+<div class="loading">
+جاري حساب المشاهدات...
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     قائمة الأكثر مبيعًا
+========================= -->
+
+<div class="box">
+
+<h2>🛒 المنتجات الأكثر مبيعًا</h2>
+
+<div
+id="salesRanking"
+class="rank-list">
+
+<div class="loading">
+جاري حساب المبيعات...
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     المناطق الأكثر طلبًا
+========================= -->
+
+<div class="box">
+
+<h2>📍 أكثر المناطق طلبًا</h2>
+
+<div
+id="districtRanking"
+class="rank-list">
+
+<div class="loading">
+جاري حساب المناطق...
 </div>
 
 </div>
@@ -669,6 +892,7 @@ onclick="addProduct()">
 
 <script type="module">
 
+
 /* =========================================
    Firebase
 ========================================= */
@@ -732,10 +956,8 @@ appId:
 const app =
 initializeApp(firebaseConfig);
 
-
 const auth =
 getAuth(app);
-
 
 const db =
 getFirestore(app);
@@ -899,9 +1121,15 @@ document
 
 async function loadAll(){
 
-await loadProducts();
+await Promise.all([
 
-await loadOrders();
+loadProducts(),
+
+loadOrders(),
+
+loadAnalytics()
+
+]);
 
 }
 
@@ -971,8 +1199,8 @@ product.اسم ||
 
 const price =
 Number(
-product.price ||
-product.سعر ||
+product.price ??
+product.سعر ??
 0
 );
 
@@ -986,6 +1214,11 @@ product.image ||
 product.صورة ||
 "";
 
+const category =
+product.category ||
+product.القسم ||
+"غير محدد";
+
 
 html += `
 
@@ -993,7 +1226,7 @@ html += `
 
 ${image ? `
 <img
-src="${image}"
+src="${escapeAttribute(image)}"
 onerror="this.style.display='none'"
 >
 ` : ""}
@@ -1001,7 +1234,7 @@ onerror="this.style.display='none'"
 <div class="product-info">
 
 <strong>
-${name}
+${escapeHTML(name)}
 </strong>
 
 <br>
@@ -1010,11 +1243,11 @@ ${name}
 
 <br>
 
-📝 ${description || "لا يوجد وصف"}
+📝 ${escapeHTML(description || "لا يوجد وصف")}
 
 <br>
 
-📂 ${product.category || product.القسم || "غير محدد"}
+📂 ${escapeHTML(category)}
 
 </div>
 
@@ -1022,7 +1255,7 @@ ${name}
 
 <button
 class="warning"
-onclick="editProduct('${product.id}')">
+onclick="editProduct('${escapeJS(product.id)}')">
 
 ✏️ تعديل
 
@@ -1030,7 +1263,7 @@ onclick="editProduct('${product.id}')">
 
 <button
 class="danger"
-onclick="removeProduct('${product.id}')">
+onclick="removeProduct('${escapeJS(product.id)}')">
 
 🗑️ حذف
 
@@ -1091,7 +1324,6 @@ document.getElementById("productImage")
 
 const message =
 document.getElementById("productMessage");
-
 
 message.textContent = "";
 
@@ -1194,8 +1426,8 @@ product.اسم ||
 "";
 
 const oldPrice =
-product.price ||
-product.سعر ||
+product.price ??
+product.سعر ??
 "";
 
 const oldDescription =
@@ -1536,9 +1768,19 @@ const phone =
 order.customerPhone ||
 "غير مسجل";
 
-const address =
+
+/*
+   دعم الحي الجديد
+   مع المحافظة على العنوان القديم
+*/
+
+const district =
+order.deliveryDistrict ||
+order.district ||
+order.الحي ||
 order.customerAddress ||
 "غير مسجل";
+
 
 const notes =
 order.notes ||
@@ -1570,7 +1812,7 @@ productsHTML += `
 <div class="order-product">
 
 <span>
-${product.name} × ${quantity}
+${escapeHTML(product.name || "منتج")} × ${quantity}
 </span>
 
 <strong>
@@ -1593,27 +1835,27 @@ html += `
 <div class="order-header">
 
 <div class="order-number">
-🔢 ${number}
+🔢 ${escapeHTML(number)}
 </div>
 
 <div class="badge">
-${status}
+${escapeHTML(status)}
 </div>
 
 </div>
 
 <div style="line-height:2;font-size:14px;">
 
-👤 <strong>الاسم:</strong> ${name}
+👤 <strong>الاسم:</strong> ${escapeHTML(name)}
 <br>
 
-📱 <strong>الجوال:</strong> ${phone}
+📱 <strong>الجوال:</strong> ${escapeHTML(phone)}
 <br>
 
-📍 <strong>العنوان:</strong> ${address}
+📍 <strong>الحي:</strong> ${escapeHTML(district)}
 <br>
 
-📝 <strong>الطلب:</strong> ${notes}
+📝 <strong>الطلب:</strong> ${escapeHTML(notes)}
 
 </div>
 
@@ -1643,7 +1885,7 @@ ${
 
 <button
 class="primary"
-onclick="changeOrderStatus('${order.id}','قيد التجهيز')">
+onclick="changeOrderStatus('${escapeJS(order.id)}','قيد التجهيز')">
 
 🔵 قيد التجهيز
 
@@ -1651,7 +1893,7 @@ onclick="changeOrderStatus('${order.id}','قيد التجهيز')">
 
 <button
 class="success"
-onclick="changeOrderStatus('${order.id}','تم التوصيل')">
+onclick="changeOrderStatus('${escapeJS(order.id)}','تم التوصيل')">
 
 🟢 تم التوصيل
 
@@ -1665,7 +1907,7 @@ onclick="changeOrderStatus('${order.id}','تم التوصيل')">
 
 <button
 class="gray"
-onclick="changeOrderStatus('${order.id}','جديد')">
+onclick="changeOrderStatus('${escapeJS(order.id)}','جديد')">
 
 ↩️ إعادة للطلبات
 
@@ -1676,7 +1918,7 @@ onclick="changeOrderStatus('${order.id}','جديد')">
 
 <button
 class="danger"
-onclick="deleteOrder('${order.id}')">
+onclick="deleteOrder('${escapeJS(order.id)}')">
 
 🗑️ حذف
 
@@ -1782,6 +2024,431 @@ alert("❌ تعذر حذف الطلب.");
 
 
 /* =========================================
+   التحليلات
+========================================= */
+
+async function loadAnalytics(){
+
+try{
+
+/*
+   قراءة أحداث المنتجات
+*/
+
+const eventsSnapshot =
+await getDocs(
+collection(db,"productEvents")
+);
+
+
+/*
+   قراءة جميع الأحداث
+*/
+
+let events = [];
+
+eventsSnapshot.forEach(eventDoc => {
+
+events.push({
+
+id:eventDoc.id,
+...eventDoc.data()
+
+});
+
+});
+
+
+/*
+   إجمالي المشاهدات
+*/
+
+const views =
+events.filter(
+event =>
+event.type === "view"
+).length;
+
+
+document.getElementById(
+"statViews"
+).textContent =
+views;
+
+
+/*
+   تجميع المشاهدات
+*/
+
+const viewMap = {};
+
+
+events
+.filter(
+event =>
+event.type === "view"
+)
+.forEach(event => {
+
+const name =
+event.productName ||
+event.name ||
+"منتج غير معروف";
+
+
+if(!viewMap[name]){
+
+viewMap[name] = 0;
+
+}
+
+viewMap[name]++;
+
+});
+
+
+const viewRanking =
+Object.entries(viewMap)
+.sort(
+(a,b) => b[1] - a[1]
+);
+
+
+/*
+   الأكثر مشاهدة
+*/
+
+if(viewRanking.length > 0){
+
+document.getElementById(
+"mostViewed"
+).textContent =
+viewRanking[0][0] +
+" (" +
+viewRanking[0][1] +
+" مشاهدة)";
+
+}else{
+
+document.getElementById(
+"mostViewed"
+).textContent =
+"لا توجد مشاهدات";
+
+}
+
+
+/*
+   عرض ترتيب المشاهدات
+*/
+
+renderRanking(
+"viewsRanking",
+viewRanking,
+"مشاهدة"
+);
+
+
+
+/*
+   المبيعات
+*/
+
+const salesMap = {};
+
+
+ordersData.forEach(order => {
+
+if(!Array.isArray(order.products)){
+return;
+}
+
+
+order.products.forEach(product => {
+
+const name =
+product.name ||
+product.productName ||
+"منتج غير معروف";
+
+
+const quantity =
+Number(
+product.quantity || 1
+);
+
+
+if(!salesMap[name]){
+
+salesMap[name] = 0;
+
+}
+
+salesMap[name] += quantity;
+
+});
+
+});
+
+
+const salesRanking =
+Object.entries(salesMap)
+.sort(
+(a,b) => b[1] - a[1]
+);
+
+
+/*
+   الأكثر مبيعًا
+*/
+
+if(salesRanking.length > 0){
+
+document.getElementById(
+"bestSelling"
+).textContent =
+salesRanking[0][0] +
+" (" +
+salesRanking[0][1] +
+" وحدة)";
+
+}else{
+
+document.getElementById(
+"bestSelling"
+).textContent =
+"لا توجد مبيعات";
+
+}
+
+
+/*
+   عرض ترتيب المبيعات
+*/
+
+renderRanking(
+"salesRanking",
+salesRanking,
+"وحدة"
+);
+
+
+
+/*
+   المناطق الأكثر طلبًا
+*/
+
+const districtMap = {};
+
+
+ordersData.forEach(order => {
+
+const district =
+String(
+order.deliveryDistrict ||
+order.district ||
+order.الحي ||
+order.customerAddress ||
+"غير محدد"
+)
+.trim();
+
+
+if(!district){
+return;
+}
+
+
+if(!districtMap[district]){
+
+districtMap[district] = 0;
+
+}
+
+districtMap[district]++;
+
+});
+
+
+const districtRanking =
+Object.entries(districtMap)
+.sort(
+(a,b) => b[1] - a[1]
+);
+
+
+/*
+   أكثر منطقة
+*/
+
+if(districtRanking.length > 0){
+
+document.getElementById(
+"topDistrict"
+).textContent =
+districtRanking[0][0] +
+" (" +
+districtRanking[0][1] +
+" طلب)";
+
+}else{
+
+document.getElementById(
+"topDistrict"
+).textContent =
+"لا توجد بيانات";
+
+}
+
+
+/*
+   عرض ترتيب المناطق
+*/
+
+renderRanking(
+"districtRanking",
+districtRanking,
+"طلب"
+);
+
+
+}catch(error){
+
+console.error(
+"Analytics Error:",
+error
+);
+
+document.getElementById(
+"statViews"
+).textContent =
+"0";
+
+document.getElementById(
+"mostViewed"
+).textContent =
+"تعذر التحميل";
+
+document.getElementById(
+"bestSelling"
+).textContent =
+"تعذر التحميل";
+
+document.getElementById(
+"topDistrict"
+).textContent =
+"تعذر التحميل";
+
+}
+
+}
+
+
+
+/* =========================================
+   عرض الترتيب
+========================================= */
+
+function renderRanking(
+elementId,
+ranking,
+unit
+){
+
+const box =
+document.getElementById(
+elementId
+);
+
+
+if(!ranking.length){
+
+box.innerHTML =
+'<div class="empty">لا توجد بيانات حاليًا.</div>';
+
+return;
+
+}
+
+
+const top =
+ranking.slice(0,10);
+
+
+let html = "";
+
+
+top.forEach(
+(item,index) => {
+
+html += `
+
+<div class="rank-item">
+
+<div class="rank-name">
+
+${index + 1}️⃣
+${escapeHTML(item[0])}
+
+</div>
+
+<div class="rank-count">
+
+${item[1]} ${unit}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML = html;
+
+}
+
+
+
+/* =========================================
+   حماية النصوص
+========================================= */
+
+function escapeHTML(value){
+
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+return String(value ?? "")
+.replace(/"/g,"%22")
+.replace(/'/g,"%27");
+
+}
+
+
+function escapeJS(value){
+
+return String(value ?? "")
+.replace(/\\/g,"\\\\")
+.replace(/'/g,"\\'")
+.replace(/\n/g,"\\n")
+.replace(/\r/g,"");
+
+}
+
+
+
+/* =========================================
    البداية
 ========================================= */
 
@@ -1791,4 +2458,4 @@ showSection("stats");
 
 </body>
 
-  </html>
+    </html>
