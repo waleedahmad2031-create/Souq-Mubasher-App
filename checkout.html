@@ -139,19 +139,11 @@ textarea{
     color:#777;
 }
 
-.loading{
-    text-align:center;
-    color:#777;
-    padding:15px;
-}
-
 </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -180,7 +172,6 @@ style="display:none;">
 </div>
 
 
-
 <div id="content">
 
 
@@ -189,7 +180,6 @@ style="display:none;">
 <div class="box">
 
 <h2>👤 بيانات الطلب</h2>
-
 
 <label>
 الاسم
@@ -235,21 +225,13 @@ placeholder="اكتب طلبك"
 </div>
 
 
-
 <!-- تفاصيل الطلب -->
 
 <div class="box">
 
 <h2>🛒 تفاصيل الطلب</h2>
 
-<div id="orderItems">
-
-<div class="loading">
-جاري تحميل الطلب...
-</div>
-
-</div>
-
+<div id="orderItems"></div>
 
 <div class="total">
 
@@ -266,7 +248,6 @@ placeholder="اكتب طلبك"
 </div>
 
 
-
 <button
 id="confirmButton"
 class="confirm"
@@ -277,7 +258,6 @@ onclick="confirmOrder()">
 </button>
 
 </div>
-
 
 
 <a
@@ -292,68 +272,51 @@ class="back">
 </div>
 
 
-
-<script type="module">
-
-
-/* =========================================
-   Firebase
-========================================= */
-
-import { db } from "./firebase.js";
-
-import {
-    collection,
-    addDoc,
-    serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
+<script>
 
 /* =========================================
    رقم واتساب الإدارة
 ========================================= */
 
 const ADMIN_WHATSAPP =
-    "966550496391";
-
+"966550496391";
 
 
 /* =========================================
-   قراءة السلة
+   قراءة السلة مباشرة
 ========================================= */
 
-const cart =
-    JSON.parse(
+let cart = [];
 
+try{
+
+    cart = JSON.parse(
         localStorage.getItem(
             "souqMubasherCart"
         ) || "[]"
-
     );
 
+}catch(error){
+
+    cart = [];
+
+}
 
 
 /* =========================================
-   تحميل السلة
+   تحميل تفاصيل الطلب
 ========================================= */
 
 function loadOrder(){
 
     const content =
-        document.getElementById(
-            "content"
-        );
+        document.getElementById("content");
 
     const empty =
-        document.getElementById(
-            "empty"
-        );
+        document.getElementById("empty");
 
 
-    if(cart.length === 0){
+    if(!Array.isArray(cart) || cart.length === 0){
 
         content.style.display =
             "none";
@@ -374,14 +337,10 @@ function loadOrder(){
     cart.forEach(item => {
 
         const quantity =
-            Number(
-                item.quantity || 1
-            );
+            Number(item.quantity || 1);
 
         const price =
-            Number(
-                item.price || 0
-            );
+            Number(item.price || 0);
 
         const itemTotal =
             price * quantity;
@@ -395,9 +354,7 @@ function loadOrder(){
         <div class="order-item">
 
             <span>
-                ${item.name}
-                ×
-                ${quantity}
+                ${item.name} × ${quantity}
             </span>
 
             <strong>
@@ -427,14 +384,12 @@ function loadOrder(){
 loadOrder();
 
 
-
 /* =========================================
    تأكيد الطلب
 ========================================= */
 
 window.confirmOrder =
 async function(){
-
 
     const name =
         document.getElementById(
@@ -460,16 +415,9 @@ async function(){
         ).value.trim();
 
 
-
-    /* =====================================
-       التحقق من البيانات
-    ===================================== */
-
     if(!name){
 
-        alert(
-            "اكتب الاسم أولًا"
-        );
+        alert("اكتب الاسم أولًا");
 
         return;
 
@@ -478,9 +426,7 @@ async function(){
 
     if(!phone){
 
-        alert(
-            "اكتب رقم الجوال"
-        );
+        alert("اكتب رقم الجوال");
 
         return;
 
@@ -489,9 +435,7 @@ async function(){
 
     if(!address){
 
-        alert(
-            "اكتب العنوان"
-        );
+        alert("اكتب العنوان");
 
         return;
 
@@ -500,9 +444,7 @@ async function(){
 
     if(!notes){
 
-        alert(
-            "اكتب الطلب"
-        );
+        alert("اكتب الطلب");
 
         return;
 
@@ -511,14 +453,11 @@ async function(){
 
     if(cart.length === 0){
 
-        alert(
-            "السلة فارغة"
-        );
+        alert("السلة فارغة");
 
         return;
 
     }
-
 
 
     /* =====================================
@@ -533,15 +472,9 @@ async function(){
                 return sum +
 
                 (
-                    Number(
-                        item.price || 0
-                    )
+                    Number(item.price || 0) *
 
-                    *
-
-                    Number(
-                        item.quantity || 1
-                    )
+                    Number(item.quantity || 1)
                 );
 
             },
@@ -549,7 +482,6 @@ async function(){
             0
 
         );
-
 
 
     /* =====================================
@@ -560,7 +492,6 @@ async function(){
         Date.now()
         .toString()
         .slice(-6);
-
 
 
     /* =====================================
@@ -608,11 +539,6 @@ async function(){
     };
 
 
-
-    /* =====================================
-       تعطيل الزر
-    ===================================== */
-
     const button =
         document.getElementById(
             "confirmButton"
@@ -625,18 +551,67 @@ async function(){
         "⏳ جاري إرسال الطلب...";
 
 
-
     try{
+
+        /* =================================
+           تحميل Firebase عند تأكيد الطلب فقط
+        ================================= */
+
+        const firebaseApp =
+            await import(
+                "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+            );
+
+
+        const firebaseFirestore =
+            await import(
+                "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+            );
+
+
+        const firebaseConfig = {
+
+            apiKey:
+                "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
+
+            authDomain:
+                "souq-mubasher-c9d87.firebaseapp.com",
+
+            projectId:
+                "souq-mubasher-c9d87",
+
+            storageBucket:
+                "souq-mubasher-c9d87.firebasestorage.app",
+
+            messagingSenderId:
+                "34321703167",
+
+            appId:
+                "1:34321703167:web:bbea33f93d9485fc97acca"
+
+        };
+
+
+        const app =
+            firebaseApp.initializeApp(
+                firebaseConfig
+            );
+
+
+        const db =
+            firebaseFirestore.getFirestore(
+                app
+            );
 
 
         /* =================================
-           حفظ الطلب في الإدارة أولًا
+           حفظ الطلب في Firestore
         ================================= */
 
         const docRef =
-            await addDoc(
+            await firebaseFirestore.addDoc(
 
-                collection(
+                firebaseFirestore.collection(
                     db,
                     "orders"
                 ),
@@ -646,16 +621,15 @@ async function(){
                     ...order,
 
                     createdAt:
-                        serverTimestamp()
+                        firebaseFirestore.serverTimestamp()
 
                 }
 
             );
 
 
-
         /* =================================
-           إنشاء رسالة واتساب
+           رسالة واتساب
         ================================= */
 
         let message =
@@ -678,18 +652,13 @@ ${notes}
 `;
 
 
-
         cart.forEach(item => {
 
             const quantity =
-                Number(
-                    item.quantity || 1
-                );
+                Number(item.quantity || 1);
 
             const price =
-                Number(
-                    item.price || 0
-                );
+                Number(item.price || 0);
 
             const itemTotal =
                 price * quantity;
@@ -703,7 +672,6 @@ ${notes}
         });
 
 
-
         message +=
 
 `
@@ -711,7 +679,6 @@ ${notes}
 
 📌 الحالة: جديد
 `;
-
 
 
         /* =================================
@@ -730,13 +697,11 @@ ${notes}
                 ...order,
 
                 createdAt:
-                    new Date()
-                    .toISOString()
+                    new Date().toISOString()
 
             })
 
         );
-
 
 
         /* =================================
@@ -748,26 +713,15 @@ ${notes}
         );
 
 
-
         /* =================================
-           فتح واتساب مباشرة
-           
-           بدون صفحة إضافية
-           وبدون زر إضافي
+           فتح واتساب
         ================================= */
 
         const whatsappURL =
-
             "https://wa.me/" +
-
             ADMIN_WHATSAPP +
-
             "?text=" +
-
-            encodeURIComponent(
-                message
-            );
-
+            encodeURIComponent(message);
 
 
         window.location.href =
@@ -793,7 +747,8 @@ ${notes}
         );
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
         button.textContent =
             "✅ تأكيد الطلب";
@@ -803,7 +758,6 @@ ${notes}
 };
 
 </script>
-
 
 </body>
 
