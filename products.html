@@ -285,144 +285,122 @@ class="back">
 </div>
 
 
-
 <script type="module">
-
-/* =========================================
-   Firebase
-========================================= */
 
 import { db } from "./firebase.js";
 
 import {
     collection,
     getDocs
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+const productsBox =
+    document.getElementById("products");
 
-/* =========================================
+
+let allProducts = [];
+
+
+/* ==============================
    السلة
-========================================= */
+============================== */
 
 function getCart(){
 
     return JSON.parse(
-
-        localStorage.getItem(
-            "souqMubasherCart"
-        ) || "[]"
-
+        localStorage.getItem("souqMubasherCart") || "[]"
     );
 
 }
 
 
-
 function updateCartCount(){
 
-    const cart =
-        getCart();
+    const cart = getCart();
 
     let count = 0;
 
-
     cart.forEach(item => {
 
-        count += Number(
-            item.quantity || 1
-        );
+        count += Number(item.quantity || 1);
 
     });
 
-
-    document.getElementById(
-        "cartCount"
-    ).textContent = count;
+    document.getElementById("cartCount").textContent = count;
 
 }
 
 
 
-/* =========================================
-   المنتجات
-========================================= */
-
-let allProducts = [];
-
-
+/* ==============================
+   تحميل المنتجات من Firebase
+============================== */
 
 async function loadProducts(){
 
-    const container =
-        document.getElementById(
-            "products"
-        );
-
+    productsBox.innerHTML = `
+        <div class="empty">
+            ⏳
+            <h3 style="margin:12px 0;">
+                جاري تحميل المنتجات...
+            </h3>
+        </div>
+    `;
 
     try{
 
+        const ref =
+            collection(db, "products");
+
         const snapshot =
-            await getDocs(
+            await getDocs(ref);
 
-                collection(
-                    db,
-                    "products"
-                )
-
-            );
+        console.log(
+            "عدد المنتجات:",
+            snapshot.size
+        );
 
 
         allProducts = [];
 
 
-        snapshot.forEach(
-            docSnapshot => {
+        snapshot.forEach(doc => {
 
-                const data =
-                    docSnapshot.data();
+            allProducts.push({
 
+                id: doc.id,
 
-                allProducts.push({
+                ...doc.data()
 
-                    id:
-                        docSnapshot.id,
+            });
 
-                    ...data
-
-                });
-
-            }
-        );
+        });
 
 
-        displayProducts(
-            allProducts
-        );
+        displayProducts(allProducts);
 
 
     }catch(error){
 
         console.error(
-            "Products Error:",
+            "خطأ Firebase:",
             error
         );
 
 
-        container.innerHTML = `
+        productsBox.innerHTML = `
 
             <div class="empty">
 
                 ❌
 
                 <h3 style="margin:12px 0;">
-                تعذر تحميل المنتجات
+                    حدث خطأ في تحميل المنتجات
                 </h3>
 
-                <p>
-                تأكد من اتصال الإنترنت.
+                <p style="direction:ltr;font-size:12px;margin-top:10px;">
+                    ${error.code || "unknown-error"}
                 </p>
 
             </div>
@@ -435,32 +413,26 @@ async function loadProducts(){
 
 
 
-/* =========================================
+/* ==============================
    عرض المنتجات
-========================================= */
+============================== */
 
 function displayProducts(products){
 
-    const container =
-        document.getElementById(
-            "products"
-        );
-
-
     if(products.length === 0){
 
-        container.innerHTML = `
+        productsBox.innerHTML = `
 
             <div class="empty">
 
                 🛒
 
                 <h3 style="margin:12px 0;">
-                لا توجد منتجات
+                    لا توجد منتجات
                 </h3>
 
                 <p>
-                سيتم إضافة المنتجات قريبًا.
+                    سيتم إضافة المنتجات قريبًا.
                 </p>
 
             </div>
@@ -503,39 +475,29 @@ function displayProducts(products){
             "";
 
 
-        const safeName =
-            escapeHTML(name);
-
-
-        const safeDescription =
-            escapeHTML(description);
-
-
-        const imageHTML =
-            image
-
-            ?
-
-            `<img
-                src="${escapeAttribute(image)}"
-                alt="${safeName}"
-                onerror="this.style.display='none';"
-            >`
-
-            :
-
-            `🛒`;
-
-
         html += `
 
         <div
             class="product"
-            data-name="${safeName.toLowerCase()}">
+            data-name="${String(name).toLowerCase()}">
 
             <div class="product-image">
 
-                ${imageHTML}
+                ${
+                    image
+
+                    ?
+
+                    `<img
+                        src="${image}"
+                        alt="${name}"
+                        onerror="this.style.display='none';"
+                    >`
+
+                    :
+
+                    `🛒`
+                }
 
             </div>
 
@@ -543,34 +505,26 @@ function displayProducts(products){
             <div class="product-info">
 
                 <div class="product-name">
-
-                    ${safeName}
-
+                    ${name}
                 </div>
 
 
                 <div class="product-description">
-
-                    ${safeDescription}
-
+                    ${description}
                 </div>
 
 
                 <div class="price">
-
                     ${price} ريال
-
                 </div>
 
 
                 <button
                     class="add-btn"
-                    onclick="addToCart(
-                        '${escapeJS(name)}',
-                        ${price},
-                        '${escapeJS(image)}',
-                        '${escapeJS(description)}'
-                    )">
+                    data-name="${name}"
+                    data-price="${price}"
+                    data-image="${image}"
+                    data-description="${description}">
 
                     🛒 إضافة للسلة
 
@@ -585,61 +539,80 @@ function displayProducts(products){
     });
 
 
-    container.innerHTML =
-        html;
+    productsBox.innerHTML = html;
+
+
+    /* ربط أزرار السلة */
+
+    document
+        .querySelectorAll(".add-btn")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    addToCart(
+
+                        button.dataset.name,
+
+                        Number(
+                            button.dataset.price
+                        ),
+
+                        button.dataset.image,
+
+                        button.dataset.description
+
+                    );
+
+                }
+            );
+
+        });
 
 }
 
 
 
-/* =========================================
+/* ==============================
    إضافة للسلة
-========================================= */
+============================== */
 
-window.addToCart =
-function(
-    productName,
+function addToCart(
+    name,
     price,
     image,
     description
 ){
 
-    let cart =
-        getCart();
+    let cart = getCart();
 
 
     const existing =
         cart.find(
-            item =>
-            item.name === productName
+            item => item.name === name
         );
 
 
     if(existing){
 
         existing.quantity =
-            Number(
-                existing.quantity || 1
-            ) + 1;
+            Number(existing.quantity || 1) + 1;
 
     }else{
 
         cart.push({
 
-            name:
-                productName,
+            name: name,
 
-            price:
-                Number(price || 0),
+            price: price,
 
-            image:
-                image || "",
+            image: image,
 
-            description:
-                description || "",
+            description: description,
 
-            quantity:
-                1
+            quantity: 1
 
         });
 
@@ -647,11 +620,8 @@ function(
 
 
     localStorage.setItem(
-
         "souqMubasherCart",
-
         JSON.stringify(cart)
-
     );
 
 
@@ -659,28 +629,24 @@ function(
 
 
     alert(
-
         "تمت إضافة " +
-        productName +
+        name +
         " إلى السلة 🛒"
-
     );
 
-};
+}
 
 
 
-/* =========================================
+/* ==============================
    البحث
-========================================= */
+============================== */
 
-window.searchProducts =
-function(){
+window.searchProducts = function(){
 
     const search =
-        document.getElementById(
-            "search"
-        )
+        document
+        .getElementById("search")
         .value
         .toLowerCase()
         .trim();
@@ -688,9 +654,7 @@ function(){
 
     if(!search){
 
-        displayProducts(
-            allProducts
-        );
+        displayProducts(allProducts);
 
         return;
 
@@ -698,57 +662,46 @@ function(){
 
 
     const filtered =
-        allProducts.filter(
-            product => {
+        allProducts.filter(product => {
 
-                const name =
-                    String(
-                        product.name ||
-                        product.اسم ||
-                        ""
-                    )
-                    .toLowerCase();
+            const name =
+                String(
+                    product.name ||
+                    product.اسم ||
+                    ""
+                ).toLowerCase();
 
 
-                const description =
-                    String(
-                        product.description ||
-                        product.الوصف ||
-                        ""
-                    )
-                    .toLowerCase();
+            const description =
+                String(
+                    product.description ||
+                    product.الوصف ||
+                    ""
+                ).toLowerCase();
 
 
-                return (
+            return (
+                name.includes(search) ||
+                description.includes(search)
+            );
 
-                    name.includes(search)
-
-                    ||
-
-                    description.includes(search)
-
-                );
-
-            }
-        );
+        });
 
 
     if(filtered.length === 0){
 
-        document.getElementById(
-            "products"
-        ).innerHTML = `
+        productsBox.innerHTML = `
 
             <div class="empty">
 
                 🔎
 
                 <h3 style="margin:12px 0;">
-                لم يتم العثور على المنتج
+                    لم يتم العثور على المنتج
                 </h3>
 
                 <p>
-                جرّب البحث باسم آخر.
+                    جرّب البحث باسم آخر.
                 </p>
 
             </div>
@@ -760,61 +713,26 @@ function(){
     }
 
 
-    displayProducts(
-        filtered
-    );
+    displayProducts(filtered);
 
 };
 
 
 
-/* =========================================
-   حماية النصوص
-========================================= */
-
-function escapeHTML(value){
-
-    return String(value || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeAttribute(value){
-
-    return String(value || "")
-        .replace(/"/g,"%22")
-        .replace(/'/g,"%27");
-
-}
-
-
-function escapeJS(value){
-
-    return String(value || "")
-        .replace(/\\/g,"\\\\")
-        .replace(/'/g,"\\'")
-        .replace(/\n/g,"\\n")
-        .replace(/\r/g,"");
-
-}
-
-
-
-/* =========================================
-   تشغيل الصفحة
-========================================= */
+/* ==============================
+   تشغيل
+============================== */
 
 updateCartCount();
 
 loadProducts();
 
-</script>
+        </script>
 
+    
+                    
+                    
+        
 </body>
 
 </html>
