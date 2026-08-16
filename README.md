@@ -1,2 +1,0 @@
-# Souq-Mubasher-App
-Public
