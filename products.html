@@ -377,10 +377,15 @@ async function loadProducts(){
             );
 
 
-        const snapshot =
-            await getDocs(
-                productsRef
-            );
+    
+            const snapshot =
+    await getDocs(
+        collection(db, "products")
+    );
+
+alert("تم الاتصال بـ Firebase. عدد المنتجات: " + snapshot.size);
+                
+            
 
 
         console.log(
