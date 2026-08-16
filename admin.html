@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>إدارة الطلبات | سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#222;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:18px;
+    text-align:center;
+}
+
+header h1{
+    font-size:23px;
+}
+
+header p{
+    margin-top:6px;
+    font-size:13px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px 15px;
+}
+
+.box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    margin-bottom:15px;
+}
+
+.box h2{
+    color:#0d6efd;
+    font-size:19px;
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#0d6efd;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+    padding:13px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.login-btn{
+    width:100%;
+    background:#0d6efd;
+    color:white;
+}
+
+.logout-btn{
+    width:100%;
+    background:#dc3545;
+    color:white;
+    margin-top:15px;
+}
+
+.status{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+    text-align:center;
+}
+
+.orders{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.order{
+    background:white;
+    border-radius:15px;
+    padding:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.order-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px solid #eee;
+    padding-bottom:12px;
+    margin-bottom:12px;
+}
+
+.order-number{
+    font-weight:bold;
+    color:#0d6efd;
+}
+
+.status-badge{
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:13px;
+    background:#fff3cd;
+    color:#856404;
+}
+
+.info{
+    line-height:2;
+    font-size:14px;
+}
+
+.products{
+    margin-top:12px;
+    border-top:1px solid #eee;
+    padding-top:12px;
+}
+
+.product{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:8px 0;
+    font-size:14px;
+    border-bottom:1px solid #f1f1f1;
+}
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:12px;
+    border-top:1px solid #ddd;
+    padding-top:12px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.actions{
+    margin-top:15px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.actions button{
+    flex:1;
+    min-width:120px;
+    color:white;
+}
+
+.new-btn{
+    background:#ffc107;
+    color:#222 !important;
+}
+
+.prepare-btn{
+    background:#0d6efd;
+}
+
+.done-btn{
+    background:#198754;
+}
+
+.whatsapp-btn{
+    background:#25D366;
+}
+
+.empty{
+    background:white;
+    padding:40px 20px;
+    border-radius:15px;
+    text-align:center;
+    color:#777;
+}
+
+.error{
+    background:#f8d7da;
+    color:#842029;
+    padding:15px;
+    border-radius:12px;
+    line-height:1.8;
+}
+
+.loading{
+    text-align:center;
+    color:#777;
+    padding:30px;
+}
+
+.hidden{
+    display:none;
+}
+
+.login-error{
+    color:#dc3545;
+    text-align:center;
+    margin-top:12px;
+    font-size:14px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>📋 سوق مباشر</h1>
+
+<p>لوحة إدارة الطلبات</p>
+
+</header>
+
+
+
+<div class="container">
+
+
+<!-- ================================
+     تسجيل الدخول
+================================ -->
+
+<div id="loginBox" class="box">
+
+<h2>
+🔐 دخول الإدارة
+</h2>
+
+
+<label>
+البريد الإلكتروني
+</label>
+
+<input
+type="email"
+id="email"
+placeholder="اكتب إيميل الإدارة"
+>
+
+
+<label>
+كلمة المرور
+</label>
+
+<input
+type="password"
+id="password"
+placeholder="اكتب كلمة المرور"
+>
+
+
+<button
+id="loginButton"
+class="login-btn"
+onclick="login()">
+
+🔑 دخول
+
+</button>
+
+
+<div
+id="loginError"
+class="login-error">
+</div>
+
+</div>
+
+
+
+<!-- ================================
+     لوحة الإدارة
+================================ -->
+
+<div
+id="adminBox"
+class="hidden">
+
+
+<div class="box">
+
+<h2>
+👨‍💼 لوحة الإدارة
+</h2>
+
+<div
+id="adminEmail"
+style="color:#666;font-size:14px;">
+</div>
+
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+🚪 تسجيل الخروج
+
+</button>
+
+</div>
+
+
+
+<div
+id="status"
+class="status">
+
+⏳ جاري تحميل الطلبات...
+
+</div>
+
+
+
+<div
+id="orders"
+class="orders">
+
+<div class="loading">
+جاري تحميل الطلبات...
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+/* =========================================
+   Firebase
+========================================= */
+
+import { db } from "./firebase.js";
+
+import {
+
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    updateDoc,
+    doc
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+/* =========================================
+   Auth
+========================================= */
+
+const auth =
+    getAuth();
+
+
+
+/* =========================================
+   تسجيل الدخول
+========================================= */
+
+window.login = async function(){
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const errorBox =
+        document.getElementById(
+            "loginError"
+        );
+
+
+    const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    errorBox.textContent = "";
+
+
+    if(!email){
+
+        errorBox.textContent =
+            "اكتب البريد الإلكتروني";
+
+        return;
+
+    }
+
+
+    if(!password){
+
+        errorBox.textContent =
+            "اكتب كلمة المرور";
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ جاري الدخول...";
+
+
+    try{
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Login Error:",
+            error
+        );
+
+
+        errorBox.textContent =
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "🔑 دخول";
+
+    }
+
+};
+
+
+
+/* =========================================
+   مراقبة تسجيل الدخول
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        const loginBox =
+            document.getElementById(
+                "loginBox"
+            );
+
+
+        const adminBox =
+            document.getElementById(
+                "adminBox"
+            );
+
+
+        if(user){
+
+            loginBox.classList.add(
+                "hidden"
+            );
+
+
+            adminBox.classList.remove(
+                "hidden"
+            );
+
+
+            document.getElementById(
+                "adminEmail"
+            ).textContent =
+                "تم تسجيل الدخول: " +
+                user.email;
+
+
+            await loadOrders();
+
+
+        }else{
+
+            loginBox.classList.remove(
+                "hidden"
+            );
+
+
+            adminBox.classList.add(
+                "hidden"
+            );
+
+        }
+
+    }
+);
+
+
+
+/* =========================================
+   تحميل الطلبات
+========================================= */
+
+async function loadOrders(){
+
+    const ordersBox =
+        document.getElementById(
+            "orders"
+        );
+
+
+    const statusBox =
+        document.getElementById(
+            "status"
+        );
+
+
+    ordersBox.innerHTML =
+        '<div class="loading">⏳ جاري تحميل الطلبات...</div>';
+
+
+    try{
+
+        const ordersQuery =
+            query(
+
+                collection(
+                    db,
+                    "orders"
+                ),
+
+                orderBy(
+                    "createdAt",
+                    "desc"
+                )
+
+            );
+
+
+        const snapshot =
+            await getDocs(
+                ordersQuery
+            );
+
+
+        if(snapshot.empty){
+
+            statusBox.innerHTML =
+                "📭 لا توجد طلبات حتى الآن";
+
+
+            ordersBox.innerHTML = `
+
+                <div class="empty">
+
+                    📦
+
+                    <h3 style="margin:12px 0;">
+                    لا توجد طلبات
+                    </h3>
+
+                    <p>
+                    ستظهر الطلبات هنا عند وصولها.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        statusBox.innerHTML =
+            "📦 عدد الطلبات: " +
+            snapshot.size;
+
+
+        let html = "";
+
+
+        snapshot.forEach(orderDoc => {
+
+            const order =
+                orderDoc.data();
+
+
+            const orderId =
+                orderDoc.id;
+
+
+            const orderNumber =
+                order.orderNumber ||
+                orderId;
+
+
+            const customerName =
+                order.customerName ||
+                "غير معروف";
+
+
+            const phone =
+                order.customerPhone ||
+                "غير مسجل";
+
+
+            const address =
+                order.customerAddress ||
+                "غير مسجل";
+
+
+            const notes =
+                order.notes ||
+                "لا توجد ملاحظات";
+
+
+            const total =
+                Number(
+                    order.total || 0
+                );
+
+
+            const currentStatus =
+                order.status ||
+                "جديد";
+
+
+            let productsHTML = "";
+
+
+            if(
+                Array.isArray(
+                    order.products
+                )
+            ){
+
+                order.products.forEach(
+                    product => {
+
+                        const quantity =
+                            Number(
+                                product.quantity || 1
+                            );
+
+
+                        const price =
+                            Number(
+                                product.price || 0
+                            );
+
+
+                        const itemTotal =
+                            quantity * price;
+
+
+                        productsHTML += `
+
+                            <div class="product">
+
+                                <span>
+                                    ${product.name}
+                                    ×
+                                    ${quantity}
+                                </span>
+
+                                <strong>
+                                    ${itemTotal}
+                                    ريال
+                                </strong>
+
+                            </div>
+
+                        `;
+
+                    }
+                );
+
+            }
+
+
+            const whatsappMessage =
+
+`🛒 طلب من سوق مباشر
+
+🔢 رقم الطلب: ${orderNumber}
+
+👤 الاسم: ${customerName}
+
+📱 الجوال: ${phone}
+
+📍 العنوان:
+${address}
+
+📝 الطلب:
+${notes}
+
+💰 الإجمالي: ${total} ريال
+
+📌 الحالة: ${currentStatus}`;
+
+
+            const whatsappURL =
+
+                "https://api.whatsapp.com/send?phone=966550496391&text="
+
+                +
+
+                encodeURIComponent(
+                    whatsappMessage
+                );
+
+
+            html += `
+
+                <div class="order">
+
+                    <div class="order-header">
+
+                        <div class="order-number">
+
+                            🔢 رقم الطلب:
+                            ${orderNumber}
+
+                        </div>
+
+                        <div class="status-badge">
+
+                            ${currentStatus}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div>
+                            👤
+                            <strong>الاسم:</strong>
+                            ${customerName}
+                        </div>
+
+
+                        <div>
+                            📱
+                            <strong>الجوال:</strong>
+                            ${phone}
+                        </div>
+
+
+                        <div>
+                            📍
+                            <strong>العنوان:</strong>
+                            ${address}
+                        </div>
+
+
+                        <div>
+                            📝
+                            <strong>الطلب:</strong>
+                            ${notes}
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="products">
+
+                        <strong>
+                            🛒 المنتجات
+                        </strong>
+
+                        ${productsHTML}
+
+                    </div>
+
+
+
+                    <div class="total">
+
+                        <span>
+                            الإجمالي
+                        </span>
+
+                        <span>
+                            ${total} ريال
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="actions">
+
+                        <button
+                        class="new-btn"
+                        onclick="changeStatus(
+                            '${orderId}',
+                            'جديد'
+                        )">
+
+                        🟡 جديد
+
+                        </button>
+
+
+                        <button
+                        class="prepare-btn"
+                        onclick="changeStatus(
+                            '${orderId}',
+                            'قيد التجهيز'
+                        )">
+
+                        🔵 قيد التجهيز
+
+                        </button>
+
+
+                        <button
+                        class="done-btn"
+                        onclick="changeStatus(
+                            '${orderId}',
+                            'تم التوصيل'
+                        )">
+
+                        🟢 تم التوصيل
+
+                        </button>
+
+
+                        <button
+                        class="whatsapp-btn"
+                        onclick="openWhatsApp(
+                            '${encodeURIComponent(
+                                whatsappURL
+                            )}'
+                        )">
+
+                        📱 واتساب
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        ordersBox.innerHTML =
+            html;
+
+
+    }catch(error){
+
+        console.error(
+            "Orders Error:",
+            error
+        );
+
+
+        statusBox.innerHTML =
+            "❌ تعذر تحميل الطلبات";
+
+
+        ordersBox.innerHTML = `
+
+            <div class="error">
+
+                تعذر تحميل الطلبات.
+
+                <br><br>
+
+                تأكد من تسجيل الدخول
+                بإيميل المدير الصحيح.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================
+   تغيير حالة الطلب
+========================================= */
+
+window.changeStatus =
+async function(
+    orderId,
+    newStatus
+){
+
+    try{
+
+        await updateDoc(
+
+            doc(
+                db,
+                "orders",
+                orderId
+            ),
+
+            {
+                status:
+                    newStatus
+            }
+
+        );
+
+
+        alert(
+            "تم تغيير حالة الطلب إلى: " +
+            newStatus
+        );
+
+
+        await loadOrders();
+
+
+    }catch(error){
+
+        console.error(
+            "Status Error:",
+            error
+        );
+
+
+        alert(
+            "تعذر تغيير حالة الطلب ❌"
+        );
+
+    }
+
+};
+
+
+
+/* =========================================
+   فتح واتساب من الإدارة
+========================================= */
+
+window.openWhatsApp =
+function(encodedURL){
+
+    const url =
+        decodeURIComponent(
+            encodedURL
+        );
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+};
+
+
+
+/* =========================================
+   تسجيل الخروج
+========================================= */
+
+window.logout =
+async function(){
+
+    await signOut(
+        auth
+    );
+
+};
+
+</script>
+
+
+</body>
+
+  </html>
