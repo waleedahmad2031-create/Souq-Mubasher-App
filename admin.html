@@ -11,387 +11,407 @@
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Tahoma,Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,Arial,sans-serif;
 }
 
 body{
-    background:#f5f6f8;
-    color:#222;
+background:#f5f6f8;
+color:#222;
 }
 
 header{
-    background:#0d6efd;
-    color:white;
-    padding:18px;
-    text-align:center;
+background:#0d6efd;
+color:white;
+padding:18px;
+text-align:center;
 }
 
 header h1{
-    font-size:23px;
+font-size:23px;
 }
 
 .container{
-    max-width:1000px;
-    margin:auto;
-    padding:20px 15px;
+max-width:1000px;
+margin:auto;
+padding:20px 15px;
 }
 
 .box{
-    background:white;
-    padding:18px;
-    border-radius:15px;
-    margin-bottom:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+background:white;
+padding:18px;
+border-radius:15px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 h2{
-    color:#0d6efd;
-    font-size:19px;
-    margin-bottom:15px;
+color:#0d6efd;
+font-size:19px;
+margin-bottom:15px;
 }
 
 h3{
-    margin-bottom:10px;
+margin-bottom:10px;
 }
 
 label{
-    display:block;
-    font-weight:bold;
-    margin-bottom:7px;
-    font-size:14px;
+display:block;
+font-weight:bold;
+margin-bottom:7px;
+font-size:14px;
 }
 
 input,
 textarea,
 select{
-    width:100%;
-    padding:13px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    margin-bottom:13px;
-    font-size:15px;
-    outline:none;
+width:100%;
+padding:13px;
+border:1px solid #ddd;
+border-radius:10px;
+margin-bottom:13px;
+font-size:15px;
+outline:none;
 }
 
 textarea{
-    min-height:90px;
-    resize:vertical;
+min-height:90px;
+resize:vertical;
 }
 
 button{
-    border:none;
-    border-radius:10px;
-    padding:12px 15px;
-    font-size:15px;
-    cursor:pointer;
+border:none;
+border-radius:10px;
+padding:12px 15px;
+font-size:15px;
+cursor:pointer;
 }
 
 .primary{
-    background:#0d6efd;
-    color:white;
+background:#0d6efd;
+color:white;
 }
 
 .success{
-    background:#198754;
-    color:white;
+background:#198754;
+color:white;
 }
 
 .danger{
-    background:#dc3545;
-    color:white;
+background:#dc3545;
+color:white;
 }
 
 .warning{
-    background:#ffc107;
-    color:#222;
+background:#ffc107;
+color:#222;
 }
 
 .gray{
-    background:#e9ecef;
-    color:#222;
+background:#e9ecef;
+color:#222;
 }
 
 .login-btn{
-    width:100%;
-    background:#0d6efd;
-    color:white;
-    padding:15px;
+width:100%;
+background:#0d6efd;
+color:white;
+padding:15px;
 }
 
 .logout{
-    width:100%;
-    background:#dc3545;
-    color:white;
-    margin-top:10px;
+width:100%;
+background:#dc3545;
+color:white;
+margin-top:10px;
 }
 
 .hidden{
-    display:none !important;
+display:none !important;
 }
 
 .error{
-    color:#dc3545;
-    text-align:center;
-    margin-top:10px;
+color:#dc3545;
+text-align:center;
+margin-top:10px;
 }
 
 .success-message{
-    color:#198754;
-    text-align:center;
-    margin-top:10px;
+color:#198754;
+text-align:center;
+margin-top:10px;
 }
 
 .menu{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-bottom:15px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-bottom:15px;
 }
 
 .menu button{
-    min-height:65px;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
-    font-weight:bold;
+min-height:65px;
+background:white;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
+font-weight:bold;
 }
 
 .menu button.active{
-    background:#0d6efd;
-    color:white;
+background:#0d6efd;
+color:white;
 }
 
 .stats{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
 }
 
 .stat{
-    background:white;
-    padding:18px;
-    border-radius:14px;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+background:white;
+padding:18px;
+border-radius:14px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .stat strong{
-    display:block;
-    font-size:25px;
-    color:#0d6efd;
-    margin-top:8px;
+display:block;
+font-size:25px;
+color:#0d6efd;
+margin-top:8px;
 }
 
 .analytics{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-top:15px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:15px;
 }
 
 .analytics-card{
-    background:white;
-    padding:18px;
-    border-radius:14px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+background:white;
+padding:18px;
+border-radius:14px;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .analytics-title{
-    color:#555;
-    font-weight:bold;
-    margin-bottom:10px;
+color:#555;
+font-weight:bold;
+margin-bottom:10px;
 }
 
 .analytics-value{
-    font-size:20px;
-    font-weight:bold;
-    color:#0d6efd;
-    line-height:1.7;
+font-size:20px;
+font-weight:bold;
+color:#0d6efd;
+line-height:1.7;
 }
 
 .analytics-number{
-    font-size:28px;
-    font-weight:bold;
-    color:#0d6efd;
+font-size:28px;
+font-weight:bold;
+color:#0d6efd;
 }
 
 .rank-list{
-    margin-top:10px;
+margin-top:10px;
 }
 
 .rank-item{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:10px 0;
-    border-bottom:1px solid #eee;
+display:flex;
+justify-content:space-between;
+gap:10px;
+padding:10px 0;
+border-bottom:1px solid #eee;
 }
 
 .rank-item:last-child{
-    border-bottom:none;
+border-bottom:none;
 }
 
 .rank-name{
-    font-weight:bold;
+font-weight:bold;
 }
 
 .rank-count{
-    color:#0d6efd;
-    font-weight:bold;
+color:#0d6efd;
+font-weight:bold;
 }
 
 .product-card{
-    background:white;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+background:white;
+border-radius:15px;
+padding:15px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .product-card img{
-    width:100%;
-    max-height:200px;
-    object-fit:contain;
-    border-radius:10px;
-    background:#f5f5f5;
-    margin-bottom:10px;
+width:100%;
+max-height:200px;
+object-fit:contain;
+border-radius:10px;
+background:#f5f5f5;
+margin-bottom:10px;
 }
 
 .product-info{
-    line-height:1.9;
+line-height:1.9;
 }
 
 .product-actions{
-    display:flex;
-    gap:8px;
-    margin-top:12px;
+display:flex;
+gap:8px;
+margin-top:12px;
 }
 
 .product-actions button{
-    flex:1;
+flex:1;
 }
 
 .order-card{
-    background:white;
-    padding:16px;
-    border-radius:15px;
-    margin-bottom:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+background:white;
+padding:16px;
+border-radius:15px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .order-header{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    border-bottom:1px solid #eee;
-    padding-bottom:10px;
-    margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+gap:10px;
+border-bottom:1px solid #eee;
+padding-bottom:10px;
+margin-bottom:10px;
 }
 
 .order-number{
-    color:#0d6efd;
-    font-weight:bold;
+color:#0d6efd;
+font-weight:bold;
 }
 
 .badge{
-    background:#fff3cd;
-    color:#856404;
-    padding:5px 9px;
-    border-radius:8px;
-    font-size:12px;
+background:#fff3cd;
+color:#856404;
+padding:5px 9px;
+border-radius:8px;
+font-size:12px;
 }
 
 .order-products{
-    border-top:1px solid #eee;
-    margin-top:10px;
-    padding-top:10px;
+border-top:1px solid #eee;
+margin-top:10px;
+padding-top:10px;
 }
 
 .order-product{
-    display:flex;
-    justify-content:space-between;
-    padding:7px 0;
-    border-bottom:1px solid #f1f1f1;
+display:flex;
+justify-content:space-between;
+padding:7px 0;
+border-bottom:1px solid #f1f1f1;
 }
 
 .order-total{
-    display:flex;
-    justify-content:space-between;
-    font-size:18px;
-    font-weight:bold;
-    border-top:1px solid #ddd;
-    margin-top:10px;
-    padding-top:10px;
+display:flex;
+justify-content:space-between;
+font-size:18px;
+font-weight:bold;
+border-top:1px solid #ddd;
+margin-top:10px;
+padding-top:10px;
+}
+
+.delivery-box{
+background:#f8f9fa;
+padding:12px;
+border-radius:10px;
+margin-top:12px;
+border:1px solid #eee;
+}
+
+.delivery-price{
+color:#198754;
+font-weight:bold;
+font-size:18px;
+}
+
+.final-total{
+color:#0d6efd;
+font-size:20px;
+font-weight:bold;
 }
 
 .order-actions{
-    display:flex;
-    gap:7px;
-    flex-wrap:wrap;
-    margin-top:12px;
+display:flex;
+gap:7px;
+flex-wrap:wrap;
+margin-top:12px;
 }
 
 .order-actions button{
-    flex:1;
-    min-width:110px;
+flex:1;
+min-width:110px;
 }
 
 .image-preview{
-    width:100%;
-    max-height:220px;
-    object-fit:contain;
-    background:#f5f5f5;
-    border-radius:10px;
-    margin-bottom:12px;
-    display:none;
+width:100%;
+max-height:220px;
+object-fit:contain;
+background:#f5f5f5;
+border-radius:10px;
+margin-bottom:12px;
+display:none;
 }
 
 .empty{
-    text-align:center;
-    padding:35px;
-    color:#777;
-    background:white;
-    border-radius:15px;
+text-align:center;
+padding:35px;
+color:#777;
+background:white;
+border-radius:15px;
 }
 
 .loading{
-    text-align:center;
-    padding:25px;
-    color:#777;
+text-align:center;
+padding:25px;
+color:#777;
 }
 
 .notice{
-    background:#e7f1ff;
-    color:#084298;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:15px;
-    line-height:1.7;
+background:#e7f1ff;
+color:#084298;
+padding:12px;
+border-radius:10px;
+margin-bottom:15px;
+line-height:1.7;
 }
 
 @media(max-width:500px){
 
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
+.stats{
+grid-template-columns:1fr 1fr;
+}
 
-    .analytics{
-        grid-template-columns:1fr 1fr;
-    }
+.analytics{
+grid-template-columns:1fr 1fr;
+}
 
-    .menu{
-        grid-template-columns:1fr 1fr;
-    }
+.menu{
+grid-template-columns:1fr 1fr;
+}
 
-    .analytics-card{
-        padding:14px;
-    }
+.analytics-card{
+padding:14px;
+}
 
-    .analytics-value{
-        font-size:16px;
-    }
+.analytics-value{
+font-size:16px;
+}
 
 }
 
@@ -409,13 +429,7 @@ button{
 
 </header>
 
-
 <div class="container">
-
-
-<!-- =========================
-     تسجيل الدخول
-========================= -->
 
 <div id="loginSection" class="box">
 
@@ -449,14 +463,7 @@ onclick="login()">
 
 </div>
 
-
-
-<!-- =========================
-     الإدارة
-========================= -->
-
 <div id="adminSection" class="hidden">
-
 
 <div class="box">
 
@@ -473,10 +480,6 @@ onclick="logout()">
 </button>
 
 </div>
-
-
-
-<!-- القائمة -->
 
 <div class="menu">
 
@@ -522,12 +525,6 @@ onclick="showSection('add')">
 
 </div>
 
-
-
-<!-- =========================
-     الإحصائيات
-========================= -->
-
 <div id="statsSection" class="section">
 
 <div class="box">
@@ -570,12 +567,6 @@ onclick="showSection('add')">
 
 </div>
 
-
-
-<!-- =========================
-     التحليلات الجديدة
-========================= -->
-
 <div class="box">
 
 <h2>📈 تحليلات سوق مباشر</h2>
@@ -598,7 +589,6 @@ class="analytics-number">
 
 </div>
 
-
 <div class="analytics-card">
 
 <div class="analytics-title">
@@ -615,7 +605,6 @@ class="analytics-value">
 
 </div>
 
-
 <div class="analytics-card">
 
 <div class="analytics-title">
@@ -631,7 +620,6 @@ class="analytics-value">
 </div>
 
 </div>
-
 
 <div class="analytics-card">
 
@@ -653,12 +641,6 @@ class="analytics-value">
 
 </div>
 
-
-
-<!-- =========================
-     قائمة الأكثر مشاهدة
-========================= -->
-
 <div class="box">
 
 <h2>👁️ أكثر المنتجات مشاهدة</h2>
@@ -675,12 +657,6 @@ class="rank-list">
 
 </div>
 
-
-
-<!-- =========================
-     قائمة الأكثر مبيعًا
-========================= -->
-
 <div class="box">
 
 <h2>🛒 المنتجات الأكثر مبيعًا</h2>
@@ -696,12 +672,6 @@ class="rank-list">
 </div>
 
 </div>
-
-
-
-<!-- =========================
-     المناطق الأكثر طلبًا
-========================= -->
 
 <div class="box">
 
@@ -721,12 +691,6 @@ class="rank-list">
 
 </div>
 
-
-
-<!-- =========================
-     الطلبات
-========================= -->
-
 <div id="ordersSection" class="section hidden">
 
 <div class="box">
@@ -744,12 +708,6 @@ class="rank-list">
 </div>
 
 </div>
-
-
-
-<!-- =========================
-     الأرشيف
-========================= -->
 
 <div id="archiveSection" class="section hidden">
 
@@ -769,12 +727,6 @@ class="rank-list">
 
 </div>
 
-
-
-<!-- =========================
-     المنتجات
-========================= -->
-
 <div id="productsSection" class="section hidden">
 
 <div class="box">
@@ -792,12 +744,6 @@ class="rank-list">
 </div>
 
 </div>
-
-
-
-<!-- =========================
-     إضافة منتج
-========================= -->
 
 <div id="addSection" class="section hidden">
 
@@ -883,26 +829,17 @@ onclick="addProduct()">
 
 </div>
 
-
 </div>
 
 </div>
-
-
 
 <script type="module">
-
-
-/* =========================================
-   Firebase
-========================================= */
 
 import {
 initializeApp
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 
 import {
 getAuth,
@@ -912,7 +849,6 @@ onAuthStateChanged
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 import {
 getFirestore,
@@ -928,7 +864,6 @@ orderBy
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 const firebaseConfig = {
 
@@ -952,7 +887,6 @@ appId:
 
 };
 
-
 const app =
 initializeApp(firebaseConfig);
 
@@ -963,10 +897,7 @@ const db =
 getFirestore(app);
 
 
-
-/* =========================================
-   تسجيل الدخول
-========================================= */
+/* تسجيل الدخول */
 
 window.login = async function(){
 
@@ -1021,10 +952,7 @@ error.textContent =
 };
 
 
-
-/* =========================================
-   مراقبة الدخول
-========================================= */
+/* مراقبة الدخول */
 
 onAuthStateChanged(
 auth,
@@ -1062,10 +990,7 @@ document
 });
 
 
-
-/* =========================================
-   تسجيل الخروج
-========================================= */
+/* تسجيل الخروج */
 
 window.logout = async function(){
 
@@ -1074,21 +999,16 @@ await signOut(auth);
 };
 
 
-
-/* =========================================
-   التنقل
-========================================= */
+/* التنقل */
 
 window.showSection = function(section){
 
 const sections = [
-
 "stats",
 "orders",
 "archive",
 "products",
 "add"
-
 ];
 
 sections.forEach(name => {
@@ -1114,10 +1034,7 @@ document
 };
 
 
-
-/* =========================================
-   تحميل الكل
-========================================= */
+/* تحميل الكل */
 
 async function loadAll(){
 
@@ -1134,13 +1051,9 @@ loadAnalytics()
 }
 
 
-
-/* =========================================
-   المنتجات
-========================================= */
+/* المنتجات */
 
 let productsData = [];
-
 
 async function loadProducts(){
 
@@ -1170,12 +1083,10 @@ id:itemDoc.id,
 
 });
 
-
 document.getElementById(
 "statProducts"
 ).textContent =
 productsData.length;
-
 
 if(productsData.length === 0){
 
@@ -1186,9 +1097,7 @@ return;
 
 }
 
-
 let html = "";
-
 
 productsData.forEach(product => {
 
@@ -1218,7 +1127,6 @@ const category =
 product.category ||
 product.القسم ||
 "غير محدد";
-
 
 html += `
 
@@ -1277,9 +1185,7 @@ onclick="removeProduct('${escapeJS(product.id)}')">
 
 });
 
-
 box.innerHTML = html;
-
 
 }catch(error){
 
@@ -1293,10 +1199,7 @@ box.innerHTML =
 }
 
 
-
-/* =========================================
-   إضافة منتج
-========================================= */
+/* إضافة منتج */
 
 window.addProduct = async function(){
 
@@ -1352,43 +1255,28 @@ collection(db,"products"),
 {
 
 name:name,
-
 price:price,
-
 description:description,
-
 category:category,
-
 image:image,
-
 shopName:"مشتاق وليد",
-
-createdAt:
-serverTimestamp()
+createdAt:serverTimestamp()
 
 }
 );
 
-
 message.innerHTML =
 '<div class="success-message">✅ تم إضافة المنتج بنجاح.</div>';
 
-
 document.getElementById("productName").value = "";
-
 document.getElementById("productPrice").value = "";
-
 document.getElementById("productDescription").value = "";
-
 document.getElementById("productImage").value = "";
-
 document.getElementById("imagePreview").style.display = "none";
-
 
 await loadProducts();
 
 showSection("products");
-
 
 }catch(error){
 
@@ -1402,10 +1290,7 @@ message.innerHTML =
 };
 
 
-
-/* =========================================
-   تعديل المنتج
-========================================= */
+/* تعديل المنتج */
 
 window.editProduct = async function(id){
 
@@ -1441,40 +1326,24 @@ product.صورة ||
 "";
 
 const newName =
-prompt(
-"اسم المنتج:",
-oldName
-);
+prompt("اسم المنتج:",oldName);
 
 if(newName === null) return;
 
-
 const newPrice =
-prompt(
-"السعر:",
-oldPrice
-);
+prompt("السعر:",oldPrice);
 
 if(newPrice === null) return;
 
-
 const newDescription =
-prompt(
-"الوصف:",
-oldDescription
-);
+prompt("الوصف:",oldDescription);
 
 if(newDescription === null) return;
 
-
 const newImage =
-prompt(
-"رابط الصورة:",
-oldImage
-);
+prompt("رابط الصورة:",oldImage);
 
 if(newImage === null) return;
-
 
 try{
 
@@ -1489,17 +1358,13 @@ id
 {
 
 name:newName.trim(),
-
 price:Number(newPrice),
-
 description:newDescription.trim(),
-
 image:newImage.trim()
 
 }
 
 );
-
 
 alert("✅ تم تعديل المنتج.");
 
@@ -1516,10 +1381,7 @@ alert("❌ تعذر تعديل المنتج.");
 };
 
 
-
-/* =========================================
-   حذف المنتج
-========================================= */
+/* حذف المنتج */
 
 window.removeProduct = async function(id){
 
@@ -1529,7 +1391,6 @@ confirm(
 );
 
 if(!ok) return;
-
 
 try{
 
@@ -1542,7 +1403,6 @@ id
 )
 
 );
-
 
 alert("✅ تم حذف المنتج.");
 
@@ -1559,10 +1419,7 @@ alert("❌ تعذر حذف المنتج.");
 };
 
 
-
-/* =========================================
-   معاينة الصورة
-========================================= */
+/* معاينة الصورة */
 
 window.previewImage = function(){
 
@@ -1576,7 +1433,6 @@ document.getElementById("imagePreview");
 if(url){
 
 image.src = url;
-
 image.style.display = "block";
 
 }else{
@@ -1588,13 +1444,9 @@ image.style.display = "none";
 };
 
 
-
-/* =========================================
-   الطلبات
-========================================= */
+/* الطلبات */
 
 let ordersData = [];
-
 
 async function loadOrders(){
 
@@ -1610,26 +1462,18 @@ ordersBox.innerHTML =
 archiveBox.innerHTML =
 '<div class="loading">جاري تحميل الأرشيف...</div>';
 
-
 try{
 
 const q =
 query(
-
 collection(db,"orders"),
-
-orderBy(
-"createdAt",
-"desc"
-)
-
+orderBy("createdAt","desc")
 );
 
 const snapshot =
 await getDocs(q);
 
 ordersData = [];
-
 
 snapshot.forEach(orderDoc => {
 
@@ -1642,12 +1486,10 @@ id:orderDoc.id,
 
 });
 
-
 document.getElementById(
 "statOrders"
 ).textContent =
 ordersData.length;
-
 
 const active =
 ordersData.filter(
@@ -1656,14 +1498,12 @@ o =>
 !== "تم التوصيل"
 );
 
-
 const archive =
 ordersData.filter(
 o =>
 (o.status || "جديد")
 === "تم التوصيل"
 );
-
 
 document.getElementById(
 "statNew"
@@ -1674,12 +1514,10 @@ o =>
 === "جديد"
 ).length;
 
-
 document.getElementById(
 "statDone"
 ).textContent =
 archive.length;
-
 
 document.getElementById(
 "statArchive"
@@ -1687,19 +1525,24 @@ document.getElementById(
 archive.length;
 
 
+/* المبيعات الآن تعتمد على الإجمالي النهائي */
+
 const sales =
 ordersData.reduce(
 (sum,o) =>
-sum + Number(o.total || 0),
+sum +
+Number(
+o.finalTotal ??
+o.total ??
+0
+),
 0
 );
-
 
 document.getElementById(
 "statSales"
 ).textContent =
 sales + " ريال";
-
 
 renderOrders(
 active,
@@ -1707,13 +1550,11 @@ ordersBox,
 false
 );
 
-
 renderOrders(
 archive,
 archiveBox,
 true
 );
-
 
 }catch(error){
 
@@ -1730,10 +1571,7 @@ archiveBox.innerHTML =
 }
 
 
-
-/* =========================================
-   عرض الطلبات
-========================================= */
+/* عرض الطلبات */
 
 function renderOrders(
 orders,
@@ -1750,9 +1588,7 @@ return;
 
 }
 
-
 let html = "";
-
 
 orders.forEach(order => {
 
@@ -1768,19 +1604,12 @@ const phone =
 order.customerPhone ||
 "غير مسجل";
 
-
-/*
-   دعم الحي الجديد
-   مع المحافظة على العنوان القديم
-*/
-
 const district =
 order.deliveryDistrict ||
 order.district ||
 order.الحي ||
 order.customerAddress ||
 "غير مسجل";
-
 
 const notes =
 order.notes ||
@@ -1790,12 +1619,23 @@ const status =
 order.status ||
 "جديد";
 
-const total =
-Number(order.total || 0);
+const productsTotal =
+Number(
+order.total || 0
+);
 
+const deliveryFee =
+Number(
+order.deliveryFee || 0
+);
+
+const finalTotal =
+Number(
+order.finalTotal ??
+(productsTotal + deliveryFee)
+);
 
 let productsHTML = "";
-
 
 if(Array.isArray(order.products)){
 
@@ -1812,7 +1652,8 @@ productsHTML += `
 <div class="order-product">
 
 <span>
-${escapeHTML(product.name || "منتج")} × ${quantity}
+${escapeHTML(product.name || "منتج")}
+× ${quantity}
 </span>
 
 <strong>
@@ -1827,7 +1668,6 @@ ${quantity * price} ريال
 
 }
 
-
 html += `
 
 <div class="order-card">
@@ -1835,27 +1675,38 @@ html += `
 <div class="order-header">
 
 <div class="order-number">
+
 🔢 ${escapeHTML(number)}
+
 </div>
 
 <div class="badge">
+
 ${escapeHTML(status)}
+
 </div>
 
 </div>
 
 <div style="line-height:2;font-size:14px;">
 
-👤 <strong>الاسم:</strong> ${escapeHTML(name)}
+👤 <strong>الاسم:</strong>
+${escapeHTML(name)}
+
 <br>
 
-📱 <strong>الجوال:</strong> ${escapeHTML(phone)}
+📱 <strong>الجوال:</strong>
+${escapeHTML(phone)}
+
 <br>
 
-📍 <strong>الحي:</strong> ${escapeHTML(district)}
+📍 <strong>الحي:</strong>
+${escapeHTML(district)}
+
 <br>
 
-📝 <strong>الطلب:</strong> ${escapeHTML(notes)}
+📝 <strong>الطلب:</strong>
+${escapeHTML(notes)}
 
 </div>
 
@@ -1869,9 +1720,39 @@ ${productsHTML}
 
 <div class="order-total">
 
-<span>الإجمالي</span>
+<span>
+قيمة المنتجات
+</span>
 
-<span>${total} ريال</span>
+<span>
+${productsTotal} ريال
+</span>
+
+</div>
+
+<div class="delivery-box">
+
+<div>
+
+🚚 <strong>سعر التوصيل:</strong>
+
+<span class="delivery-price">
+${deliveryFee} ريال
+</span>
+
+</div>
+
+<br>
+
+<div>
+
+💰 <strong>الإجمالي النهائي:</strong>
+
+<span class="final-total">
+${finalTotal} ريال
+</span>
+
+</div>
 
 </div>
 
@@ -1882,6 +1763,22 @@ ${
 ?
 
 `
+
+<button
+class="warning"
+onclick="setDeliveryFee('${escapeJS(order.id)}')">
+
+🚚 تحديد التوصيل
+
+</button>
+
+<button
+class="success"
+onclick="sendOrderWhatsApp('${escapeJS(order.id)}')">
+
+📱 إرسال للعميل
+
+</button>
 
 <button
 class="primary"
@@ -1932,16 +1829,331 @@ onclick="deleteOrder('${escapeJS(order.id)}')">
 
 });
 
-
 box.innerHTML = html;
 
 }
 
 
+/* =========================================
+   تحديد سعر التوصيل
+========================================= */
+
+window.setDeliveryFee =
+async function(id){
+
+const order =
+ordersData.find(
+item => item.id === id
+);
+
+if(!order){
+
+alert("الطلب غير موجود.");
+
+return;
+
+}
+
+const currentFee =
+Number(
+order.deliveryFee || 0
+);
+
+const fee =
+prompt(
+"اكتب سعر التوصيل بالريال:",
+currentFee
+);
+
+if(fee === null){
+
+return;
+
+}
+
+const deliveryFee =
+Number(fee);
+
+if(
+!Number.isFinite(deliveryFee)
+||
+deliveryFee < 0
+){
+
+alert(
+"اكتب سعر توصيل صحيح."
+);
+
+return;
+
+}
+
+const productsTotal =
+Number(
+order.total || 0
+);
+
+const finalTotal =
+productsTotal +
+deliveryFee;
+
+try{
+
+await updateDoc(
+
+doc(
+db,
+"orders",
+id
+),
+
+{
+
+deliveryFee:
+deliveryFee,
+
+finalTotal:
+finalTotal
+
+}
+
+);
+
+alert(
+"✅ تم حفظ سعر التوصيل.\n\n" +
+"قيمة المنتجات: " +
+productsTotal +
+" ريال\n" +
+"التوصيل: " +
+deliveryFee +
+" ريال\n" +
+"الإجمالي النهائي: " +
+finalTotal +
+" ريال"
+);
+
+await loadOrders();
+
+}catch(error){
+
+console.error(error);
+
+alert(
+"❌ تعذر حفظ سعر التوصيل."
+);
+
+}
+
+};
+
 
 /* =========================================
-   تغيير حالة الطلب
+   إرسال الطلب للعميل واتساب
 ========================================= */
+
+window.sendOrderWhatsApp =
+async function(id){
+
+const order =
+ordersData.find(
+item => item.id === id
+);
+
+if(!order){
+
+alert("الطلب غير موجود.");
+
+return;
+
+}
+
+const phone =
+String(
+order.customerPhone || ""
+)
+.trim();
+
+if(!phone){
+
+alert(
+"❌ رقم جوال العميل غير موجود."
+);
+
+return;
+
+}
+
+const deliveryFee =
+Number(
+order.deliveryFee || 0
+);
+
+const productsTotal =
+Number(
+order.total || 0
+);
+
+const finalTotal =
+Number(
+order.finalTotal ??
+(productsTotal + deliveryFee)
+);
+
+
+/*
+   إذا لم يتم تحديد التوصيل
+   نطلب من الإدارة تحديده أولًا
+*/
+
+if(
+order.deliveryFee === undefined
+||
+order.deliveryFee === null
+){
+
+const answer =
+confirm(
+"لم يتم تحديد سعر التوصيل.\n\nهل تريد تحديده الآن؟"
+);
+
+if(answer){
+
+await setDeliveryFee(id);
+
+}
+
+return;
+
+}
+
+
+/*
+   تجهيز رقم واتساب
+*/
+
+let whatsappNumber =
+phone.replace(/\D/g,"");
+
+
+if(
+whatsappNumber.startsWith("0")
+){
+
+whatsappNumber =
+"967" +
+whatsappNumber.substring(1);
+
+}else if(
+whatsappNumber.length === 9 &&
+whatsappNumber.startsWith("7")
+){
+
+whatsappNumber =
+"967" +
+whatsappNumber;
+
+}
+
+
+/*
+   تجهيز المنتجات
+*/
+
+let productsText = "";
+
+if(Array.isArray(order.products)){
+
+order.products.forEach(product => {
+
+const quantity =
+Number(
+product.quantity || 1
+);
+
+const price =
+Number(
+product.price || 0
+);
+
+productsText +=
+"• " +
+(product.name || "منتج") +
+" × " +
+quantity +
+" = " +
+(quantity * price) +
+" ريال\n";
+
+});
+
+}
+
+
+const number =
+order.orderNumber ||
+order.id;
+
+const name =
+order.customerName ||
+"العميل";
+
+const district =
+order.deliveryDistrict ||
+order.district ||
+order.الحي ||
+order.customerAddress ||
+"غير محدد";
+
+const message =
+
+"السلام عليكم " +
+name +
+" 👋\n\n" +
+
+"📦 تفاصيل طلبك من سوق مباشر\n" +
+
+"🔢 رقم الطلب: " +
+number +
+"\n\n" +
+
+"🛒 المنتجات:\n" +
+productsText +
+
+"\n💰 قيمة المنتجات: " +
+productsTotal +
+" ريال\n" +
+
+"🚚 التوصيل: " +
+deliveryFee +
+" ريال\n" +
+
+"💵 الإجمالي النهائي: " +
+finalTotal +
+" ريال\n\n" +
+
+"📍 الحي: " +
+district +
+"\n\n" +
+
+"شكراً لطلبك من سوق مباشر ❤️";
+
+
+const url =
+"https://wa.me/" +
+whatsappNumber +
+"?text=" +
+encodeURIComponent(message);
+
+
+window.open(
+url,
+"_blank"
+);
+
+};
+
+
+/* تغيير حالة الطلب */
 
 window.changeOrderStatus =
 async function(id,status){
@@ -1962,7 +2174,9 @@ status:status
 
 );
 
-alert("✅ تم تغيير حالة الطلب.");
+alert(
+"✅ تم تغيير حالة الطلب."
+);
 
 await loadOrders();
 
@@ -1970,17 +2184,16 @@ await loadOrders();
 
 console.error(error);
 
-alert("❌ تعذر تغيير الحالة.");
+alert(
+"❌ تعذر تغيير الحالة."
+);
 
 }
 
 };
 
 
-
-/* =========================================
-   حذف طلب
-========================================= */
+/* حذف طلب */
 
 window.deleteOrder =
 async function(id){
@@ -2007,7 +2220,9 @@ id
 
 );
 
-alert("✅ تم حذف الطلب.");
+alert(
+"✅ تم حذف الطلب."
+);
 
 await loadOrders();
 
@@ -2015,35 +2230,25 @@ await loadOrders();
 
 console.error(error);
 
-alert("❌ تعذر حذف الطلب.");
+alert(
+"❌ تعذر حذف الطلب."
+);
 
 }
 
 };
 
 
-
-/* =========================================
-   التحليلات
-========================================= */
+/* التحليلات */
 
 async function loadAnalytics(){
 
 try{
 
-/*
-   قراءة أحداث المنتجات
-*/
-
 const eventsSnapshot =
 await getDocs(
 collection(db,"productEvents")
 );
-
-
-/*
-   قراءة جميع الأحداث
-*/
 
 let events = [];
 
@@ -2058,30 +2263,18 @@ id:eventDoc.id,
 
 });
 
-
-/*
-   إجمالي المشاهدات
-*/
-
 const views =
 events.filter(
 event =>
 event.type === "view"
 ).length;
 
-
 document.getElementById(
 "statViews"
 ).textContent =
 views;
 
-
-/*
-   تجميع المشاهدات
-*/
-
 const viewMap = {};
-
 
 events
 .filter(
@@ -2095,7 +2288,6 @@ event.productName ||
 event.name ||
 "منتج غير معروف";
 
-
 if(!viewMap[name]){
 
 viewMap[name] = 0;
@@ -2106,17 +2298,11 @@ viewMap[name]++;
 
 });
 
-
 const viewRanking =
 Object.entries(viewMap)
 .sort(
 (a,b) => b[1] - a[1]
 );
-
-
-/*
-   الأكثر مشاهدة
-*/
 
 if(viewRanking.length > 0){
 
@@ -2137,11 +2323,6 @@ document.getElementById(
 
 }
 
-
-/*
-   عرض ترتيب المشاهدات
-*/
-
 renderRanking(
 "viewsRanking",
 viewRanking,
@@ -2149,20 +2330,17 @@ viewRanking,
 );
 
 
-
-/*
-   المبيعات
-*/
+/* المبيعات */
 
 const salesMap = {};
-
 
 ordersData.forEach(order => {
 
 if(!Array.isArray(order.products)){
-return;
-}
 
+return;
+
+}
 
 order.products.forEach(product => {
 
@@ -2171,12 +2349,10 @@ product.name ||
 product.productName ||
 "منتج غير معروف";
 
-
 const quantity =
 Number(
 product.quantity || 1
 );
-
 
 if(!salesMap[name]){
 
@@ -2190,17 +2366,11 @@ salesMap[name] += quantity;
 
 });
 
-
 const salesRanking =
 Object.entries(salesMap)
 .sort(
 (a,b) => b[1] - a[1]
 );
-
-
-/*
-   الأكثر مبيعًا
-*/
 
 if(salesRanking.length > 0){
 
@@ -2221,11 +2391,6 @@ document.getElementById(
 
 }
 
-
-/*
-   عرض ترتيب المبيعات
-*/
-
 renderRanking(
 "salesRanking",
 salesRanking,
@@ -2233,13 +2398,9 @@ salesRanking,
 );
 
 
-
-/*
-   المناطق الأكثر طلبًا
-*/
+/* المناطق */
 
 const districtMap = {};
-
 
 ordersData.forEach(order => {
 
@@ -2253,11 +2414,11 @@ order.customerAddress ||
 )
 .trim();
 
-
 if(!district){
-return;
-}
 
+return;
+
+}
 
 if(!districtMap[district]){
 
@@ -2269,17 +2430,11 @@ districtMap[district]++;
 
 });
 
-
 const districtRanking =
 Object.entries(districtMap)
 .sort(
 (a,b) => b[1] - a[1]
 );
-
-
-/*
-   أكثر منطقة
-*/
 
 if(districtRanking.length > 0){
 
@@ -2300,17 +2455,11 @@ document.getElementById(
 
 }
 
-
-/*
-   عرض ترتيب المناطق
-*/
-
 renderRanking(
 "districtRanking",
 districtRanking,
 "طلب"
 );
-
 
 }catch(error){
 
@@ -2344,10 +2493,7 @@ document.getElementById(
 }
 
 
-
-/* =========================================
-   عرض الترتيب
-========================================= */
+/* عرض الترتيب */
 
 function renderRanking(
 elementId,
@@ -2360,7 +2506,6 @@ document.getElementById(
 elementId
 );
 
-
 if(!ranking.length){
 
 box.innerHTML =
@@ -2370,13 +2515,10 @@ return;
 
 }
 
-
 const top =
 ranking.slice(0,10);
 
-
 let html = "";
-
 
 top.forEach(
 (item,index) => {
@@ -2404,16 +2546,12 @@ ${item[1]} ${unit}
 
 });
 
-
 box.innerHTML = html;
 
 }
 
 
-
-/* =========================================
-   حماية النصوص
-========================================= */
+/* حماية النصوص */
 
 function escapeHTML(value){
 
@@ -2426,7 +2564,6 @@ return String(value ?? "")
 
 }
 
-
 function escapeAttribute(value){
 
 return String(value ?? "")
@@ -2434,7 +2571,6 @@ return String(value ?? "")
 .replace(/'/g,"%27");
 
 }
-
 
 function escapeJS(value){
 
@@ -2447,10 +2583,7 @@ return String(value ?? "")
 }
 
 
-
-/* =========================================
-   البداية
-========================================= */
+/* البداية */
 
 showSection("stats");
 
@@ -2458,4 +2591,4 @@ showSection("stats");
 
 </body>
 
-    </html>
+                      </html>
