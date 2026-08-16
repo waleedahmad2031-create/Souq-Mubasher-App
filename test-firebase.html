@@ -1,19 +1,127 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
-    authDomain: "souq-mubasher-c9d87.firebaseapp.com",
-    projectId: "souq-mubasher-c9d87",
-    storageBucket: "souq-mubasher-c9d87.firebasestorage.app",
-    messagingSenderId: "34321703167",
-    appId: "1:34321703167:web:bbea33f93d9485fc97acca"
-};
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const app = initializeApp(firebaseConfig);
+<title>اختبار Firebase | سوق مباشر</title>
 
-const db = getFirestore(app);
+<style>
 
-console.log("Firebase اشتغل بنجاح");
+*{
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
 
-export { db };
+body{
+    margin:0;
+    background:#f5f6f8;
+    padding:20px;
+}
+
+.box{
+    max-width:600px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    text-align:center;
+}
+
+h1{
+    color:#0d6efd;
+}
+
+#result{
+    margin-top:20px;
+    padding:18px;
+    border-radius:10px;
+    background:#f1f1f1;
+    line-height:1.8;
+}
+
+.success{
+    background:#d1e7dd !important;
+    color:#0f5132;
+}
+
+.error{
+    background:#f8d7da !important;
+    color:#842029;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>🔥 اختبار سوق مباشر</h1>
+
+<p>اختبار الاتصال بقاعدة بيانات Firebase</p>
+
+<div id="result">
+⏳ جاري الاختبار...
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+async function testFirebase(){
+
+    const result =
+        document.getElementById("result");
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(db,"products")
+            );
+
+        result.className = "success";
+
+        result.innerHTML = `
+            ✅ Firebase يعمل بنجاح
+            <br><br>
+            📦 عدد المنتجات:
+            <strong>${snapshot.size}</strong>
+        `;
+
+    }catch(error){
+
+        console.error(error);
+
+        result.className = "error";
+
+        result.innerHTML = `
+            ❌ حدث خطأ
+            <br><br>
+            ${error.message}
+        `;
+
+    }
+
+}
+
+testFirebase();
+
+</script>
+
+</body>
+
+    </html>
