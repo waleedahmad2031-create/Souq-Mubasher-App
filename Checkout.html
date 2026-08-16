@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>إتمام الطلب | سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#222;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:17px;
+    text-align:center;
+}
+
+header h1{
+    font-size:23px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:20px 15px;
+}
+
+.box{
+    background:white;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.box h2{
+    font-size:18px;
+    margin-bottom:16px;
+    color:#0d6efd;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+input,
+textarea{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:13px;
+    margin-bottom:14px;
+    outline:none;
+    font-size:15px;
+    background:white;
+}
+
+input:focus,
+textarea:focus{
+    border-color:#0d6efd;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.order-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+}
+
+.order-item:last-child{
+    border-bottom:none;
+}
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    border-top:1px solid #ddd;
+    margin-top:10px;
+    padding-top:14px;
+    font-size:19px;
+    font-weight:bold;
+}
+
+.confirm{
+    width:100%;
+    border:none;
+    background:#198754;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.confirm:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    color:#0d6efd;
+    text-decoration:none;
+}
+
+.empty{
+    background:white;
+    border-radius:15px;
+    padding:35px 20px;
+    text-align:center;
+    color:#777;
+}
+
+.loading{
+    text-align:center;
+    color:#777;
+    padding:15px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>📦 إتمام الطلب</h1>
+
+</header>
+
+
+<div class="container">
+
+
+<div id="empty"
+class="empty"
+style="display:none;">
+
+🛒
+
+<h3 style="margin:12px 0;">
+السلة فارغة
+</h3>
+
+<p>
+أضف منتجًا إلى السلة أولًا.
+</p>
+
+</div>
+
+
+
+<div id="content">
+
+
+<!-- بيانات العميل -->
+
+<div class="box">
+
+<h2>👤 بيانات الطلب</h2>
+
+
+<label>
+الاسم
+</label>
+
+<input
+type="text"
+id="name"
+placeholder="اكتب اسمك"
+>
+
+
+<label>
+رقم الجوال
+</label>
+
+<input
+type="tel"
+id="phone"
+placeholder="اكتب رقم الجوال"
+>
+
+
+<label>
+العنوان
+</label>
+
+<textarea
+id="address"
+placeholder="اكتب عنوان التوصيل"
+></textarea>
+
+
+<label>
+الطلب
+</label>
+
+<textarea
+id="notes"
+placeholder="اكتب طلبك"
+></textarea>
+
+</div>
+
+
+
+<!-- تفاصيل الطلب -->
+
+<div class="box">
+
+<h2>🛒 تفاصيل الطلب</h2>
+
+<div id="orderItems">
+
+<div class="loading">
+جاري تحميل الطلب...
+</div>
+
+</div>
+
+
+<div class="total">
+
+<span>
+الإجمالي
+</span>
+
+<span id="total">
+0 ريال
+</span>
+
+</div>
+
+</div>
+
+
+
+<button
+id="confirmButton"
+class="confirm"
+onclick="confirmOrder()">
+
+✅ تأكيد الطلب
+
+</button>
+
+</div>
+
+
+
+<a
+href="cart.html"
+class="back">
+
+⬅️ العودة إلى السلة
+
+</a>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+/* =========================================
+   Firebase
+========================================= */
+
+import { db } from "./firebase.js";
+
+import {
+    collection,
+    addDoc,
+    serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+/* =========================================
+   رقم واتساب الإدارة
+========================================= */
+
+const ADMIN_WHATSAPP =
+    "966550496391";
+
+
+
+/* =========================================
+   قراءة السلة
+========================================= */
+
+const cart =
+    JSON.parse(
+
+        localStorage.getItem(
+            "souqMubasherCart"
+        ) || "[]"
+
+    );
+
+
+
+/* =========================================
+   تحميل السلة
+========================================= */
+
+function loadOrder(){
+
+    const content =
+        document.getElementById(
+            "content"
+        );
+
+    const empty =
+        document.getElementById(
+            "empty"
+        );
+
+
+    if(cart.length === 0){
+
+        content.style.display =
+            "none";
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    let html = "";
+
+    let total = 0;
+
+
+    cart.forEach(item => {
+
+        const quantity =
+            Number(
+                item.quantity || 1
+            );
+
+        const price =
+            Number(
+                item.price || 0
+            );
+
+        const itemTotal =
+            price * quantity;
+
+
+        total += itemTotal;
+
+
+        html += `
+
+        <div class="order-item">
+
+            <span>
+                ${item.name}
+                ×
+                ${quantity}
+            </span>
+
+            <strong>
+                ${itemTotal} ريال
+            </strong>
+
+        </div>
+
+        `;
+
+    });
+
+
+    document.getElementById(
+        "orderItems"
+    ).innerHTML = html;
+
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        total + " ريال";
+
+}
+
+
+loadOrder();
+
+
+
+/* =========================================
+   تأكيد الطلب
+========================================= */
+
+window.confirmOrder =
+async function(){
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    const phone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const address =
+        document.getElementById(
+            "address"
+        ).value.trim();
+
+
+    const notes =
+        document.getElementById(
+            "notes"
+        ).value.trim();
+
+
+
+    /* =====================================
+       التحقق من البيانات
+    ===================================== */
+
+    if(!name){
+
+        alert(
+            "اكتب الاسم أولًا"
+        );
+
+        return;
+
+    }
+
+
+    if(!phone){
+
+        alert(
+            "اكتب رقم الجوال"
+        );
+
+        return;
+
+    }
+
+
+    if(!address){
+
+        alert(
+            "اكتب العنوان"
+        );
+
+        return;
+
+    }
+
+
+    if(!notes){
+
+        alert(
+            "اكتب الطلب"
+        );
+
+        return;
+
+    }
+
+
+    if(cart.length === 0){
+
+        alert(
+            "السلة فارغة"
+        );
+
+        return;
+
+    }
+
+
+
+    /* =====================================
+       حساب الإجمالي
+    ===================================== */
+
+    const total =
+        cart.reduce(
+
+            (sum,item) => {
+
+                return sum +
+
+                (
+                    Number(
+                        item.price || 0
+                    )
+
+                    *
+
+                    Number(
+                        item.quantity || 1
+                    )
+                );
+
+            },
+
+            0
+
+        );
+
+
+
+    /* =====================================
+       رقم الطلب
+    ===================================== */
+
+    const orderNumber =
+        Date.now()
+        .toString()
+        .slice(-6);
+
+
+
+    /* =====================================
+       تجهيز الطلب
+    ===================================== */
+
+    const order = {
+
+        orderNumber:
+            orderNumber,
+
+        customerName:
+            name,
+
+        customerPhone:
+            phone,
+
+        customerCity:
+            "غير محدد",
+
+        customerAddress:
+            address,
+
+        deliveryArea:
+            "غير محدد",
+
+        orderType:
+            "توصيل",
+
+        deliveryTime:
+            "غير محدد",
+
+        products:
+            cart,
+
+        status:
+            "جديد",
+
+        notes:
+            notes,
+
+        total:
+            total
+
+    };
+
+
+
+    /* =====================================
+       تعطيل الزر
+    ===================================== */
+
+    const button =
+        document.getElementById(
+            "confirmButton"
+        );
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ جاري إرسال الطلب...";
+
+
+
+    try{
+
+
+        /* =================================
+           حفظ الطلب في الإدارة أولًا
+        ================================= */
+
+        const docRef =
+            await addDoc(
+
+                collection(
+                    db,
+                    "orders"
+                ),
+
+                {
+
+                    ...order,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+
+
+        /* =================================
+           إنشاء رسالة واتساب
+        ================================= */
+
+        let message =
+
+`🛒 طلب جديد من سوق مباشر
+
+🔢 رقم الطلب: ${orderNumber}
+
+👤 الاسم: ${name}
+
+📱 الجوال: ${phone}
+
+📍 العنوان:
+${address}
+
+📝 الطلب:
+${notes}
+
+🛍️ المنتجات:
+`;
+
+
+
+        cart.forEach(item => {
+
+            const quantity =
+                Number(
+                    item.quantity || 1
+                );
+
+            const price =
+                Number(
+                    item.price || 0
+                );
+
+            const itemTotal =
+                price * quantity;
+
+
+            message +=
+
+`• ${item.name} × ${quantity} = ${itemTotal} ريال
+`;
+
+        });
+
+
+
+        message +=
+
+`
+💰 الإجمالي: ${total} ريال
+
+📌 الحالة: جديد
+`;
+
+
+
+        /* =================================
+           حفظ آخر طلب
+        ================================= */
+
+        localStorage.setItem(
+
+            "souqMubasherLastOrder",
+
+            JSON.stringify({
+
+                orderId:
+                    docRef.id,
+
+                ...order,
+
+                createdAt:
+                    new Date()
+                    .toISOString()
+
+            })
+
+        );
+
+
+
+        /* =================================
+           تفريغ السلة
+        ================================= */
+
+        localStorage.removeItem(
+            "souqMubasherCart"
+        );
+
+
+
+        /* =================================
+           فتح واتساب مباشرة
+           
+           بدون صفحة إضافية
+           وبدون زر إضافي
+        ================================= */
+
+        const whatsappURL =
+
+            "https://wa.me/" +
+
+            ADMIN_WHATSAPP +
+
+            "?text=" +
+
+            encodeURIComponent(
+                message
+            );
+
+
+
+        window.location.href =
+            whatsappURL;
+
+
+    }catch(error){
+
+        console.error(
+            "Firebase Error:",
+            error
+        );
+
+
+        alert(
+
+            "تعذر إرسال الطلب ❌\n\n" +
+
+            "تأكد من اتصال الإنترنت " +
+
+            "ثم حاول مرة أخرى."
+
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "✅ تأكيد الطلب";
+
+    }
+
+};
+
+</script>
+
+
+</body>
+
+</html>
