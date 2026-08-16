@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>السلة | سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#222;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:17px;
+    text-align:center;
+}
+
+header h1{
+    font-size:23px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:20px 15px;
+}
+
+.cart{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.item{
+    background:white;
+    border-radius:14px;
+    padding:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.item-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.name{
+    font-weight:bold;
+    font-size:17px;
+}
+
+.price{
+    color:#0d6efd;
+    font-weight:bold;
+}
+
+.controls{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:15px;
+}
+
+.quantity{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.quantity button{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:8px;
+    background:#e9ecef;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.remove{
+    border:none;
+    background:#dc3545;
+    color:white;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.summary{
+    background:white;
+    margin-top:20px;
+    padding:18px;
+    border-radius:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.total{
+    border-top:1px solid #ddd;
+    padding-top:12px;
+    font-size:19px;
+    font-weight:bold;
+}
+
+.checkout{
+    width:100%;
+    margin-top:15px;
+    border:none;
+    background:#198754;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    color:#0d6efd;
+    text-decoration:none;
+}
+
+.empty{
+    background:white;
+    padding:35px 20px;
+    text-align:center;
+    border-radius:15px;
+    color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🛒 سلة المشتريات</h1>
+
+</header>
+
+
+<div class="container">
+
+<div id="cart"></div>
+
+<div id="summary" style="display:none;">
+
+<div class="summary">
+
+<div class="row">
+
+<span>عدد المنتجات</span>
+
+<strong id="count">0</strong>
+
+</div>
+
+
+<div class="row">
+
+<span>المجموع</span>
+
+<strong id="subtotal">0 ريال</strong>
+
+</div>
+
+
+<div class="row total">
+
+<span>الإجمالي</span>
+
+<strong id="total">0 ريال</strong>
+
+</div>
+
+
+<button class="checkout" onclick="checkout()">
+
+✅ إتمام الطلب
+
+</button>
+
+</div>
+
+</div>
+
+
+<a href="products.html" class="back">
+
+⬅️ العودة للمنتجات
+
+</a>
+
+</div>
+
+
+<script>
+
+let cart = JSON.parse(
+localStorage.getItem("souqMubasherCart") || "[]"
+);
+
+
+function saveCart(){
+
+localStorage.setItem(
+"souqMubasherCart",
+JSON.stringify(cart)
+);
+
+}
+
+
+function renderCart(){
+
+const container =
+document.getElementById("cart");
+
+const summary =
+document.getElementById("summary");
+
+if(cart.length === 0){
+
+container.innerHTML = `
+<div class="empty">
+
+🛒
+
+<h3 style="margin:12px 0;">
+السلة فارغة
+</h3>
+
+<p>
+لم تضف أي منتج إلى السلة بعد.
+</p>
+
+</div>
+`;
+
+summary.style.display = "none";
+
+return;
+
+}
+
+
+summary.style.display = "block";
+
+let html = "";
+
+let count = 0;
+
+let total = 0;
+
+
+cart.forEach((item,index)=>{
+
+const itemTotal =
+item.price * item.quantity;
+
+count += item.quantity;
+
+total += itemTotal;
+
+
+html += `
+
+<div class="item">
+
+<div class="item-top">
+
+<div class="name">
+${item.name}
+</div>
+
+<div class="price">
+${item.price} ريال
+</div>
+
+</div>
+
+
+<div class="controls">
+
+<div class="quantity">
+
+<button onclick="changeQuantity(${index},-1)">
+−
+</button>
+
+<strong>
+${item.quantity}
+</strong>
+
+<button onclick="changeQuantity(${index},1)">
++
+</button>
+
+</div>
+
+
+<button class="remove"
+onclick="removeItem(${index})">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+container.innerHTML = html;
+
+document.getElementById("count").textContent =
+count;
+
+document.getElementById("subtotal").textContent =
+total + " ريال";
+
+document.getElementById("total").textContent =
+total + " ريال";
+
+}
+
+
+function changeQuantity(index,change){
+
+cart[index].quantity += change;
+
+
+if(cart[index].quantity <= 0){
+
+cart.splice(index,1);
+
+}
+
+
+saveCart();
+
+renderCart();
+
+}
+
+
+function removeItem(index){
+
+cart.splice(index,1);
+
+saveCart();
+
+renderCart();
+
+}
+
+
+function checkout(){
+
+if(cart.length === 0){
+
+alert("السلة فارغة");
+
+return;
+
+}
+
+
+localStorage.setItem(
+"souqMubasherOrder",
+JSON.stringify(cart)
+);
+
+window.location.href =
+"checkout.html";
+
+}
+
+
+renderCart();
+
+</script>
+
+</body>
+
+  </html>
