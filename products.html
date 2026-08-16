@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>المنتجات | سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#222;
+}
+
+/* الهيدر */
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:16px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+header h1{
+    font-size:23px;
+}
+
+header p{
+    margin-top:5px;
+    font-size:13px;
+    opacity:.9;
+}
+
+/* المحتوى */
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px 15px;
+}
+
+/* البحث */
+
+.search-box{
+    background:white;
+    padding:15px;
+    border-radius:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    margin-bottom:20px;
+}
+
+.search-box input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    outline:none;
+    font-size:15px;
+}
+
+.search-box input:focus{
+    border-color:#0d6efd;
+}
+
+/* المنتجات */
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.product{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.product-image{
+    height:150px;
+    background:#eee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+}
+
+.product-info{
+    padding:13px;
+}
+
+.product-name{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.product-description{
+    color:#777;
+    font-size:13px;
+    line-height:1.6;
+    min-height:40px;
+}
+
+.price{
+    color:#0d6efd;
+    font-size:18px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+.add-btn{
+    width:100%;
+    border:none;
+    background:#0d6efd;
+    color:white;
+    padding:11px;
+    border-radius:9px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.add-btn:active{
+    transform:scale(.98);
+}
+
+/* لا توجد منتجات */
+
+.empty{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    color:#777;
+    grid-column:1/-1;
+}
+
+/* زر الرجوع */
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:25px;
+    color:#0d6efd;
+    text-decoration:none;
+    font-size:15px;
+}
+
+/* الشاشات الصغيرة */
+
+@media(max-width:450px){
+
+    .products{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .product-image{
+        height:120px;
+    }
+
+    .product-info{
+        padding:10px;
+    }
+
+    .product-name{
+        font-size:14px;
+    }
+
+    .price{
+        font-size:16px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🛒 منتجات سوق مباشر</h1>
+
+<p>اختر المنتج الذي تبحث عنه</p>
+
+</header>
+
+
+<div class="container">
+
+<div class="search-box">
+
+<input
+type="search"
+id="search"
+placeholder="🔎 ابحث عن منتج..."
+oninput="searchProducts()"
+>
+
+</div>
+
+
+<div class="products" id="products">
+
+<!-- المنتجات التجريبية -->
+
+<div class="product" data-name="أرز">
+
+<div class="product-image">
+🍚
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+أرز
+</div>
+
+<div class="product-description">
+أرز بجودة ممتازة للاستخدام اليومي
+</div>
+
+<div class="price">
+2500 ريال
+</div>
+
+<button class="add-btn" onclick="addToCart('أرز')">
+🛒 إضافة للسلة
+</button>
+
+</div>
+
+</div>
+
+
+<div class="product" data-name="سكر">
+
+<div class="product-image">
+🍬
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+سكر
+</div>
+
+<div class="product-description">
+سكر للاستخدام المنزلي
+</div>
+
+<div class="price">
+1500 ريال
+</div>
+
+<button class="add-btn" onclick="addToCart('سكر')">
+🛒 إضافة للسلة
+</button>
+
+</div>
+
+</div>
+
+
+<div class="product" data-name="زيت">
+
+<div class="product-image">
+🫗
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+زيت طبخ
+</div>
+
+<div class="product-description">
+زيت مناسب للطبخ والاستخدام اليومي
+</div>
+
+<div class="price">
+3000 ريال
+</div>
+
+<button class="add-btn" onclick="addToCart('زيت طبخ')">
+🛒 إضافة للسلة
+</button>
+
+</div>
+
+</div>
+
+
+<div class="product" data-name="دقيق">
+
+<div class="product-image">
+🌾
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+دقيق
+</div>
+
+<div class="product-description">
+دقيق للاستخدام المنزلي والمخبوزات
+</div>
+
+<div class="price">
+2000 ريال
+</div>
+
+<button class="add-btn" onclick="addToCart('دقيق')">
+🛒 إضافة للسلة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<a href="index.html" class="back">
+⬅️ العودة للرئيسية
+</a>
+
+</div>
+
+
+<script>
+
+function addToCart(productName){
+
+const products = {
+    "أرز": {
+        name:"أرز",
+        price:2500
+    },
+
+    "سكر": {
+        name:"سكر",
+        price:1500
+    },
+
+    "زيت طبخ": {
+        name:"زيت طبخ",
+        price:3000
+    },
+
+    "دقيق": {
+        name:"دقيق",
+        price:2000
+    }
+};
+
+const product = products[productName];
+
+if(!product){
+    alert("المنتج غير موجود");
+    return;
+}
+
+let cart = JSON.parse(
+    localStorage.getItem("souqMubasherCart") || "[]"
+);
+
+const existing = cart.find(
+    item => item.name === product.name
+);
+
+if(existing){
+
+    existing.quantity += 1;
+
+}else{
+
+    cart.push({
+        name:product.name,
+        price:product.price,
+        quantity:1
+    });
+
+}
+
+localStorage.setItem(
+    "souqMubasherCart",
+    JSON.stringify(cart)
+);
+
+alert("تمت إضافة " + productName + " إلى السلة 🛒");
+
+}
+
+
+function searchProducts(){
+
+const search =
+document.getElementById("search").value
+.toLowerCase()
+.trim();
+
+const products =
+document.querySelectorAll(".product");
+
+let found = false;
+
+products.forEach(product => {
+
+const name =
+product.dataset.name.toLowerCase();
+
+if(name.includes(search)){
+
+product.style.display = "block";
+
+found = true;
+
+}else{
+
+product.style.display = "none";
+
+}
+
+});
+
+
+let empty =
+document.getElementById("empty");
+
+if(!found){
+
+if(!empty){
+
+empty = document.createElement("div");
+
+empty.id = "empty";
+
+empty.className = "empty";
+
+empty.innerText =
+"لم يتم العثور على المنتج 🔎";
+
+document.getElementById("products")
+.appendChild(empty);
+
+}
+
+}else{
+
+if(empty){
+
+empty.remove();
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
