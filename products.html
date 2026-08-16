@@ -43,6 +43,30 @@ header p{
     opacity:.9;
 }
 
+/* زر السلة */
+
+.cart-button{
+    display:block;
+    width:100%;
+    max-width:900px;
+    margin:12px auto 0;
+    padding:12px;
+    background:white;
+    color:#0d6efd;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.cart-count{
+    background:#dc3545;
+    color:white;
+    border-radius:20px;
+    padding:3px 8px;
+    margin-right:5px;
+}
+
 /* المحتوى */
 
 .container{
@@ -198,6 +222,11 @@ header p{
 
 <p>اختر المنتج الذي تبحث عنه</p>
 
+<a href="cart.html" class="cart-button">
+🛒 السلة
+<span id="cartCount" class="cart-count">0</span>
+</a>
+
 </header>
 
 
@@ -216,8 +245,6 @@ oninput="searchProducts()"
 
 
 <div class="products" id="products">
-
-<!-- المنتجات التجريبية -->
 
 <div class="product" data-name="أرز">
 
@@ -277,7 +304,7 @@ oninput="searchProducts()"
 </div>
 
 
-<div class="product" data-name="زيت">
+<div class="product" data-name="زيت طبخ">
 
 <div class="product-image">
 🫗
@@ -346,65 +373,123 @@ oninput="searchProducts()"
 
 <script>
 
+function getCart(){
+
+return JSON.parse(
+localStorage.getItem("souqMubasherCart") || "[]"
+);
+
+}
+
+
+function updateCartCount(){
+
+const cart = getCart();
+
+let count = 0;
+
+cart.forEach(item => {
+
+count += Number(
+item.quantity || 1
+);
+
+});
+
+document.getElementById(
+"cartCount"
+).textContent = count;
+
+}
+
+
 function addToCart(productName){
 
 const products = {
-    "أرز": {
-        name:"أرز",
-        price:2500
-    },
 
-    "سكر": {
-        name:"سكر",
-        price:1500
-    },
+"أرز":{
+name:"أرز",
+price:2500
+},
 
-    "زيت طبخ": {
-        name:"زيت طبخ",
-        price:3000
-    },
+"سكر":{
+name:"سكر",
+price:1500
+},
 
-    "دقيق": {
-        name:"دقيق",
-        price:2000
-    }
-};
+"زيت طبخ":{
+name:"زيت طبخ",
+price:3000
+},
 
-const product = products[productName];
-
-if(!product){
-    alert("المنتج غير موجود");
-    return;
+"دقيق":{
+name:"دقيق",
+price:2000
 }
 
-let cart = JSON.parse(
-    localStorage.getItem("souqMubasherCart") || "[]"
+};
+
+
+const product =
+products[productName];
+
+
+if(!product){
+
+alert("المنتج غير موجود");
+
+return;
+
+}
+
+
+let cart =
+getCart();
+
+
+const existing =
+cart.find(
+item => item.name === product.name
 );
 
-const existing = cart.find(
-    item => item.name === product.name
-);
 
 if(existing){
 
-    existing.quantity += 1;
+existing.quantity =
+Number(existing.quantity || 1) + 1;
 
 }else{
 
-    cart.push({
-        name:product.name,
-        price:product.price,
-        quantity:1
-    });
+cart.push({
+
+name:product.name,
+
+price:product.price,
+
+quantity:1
+
+});
 
 }
 
+
 localStorage.setItem(
-    "souqMubasherCart",
-    JSON.stringify(cart)
+
+"souqMubasherCart",
+
+JSON.stringify(cart)
+
 );
 
-alert("تمت إضافة " + productName + " إلى السلة 🛒");
+
+updateCartCount();
+
+
+alert(
+"تمت إضافة " +
+productName +
+" إلى السلة 🛒"
+);
 
 }
 
@@ -412,29 +497,37 @@ alert("تمت إضافة " + productName + " إلى السلة 🛒");
 function searchProducts(){
 
 const search =
-document.getElementById("search").value
+document.getElementById("search")
+.value
 .toLowerCase()
 .trim();
+
 
 const products =
 document.querySelectorAll(".product");
 
+
 let found = false;
+
 
 products.forEach(product => {
 
 const name =
-product.dataset.name.toLowerCase();
+product.dataset.name
+.toLowerCase();
+
 
 if(name.includes(search)){
 
-product.style.display = "block";
+product.style.display =
+"block";
 
 found = true;
 
 }else{
 
-product.style.display = "none";
+product.style.display =
+"none";
 
 }
 
@@ -444,21 +537,26 @@ product.style.display = "none";
 let empty =
 document.getElementById("empty");
 
+
 if(!found){
 
 if(!empty){
 
-empty = document.createElement("div");
+empty =
+document.createElement("div");
 
-empty.id = "empty";
+empty.id =
+"empty";
 
-empty.className = "empty";
+empty.className =
+"empty";
 
 empty.innerText =
 "لم يتم العثور على المنتج 🔎";
 
-document.getElementById("products")
-.appendChild(empty);
+document.getElementById(
+"products"
+).appendChild(empty);
 
 }
 
@@ -473,6 +571,9 @@ empty.remove();
 }
 
 }
+
+
+updateCartCount();
 
 </script>
 
