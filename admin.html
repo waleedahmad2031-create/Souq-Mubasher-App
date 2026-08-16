@@ -2,10 +2,11 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>لوحة الإدارة | سوق مباشر</title>
+<title>إدارة سوق مباشر</title>
 
 <style>
 
@@ -24,17 +25,12 @@ body{
 header{
     background:#0d6efd;
     color:white;
-    padding:18px 15px;
+    padding:18px;
     text-align:center;
 }
 
 header h1{
-    font-size:24px;
-}
-
-header p{
-    margin-top:6px;
-    font-size:13px;
+    font-size:23px;
 }
 
 .container{
@@ -47,18 +43,21 @@ header p{
     background:white;
     padding:18px;
     border-radius:15px;
+    margin-bottom:15px;
     box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+h2{
+    color:#0d6efd;
+    font-size:19px;
     margin-bottom:15px;
 }
 
-.box h2{
-    color:#0d6efd;
-    font-size:19px;
-    margin-bottom:16px;
-}
-
-.hidden{
-    display:none !important;
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+    font-size:14px;
 }
 
 input,
@@ -68,28 +67,14 @@ select{
     padding:13px;
     border:1px solid #ddd;
     border-radius:10px;
-    margin-bottom:12px;
+    margin-bottom:13px;
     font-size:15px;
     outline:none;
-    background:white;
 }
 
 textarea{
     min-height:90px;
     resize:vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-    border-color:#0d6efd;
-}
-
-label{
-    display:block;
-    font-size:14px;
-    font-weight:bold;
-    margin-bottom:6px;
 }
 
 button{
@@ -98,70 +83,6 @@ button{
     padding:12px 15px;
     font-size:15px;
     cursor:pointer;
-}
-
-.login-btn{
-    width:100%;
-    background:#0d6efd;
-    color:white;
-}
-
-.logout{
-    background:#dc3545;
-    color:white;
-    width:100%;
-    margin-top:12px;
-}
-
-.login-error{
-    color:#dc3545;
-    text-align:center;
-    margin-top:10px;
-}
-
-.nav{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin-bottom:15px;
-}
-
-.nav button{
-    background:white;
-    color:#333;
-    box-shadow:0 2px 7px rgba(0,0,0,.07);
-}
-
-.nav button.active{
-    background:#0d6efd;
-    color:white;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.stat{
-    background:white;
-    border-radius:14px;
-    padding:15px 8px;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.06);
-}
-
-.stat-number{
-    font-size:23px;
-    font-weight:bold;
-    color:#0d6efd;
-    margin-bottom:6px;
-}
-
-.stat-title{
-    font-size:12px;
-    color:#666;
 }
 
 .primary{
@@ -174,95 +95,128 @@ button{
     color:white;
 }
 
-.warning{
-    background:#ffc107;
-    color:#222;
-}
-
 .danger{
     background:#dc3545;
     color:white;
 }
 
+.warning{
+    background:#ffc107;
+    color:#222;
+}
+
 .gray{
-    background:#6c757d;
+    background:#e9ecef;
+    color:#222;
+}
+
+.login-btn{
+    width:100%;
+    background:#0d6efd;
     color:white;
-}
-
-.products-grid,
-.orders{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-
-.product-card,
-.order-card{
-    background:white;
-    border-radius:15px;
     padding:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
-.product-card{
-    display:flex;
-    gap:15px;
-    align-items:center;
-}
-
-.product-image{
-    width:90px;
-    height:90px;
-    border-radius:12px;
-    object-fit:cover;
-    background:#eee;
-    flex-shrink:0;
-}
-
-.no-image{
-    width:90px;
-    height:90px;
-    border-radius:12px;
-    background:#eee;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:35px;
-    flex-shrink:0;
-}
-
-.product-info{
-    flex:1;
-}
-
-.product-name{
-    font-weight:bold;
-    font-size:17px;
-    margin-bottom:5px;
-}
-
-.product-price{
-    color:#0d6efd;
-    font-weight:bold;
-    margin:5px 0;
-}
-
-.product-description{
-    color:#777;
-    font-size:13px;
-    line-height:1.6;
-}
-
-.actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
+.logout{
+    width:100%;
+    background:#dc3545;
+    color:white;
     margin-top:10px;
 }
 
-.actions button{
+.hidden{
+    display:none !important;
+}
+
+.error{
+    color:#dc3545;
+    text-align:center;
+    margin-top:10px;
+}
+
+.success-message{
+    color:#198754;
+    text-align:center;
+    margin-top:10px;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.menu button{
+    min-height:65px;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    font-weight:bold;
+}
+
+.menu button.active{
+    background:#0d6efd;
+    color:white;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.stat{
+    background:white;
+    padding:18px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.stat strong{
+    display:block;
+    font-size:25px;
+    color:#0d6efd;
+    margin-top:8px;
+}
+
+.product-card{
+    background:white;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.product-card img{
+    width:100%;
+    max-height:200px;
+    object-fit:contain;
+    border-radius:10px;
+    background:#f5f5f5;
+    margin-bottom:10px;
+}
+
+.product-info{
+    line-height:1.9;
+}
+
+.product-actions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.product-actions button{
     flex:1;
-    min-width:90px;
+}
+
+.order-card{
+    background:white;
+    padding:16px;
+    border-radius:15px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .order-header{
@@ -280,21 +234,16 @@ button{
 }
 
 .badge{
-    padding:6px 10px;
-    border-radius:8px;
     background:#fff3cd;
     color:#856404;
+    padding:5px 9px;
+    border-radius:8px;
     font-size:12px;
 }
 
-.info{
-    line-height:2;
-    font-size:14px;
-}
-
 .order-products{
-    margin-top:10px;
     border-top:1px solid #eee;
+    margin-top:10px;
     padding-top:10px;
 }
 
@@ -303,25 +252,46 @@ button{
     justify-content:space-between;
     padding:7px 0;
     border-bottom:1px solid #f1f1f1;
-    font-size:14px;
 }
 
 .order-total{
     display:flex;
     justify-content:space-between;
-    border-top:1px solid #ddd;
-    padding-top:10px;
-    margin-top:10px;
     font-size:18px;
     font-weight:bold;
+    border-top:1px solid #ddd;
+    margin-top:10px;
+    padding-top:10px;
+}
+
+.order-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.order-actions button{
+    flex:1;
+    min-width:110px;
+}
+
+.image-preview{
+    width:100%;
+    max-height:220px;
+    object-fit:contain;
+    background:#f5f5f5;
+    border-radius:10px;
+    margin-bottom:12px;
+    display:none;
 }
 
 .empty{
+    text-align:center;
+    padding:35px;
+    color:#777;
     background:white;
     border-radius:15px;
-    padding:35px 20px;
-    text-align:center;
-    color:#777;
 }
 
 .loading{
@@ -330,36 +300,23 @@ button{
     color:#777;
 }
 
-.image-preview{
-    width:120px;
-    height:120px;
-    object-fit:cover;
-    border-radius:12px;
-    margin-bottom:12px;
-    display:none;
+.notice{
+    background:#e7f1ff;
+    color:#084298;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    line-height:1.7;
 }
 
-.form-buttons{
-    display:flex;
-    gap:8px;
-}
-
-.form-buttons button{
-    flex:1;
-}
-
-@media(max-width:700px){
+@media(max-width:500px){
 
     .stats{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:1fr 1fr;
     }
 
-    .nav{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .product-card{
-        align-items:flex-start;
+    .menu{
+        grid-template-columns:1fr 1fr;
     }
 
 }
@@ -372,9 +329,9 @@ button{
 
 <header>
 
-<h1>🛒 سوق مباشر</h1>
+<h1>👨‍💼 إدارة سوق مباشر</h1>
 
-<p>لوحة الإدارة الشاملة</p>
+<p>لوحة التحكم الخاصة بالإدارة</p>
 
 </header>
 
@@ -382,9 +339,11 @@ button{
 <div class="container">
 
 
-<!-- تسجيل الدخول -->
+<!-- =========================
+     تسجيل الدخول
+========================= -->
 
-<div id="loginBox" class="box">
+<div id="loginSection" class="box">
 
 <h2>🔐 دخول الإدارة</h2>
 
@@ -393,7 +352,7 @@ button{
 <input
 type="email"
 id="email"
-placeholder="اكتب إيميل الإدارة"
+placeholder="إيميل الإدارة"
 >
 
 <label>كلمة المرور</label>
@@ -401,35 +360,35 @@ placeholder="اكتب إيميل الإدارة"
 <input
 type="password"
 id="password"
-placeholder="اكتب كلمة المرور"
+placeholder="كلمة المرور"
 >
 
 <button
 class="login-btn"
-id="loginButton"
 onclick="login()">
 
 🔑 دخول
 
 </button>
 
-<div id="loginError" class="login-error"></div>
+<div id="loginError" class="error"></div>
 
 </div>
 
 
-<!-- لوحة الإدارة -->
 
-<div id="adminBox" class="hidden">
+<!-- =========================
+     الإدارة
+========================= -->
+
+<div id="adminSection" class="hidden">
 
 
 <div class="box">
 
-<h2>👨‍💼 لوحة الإدارة</h2>
+<h2>👋 لوحة الإدارة</h2>
 
-<div id="adminEmail"
-style="color:#666;font-size:14px;">
-</div>
+<div id="adminEmail"></div>
 
 <button
 class="logout"
@@ -442,153 +401,192 @@ onclick="logout()">
 </div>
 
 
-<!-- التنقل -->
 
-<div class="nav">
+<!-- القائمة -->
+
+<div class="menu">
 
 <button
-id="navStats"
-class="active"
-onclick="showSection('statsSection')">
+id="statsMenu"
+onclick="showSection('stats')">
 
 📊 الإحصائيات
 
 </button>
 
 <button
-id="navProducts"
-onclick="showSection('productsSection')">
+id="ordersMenu"
+onclick="showSection('orders')">
+
+📦 الطلبات
+
+</button>
+
+<button
+id="archiveMenu"
+onclick="showSection('archive')">
+
+🗄️ الأرشيف
+
+</button>
+
+<button
+id="productsMenu"
+onclick="showSection('products')">
 
 🛍️ المنتجات
 
 </button>
 
 <button
-id="navOrders"
-onclick="showSection('ordersSection')">
+id="addMenu"
+onclick="showSection('add')">
 
-📋 الطلبات
-
-</button>
-
-<button
-id="navArchive"
-onclick="showSection('archiveSection')">
-
-🗄️ الأرشيف
+➕ إضافة منتج
 
 </button>
 
 </div>
 
 
-<!-- الإحصائيات -->
 
-<section id="statsSection">
+<!-- =========================
+     الإحصائيات
+========================= -->
+
+<div id="statsSection" class="section">
+
+<div class="box">
+
+<h2>📊 الإحصائيات</h2>
 
 <div class="stats">
 
 <div class="stat">
-
-<div
-class="stat-number"
-id="statProducts">
-0
-</div>
-
-<div class="stat-title">
 المنتجات
+<strong id="statProducts">0</strong>
 </div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-class="stat-number"
-id="statOrders">
-0
+الطلبات
+<strong id="statOrders">0</strong>
 </div>
-
-<div class="stat-title">
-كل الطلبات
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-class="stat-number"
-id="statNew">
-0
+الجديدة
+<strong id="statNew">0</strong>
 </div>
-
-<div class="stat-title">
-طلبات جديدة
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-class="stat-number"
-id="statDone">
-0
-</div>
-
-<div class="stat-title">
 تم التوصيل
+<strong id="statDone">0</strong>
 </div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-class="stat-number"
-id="statSales">
-0
-</div>
-
-<div class="stat-title">
 إجمالي المبيعات
+<strong id="statSales">0</strong>
+</div>
+
+<div class="stat">
+الأرشيف
+<strong id="statArchive">0</strong>
 </div>
 
 </div>
 
 </div>
 
-</section>
+</div>
 
 
-<!-- المنتجات -->
 
-<section
-id="productsSection"
-class="hidden">
+<!-- =========================
+     الطلبات
+========================= -->
+
+<div id="ordersSection" class="section hidden">
 
 <div class="box">
 
-<h2 id="productFormTitle">
-➕ إضافة منتج
-</h2>
+<h2>📦 الطلبات الحالية</h2>
+
+<div id="ordersList">
+
+<div class="loading">
+جاري تحميل الطلبات...
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 
-<input
-type="hidden"
-id="editProductId"
->
+
+<!-- =========================
+     الأرشيف
+========================= -->
+
+<div id="archiveSection" class="section hidden">
+
+<div class="box">
+
+<h2>🗄️ أرشيف الطلبات</h2>
+
+<div id="archiveList">
+
+<div class="loading">
+جاري تحميل الأرشيف...
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 
-<label>
-اسم المنتج
-</label>
+
+<!-- =========================
+     المنتجات
+========================= -->
+
+<div id="productsSection" class="section hidden">
+
+<div class="box">
+
+<h2>🛍️ إدارة المنتجات</h2>
+
+<div id="productsList">
+
+<div class="loading">
+جاري تحميل المنتجات...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     إضافة منتج
+========================= -->
+
+<div id="addSection" class="section hidden">
+
+<div class="box">
+
+<h2>➕ إضافة منتج جديد</h2>
+
+<div class="notice">
+اكتب بيانات المنتج ثم اضغط حفظ المنتج.
+</div>
+
+<label>اسم المنتج</label>
 
 <input
 type="text"
@@ -596,21 +594,22 @@ id="productName"
 placeholder="مثال: أرز"
 >
 
-
-<label>
-السعر
-</label>
+<label>السعر</label>
 
 <input
 type="number"
 id="productPrice"
-placeholder="السعر بالريال"
+placeholder="مثال: 2500"
 >
 
+<label>الوصف</label>
 
-<label>
-القسم
-</label>
+<textarea
+id="productDescription"
+placeholder="وصف المنتج"
+></textarea>
+
+<label>القسم</label>
 
 <select id="productCategory">
 
@@ -620,10 +619,6 @@ placeholder="السعر بالريال"
 
 <option value="خضروات وفواكه">
 خضروات وفواكه
-</option>
-
-<option value="زيوت">
-زيوت
 </option>
 
 <option value="منزلية">
@@ -636,201 +631,115 @@ placeholder="السعر بالريال"
 
 </select>
 
-
-<label>
-الوصف
-</label>
-
-<textarea
-id="productDescription"
-placeholder="وصف المنتج"
-></textarea>
-
-
-<label>
-صورة المنتج
-</label>
+<label>رابط صورة المنتج</label>
 
 <input
-type="file"
+type="text"
 id="productImage"
-accept="image/*"
-onchange="previewImage()"
+placeholder="ضع رابط الصورة هنا"
+oninput="previewImage()"
 >
-
 
 <img
 id="imagePreview"
 class="image-preview"
 >
 
-
-<div
-id="uploadStatus"
-style="font-size:13px;color:#777;margin-bottom:10px;">
-</div>
-
-
-<div class="form-buttons">
-
 <button
-class="primary"
-onclick="saveProduct()">
+class="success"
+style="width:100%;"
+onclick="addProduct()">
 
 💾 حفظ المنتج
 
 </button>
 
-<button
-class="gray"
-onclick="resetProductForm()">
-
-↩️ إلغاء
-
-</button>
+<div id="productMessage"></div>
 
 </div>
 
 </div>
 
 
-<div class="box">
-
-<h2>
-📦 المنتجات الموجودة
-</h2>
-
-<div
-id="productsList"
-class="products-grid">
-
-<div class="loading">
-⏳ جاري تحميل المنتجات...
 </div>
 
 </div>
 
-</div>
-
-</section>
-
-
-<!-- الطلبات -->
-
-<section
-id="ordersSection"
-class="hidden">
-
-<div class="box">
-
-<h2>
-📋 الطلبات الحالية
-</h2>
-
-<div
-id="ordersList"
-class="orders">
-
-<div class="loading">
-⏳ جاري تحميل الطلبات...
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- الأرشيف -->
-
-<section
-id="archiveSection"
-class="hidden">
-
-<div class="box">
-
-<h2>
-🗄️ أرشيف الطلبات
-</h2>
-
-<div
-id="archiveList"
-class="orders">
-
-<div class="loading">
-⏳ جاري تحميل الأرشيف...
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-</div>
-
-</div>
 
 
 <script type="module">
 
-import { db } from "./firebase.js";
+/* =========================================
+   Firebase
+========================================= */
 
 import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
 
+import {
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
-
-    collection,
-    getDocs,
-    addDoc,
-    updateDoc,
-    deleteDoc,
-    doc,
-    query,
-    orderBy,
-    serverTimestamp
-
+getFirestore,
+collection,
+addDoc,
+getDocs,
+doc,
+updateDoc,
+deleteDoc,
+serverTimestamp,
+query,
+orderBy
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-import {
+const firebaseConfig = {
 
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL,
-    deleteObject
+apiKey:
+"AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
 
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+authDomain:
+"souq-mubasher-c9d87.firebaseapp.com",
+
+projectId:
+"souq-mubasher-c9d87",
+
+storageBucket:
+"souq-mubasher-c9d87.firebasestorage.app",
+
+messagingSenderId:
+"34321703167",
+
+appId:
+"1:34321703167:web:bbea33f93d9485fc97acca"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
 
 
 const auth =
-getAuth();
+getAuth(app);
 
 
-const storage =
-getStorage();
+const db =
+getFirestore(app);
 
-
-let allProducts = [];
-
-let allOrders = [];
 
 
 /* =========================================
@@ -839,1534 +748,1044 @@ let allOrders = [];
 
 window.login = async function(){
 
-    const email =
-    document.getElementById("email")
-    .value.trim();
+const email =
+document.getElementById("email")
+.value.trim();
 
-    const password =
-    document.getElementById("password")
-    .value;
+const password =
+document.getElementById("password")
+.value;
 
-    const error =
-    document.getElementById("loginError");
+const error =
+document.getElementById("loginError");
 
-    const button =
-    document.getElementById("loginButton");
+error.textContent = "";
 
+if(!email){
 
-    error.textContent = "";
+error.textContent =
+"اكتب إيميل الإدارة";
 
+return;
 
-    if(!email){
+}
 
-        error.textContent =
-        "اكتب البريد الإلكتروني";
+if(!password){
 
-        return;
+error.textContent =
+"اكتب كلمة المرور";
 
-    }
+return;
 
+}
 
-    if(!password){
+try{
 
-        error.textContent =
-        "اكتب كلمة المرور";
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-        return;
+}catch(e){
 
-    }
+console.error(e);
 
+error.textContent =
+"بيانات الدخول غير صحيحة.";
 
-    button.disabled = true;
-
-    button.textContent =
-    "⏳ جاري الدخول...";
-
-
-    try{
-
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        document.getElementById(
-            "loginError"
-        ).textContent =
-        "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
-        button.disabled = false;
-
-        button.textContent =
-        "🔑 دخول";
-
-    }
+}
 
 };
 
 
+
 /* =========================================
-   حالة تسجيل الدخول
+   مراقبة الدخول
 ========================================= */
 
 onAuthStateChanged(
-    auth,
-    async user => {
+auth,
+async user => {
 
-        if(user){
+if(user){
 
-            document.getElementById(
-                "loginBox"
-            ).classList.add("hidden");
+document
+.getElementById("loginSection")
+.classList.add("hidden");
 
+document
+.getElementById("adminSection")
+.classList.remove("hidden");
 
-            document.getElementById(
-                "adminBox"
-            ).classList.remove("hidden");
+document
+.getElementById("adminEmail")
+.textContent =
+"تم تسجيل الدخول: " + user.email;
 
+await loadAll();
 
-            document.getElementById(
-                "adminEmail"
-            ).textContent =
-            "تم تسجيل الدخول: " +
-            user.email;
+}else{
 
+document
+.getElementById("loginSection")
+.classList.remove("hidden");
 
-            await loadEverything();
-
-        }else{
-
-            document.getElementById(
-                "loginBox"
-            ).classList.remove("hidden");
-
-
-            document.getElementById(
-                "adminBox"
-            ).classList.add("hidden");
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   تحميل كل البيانات
-========================================= */
-
-async function loadEverything(){
-
-    await loadProducts();
-
-    await loadOrders();
-
-    updateStats();
+document
+.getElementById("adminSection")
+.classList.add("hidden");
 
 }
 
+});
 
-/* =========================================
-   المنتجات
-========================================= */
-
-async function loadProducts(){
-
-    const box =
-    document.getElementById(
-        "productsList"
-    );
-
-
-    box.innerHTML =
-    '<div class="loading">⏳ جاري تحميل المنتجات...</div>';
-
-
-    try{
-
-        const snapshot =
-        await getDocs(
-            collection(
-                db,
-                "products"
-            )
-        );
-
-
-        allProducts = [];
-
-
-        snapshot.forEach(itemDoc => {
-
-            allProducts.push({
-
-                id:itemDoc.id,
-
-                ...itemDoc.data()
-
-            });
-
-        });
-
-
-        renderProducts();
-
-    }catch(error){
-
-        console.error(error);
-
-        box.innerHTML =
-        '<div class="empty">❌ تعذر تحميل المنتجات</div>';
-
-    }
-
-}
-
-
-/* =========================================
-   عرض المنتجات
-========================================= */
-
-function renderProducts(){
-
-    const box =
-    document.getElementById(
-        "productsList"
-    );
-
-
-    if(allProducts.length === 0){
-
-        box.innerHTML =
-        '<div class="empty">📦 لا توجد منتجات</div>';
-
-        return;
-
-    }
-
-
-    let html = "";
-
-
-    allProducts.forEach(product => {
-
-        const name =
-        product.name ||
-        product.اسم ||
-        "بدون اسم";
-
-
-        const price =
-        Number(
-            product.price ??
-            product.سعر ??
-            0
-        );
-
-
-        const description =
-        product.description ||
-        product.الوصف ||
-        "";
-
-
-        const image =
-        product.image ||
-        product.صورة ||
-        "";
-
-
-        html += `
-
-        <div class="product-card">
-
-            ${
-                image
-                ?
-                `<img
-                    src="${image}"
-                    class="product-image"
-                >`
-                :
-                `<div class="no-image">🖼️</div>`
-            }
-
-            <div class="product-info">
-
-                <div class="product-name">
-                    ${escapeHTML(name)}
-                </div>
-
-                <div class="product-price">
-                    ${price} ريال
-                </div>
-
-                <div class="product-description">
-                    ${escapeHTML(description)}
-                </div>
-
-                <div class="actions">
-
-                    <button
-                    class="warning"
-                    onclick="editProduct('${product.id}')">
-
-                    ✏️ تعديل
-
-                    </button>
-
-                    <button
-                    class="danger"
-                    onclick="deleteProduct('${product.id}')">
-
-                    🗑️ حذف
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-
-    box.innerHTML =
-    html;
-
-}
-
-
-/* =========================================
-   معاينة الصورة
-========================================= */
-
-window.previewImage =
-function(){
-
-    const file =
-    document.getElementById(
-        "productImage"
-    ).files[0];
-
-
-    const preview =
-    document.getElementById(
-        "imagePreview"
-    );
-
-
-    if(!file){
-
-        preview.style.display =
-        "none";
-
-        return;
-
-    }
-
-
-    preview.src =
-    URL.createObjectURL(file);
-
-    preview.style.display =
-    "block";
-
-};
-
-
-/* =========================================
-   حفظ المنتج
-========================================= */
-
-window.saveProduct =
-async function(){
-
-    const id =
-    document.getElementById(
-        "editProductId"
-    ).value;
-
-
-    const name =
-    document.getElementById(
-        "productName"
-    ).value.trim();
-
-
-    const price =
-    Number(
-        document.getElementById(
-            "productPrice"
-        ).value
-    );
-
-
-    const category =
-    document.getElementById(
-        "productCategory"
-    ).value;
-
-
-    const description =
-    document.getElementById(
-        "productDescription"
-    ).value.trim();
-
-
-    const imageFile =
-    document.getElementById(
-        "productImage"
-    ).files[0];
-
-
-    const status =
-    document.getElementById(
-        "uploadStatus"
-    );
-
-
-    if(!name){
-
-        alert("اكتب اسم المنتج");
-
-        return;
-
-    }
-
-
-    if(!price || price < 0){
-
-        alert("اكتب السعر");
-
-        return;
-
-    }
-
-
-    const button =
-    document.querySelector(
-        "#productsSection .primary"
-    );
-
-
-    button.disabled = true;
-
-    status.textContent =
-    "⏳ جاري حفظ المنتج...";
-
-
-    try{
-
-        let imageURL = "";
-
-
-        const oldProduct =
-        allProducts.find(
-            p => p.id === id
-        );
-
-
-        if(oldProduct){
-
-            imageURL =
-            oldProduct.image ||
-            oldProduct.صورة ||
-            "";
-
-        }
-
-
-        /* رفع صورة جديدة */
-
-        if(imageFile){
-
-            const fileName =
-            Date.now() +
-            "_" +
-            imageFile.name
-            .replace(/\s+/g,"_");
-
-
-            const storageRef =
-            ref(
-                storage,
-                "products/" +
-                fileName
-            );
-
-
-            const upload =
-            await uploadBytes(
-                storageRef,
-                imageFile
-            );
-
-
-            imageURL =
-            await getDownloadURL(
-                upload.ref
-            );
-
-        }
-
-
-        const productData = {
-
-            name:name,
-
-            price:price,
-
-            category:category,
-
-            description:description,
-
-            image:imageURL,
-
-            updatedAt:
-            serverTimestamp()
-
-        };
-
-
-        if(id){
-
-            await updateDoc(
-
-                doc(
-                    db,
-                    "products",
-                    id
-                ),
-
-                productData
-
-            );
-
-
-            alert(
-                "تم تعديل المنتج بنجاح ✅"
-            );
-
-        }else{
-
-            await addDoc(
-
-                collection(
-                    db,
-                    "products"
-                ),
-
-                {
-
-                    ...productData,
-
-                    createdAt:
-                    serverTimestamp()
-
-                }
-
-            );
-
-
-            alert(
-                "تمت إضافة المنتج بنجاح ✅"
-            );
-
-        }
-
-
-        resetProductForm();
-
-        await loadProducts();
-
-        updateStats();
-
-
-    }catch(error){
-
-        console.error(
-            "Save Product Error:",
-            error
-        );
-
-
-        alert(
-            "تعذر حفظ المنتج ❌\n\n" +
-            error.message
-        );
-
-    }
-
-
-    button.disabled = false;
-
-    status.textContent = "";
-
-};
-
-
-/* =========================================
-   تعديل المنتج
-========================================= */
-
-window.editProduct =
-function(id){
-
-    const product =
-    allProducts.find(
-        p => p.id === id
-    );
-
-
-    if(!product){
-
-        alert("المنتج غير موجود");
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "editProductId"
-    ).value =
-    product.id;
-
-
-    document.getElementById(
-        "productName"
-    ).value =
-    product.name ||
-    product.اسم ||
-    "";
-
-
-    document.getElementById(
-        "productPrice"
-    ).value =
-    product.price ??
-    product.سعر ??
-    "";
-
-
-    document.getElementById(
-        "productCategory"
-    ).value =
-    product.category ||
-    "أخرى";
-
-
-    document.getElementById(
-        "productDescription"
-    ).value =
-    product.description ||
-    product.الوصف ||
-    "";
-
-
-    const image =
-    product.image ||
-    product.صورة ||
-    "";
-
-
-    const preview =
-    document.getElementById(
-        "imagePreview"
-    );
-
-
-    if(image){
-
-        preview.src =
-        image;
-
-        preview.style.display =
-        "block";
-
-    }else{
-
-        preview.style.display =
-        "none";
-
-    }
-
-
-    document.getElementById(
-        "productFormTitle"
-    ).textContent =
-    "✏️ تعديل المنتج";
-
-
-    showSection(
-        "productsSection"
-    );
-
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
-};
-
-
-/* =========================================
-   حذف المنتج
-========================================= */
-
-window.deleteProduct =
-async function(id){
-
-    const product =
-    allProducts.find(
-        p => p.id === id
-    );
-
-
-    if(!product){
-
-        return;
-
-    }
-
-
-    const name =
-    product.name ||
-    product.اسم ||
-    "هذا المنتج";
-
-
-    if(!confirm(
-        "هل تريد حذف " +
-        name +
-        "؟"
-    )){
-
-        return;
-
-    }
-
-
-    try{
-
-        await deleteDoc(
-
-            doc(
-                db,
-                "products",
-                id
-            )
-
-        );
-
-
-        alert(
-            "تم حذف المنتج ✅"
-        );
-
-
-        await loadProducts();
-
-        updateStats();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر حذف المنتج ❌"
-        );
-
-    }
-
-};
-
-
-/* =========================================
-   إعادة نموذج المنتج
-========================================= */
-
-window.resetProductForm =
-function(){
-
-    document.getElementById(
-        "editProductId"
-    ).value = "";
-
-
-    document.getElementById(
-        "productName"
-    ).value = "";
-
-
-    document.getElementById(
-        "productPrice"
-    ).value = "";
-
-
-    document.getElementById(
-        "productDescription"
-    ).value = "";
-
-
-    document.getElementById(
-        "productCategory"
-    ).value =
-    "مواد غذائية";
-
-
-    document.getElementById(
-        "productImage"
-    ).value = "";
-
-
-    document.getElementById(
-        "imagePreview"
-    ).style.display =
-    "none";
-
-
-    document.getElementById(
-        "productFormTitle"
-    ).textContent =
-    "➕ إضافة منتج";
-
-};
-
-
-/* =========================================
-   الطلبات
-========================================= */
-
-async function loadOrders(){
-
-    const ordersList =
-    document.getElementById(
-        "ordersList"
-    );
-
-
-    const archiveList =
-    document.getElementById(
-        "archiveList"
-    );
-
-
-    ordersList.innerHTML =
-    '<div class="loading">⏳ جاري تحميل الطلبات...</div>';
-
-
-    archiveList.innerHTML =
-    '<div class="loading">⏳ جاري تحميل الأرشيف...</div>';
-
-
-    try{
-
-        const q =
-        query(
-
-            collection(
-                db,
-                "orders"
-            ),
-
-            orderBy(
-                "createdAt",
-                "desc"
-            )
-
-        );
-
-
-        const snapshot =
-        await getDocs(q);
-
-
-        allOrders = [];
-
-
-        snapshot.forEach(orderDoc => {
-
-            allOrders.push({
-
-                id:orderDoc.id,
-
-                ...orderDoc.data()
-
-            });
-
-        });
-
-
-        renderOrders();
-
-        renderArchive();
-
-    }catch(error){
-
-        console.error(error);
-
-        ordersList.innerHTML =
-        '<div class="empty">❌ تعذر تحميل الطلبات</div>';
-
-        archiveList.innerHTML =
-        '<div class="empty">❌ تعذر تحميل الأرشيف</div>';
-
-    }
-
-}
-
-
-/* =========================================
-   إنشاء بطاقة طلب
-========================================= */
-
-function orderHTML(order){
-
-    const orderNumber =
-    order.orderNumber ||
-    order.id;
-
-
-    const customerName =
-    order.customerName ||
-    "غير معروف";
-
-
-    const phone =
-    order.customerPhone ||
-    "غير مسجل";
-
-
-    const address =
-    order.customerAddress ||
-    "غير مسجل";
-
-
-    const notes =
-    order.notes ||
-    "لا توجد ملاحظات";
-
-
-    const status =
-    order.status ||
-    "جديد";
-
-
-    const total =
-    Number(
-        order.total || 0
-    );
-
-
-    let productsHTML = "";
-
-
-    if(Array.isArray(order.products)){
-
-        order.products.forEach(
-            product => {
-
-                const quantity =
-                Number(
-                    product.quantity || 1
-                );
-
-
-                const price =
-                Number(
-                    product.price || 0
-                );
-
-
-                const itemTotal =
-                quantity * price;
-
-
-                productsHTML += `
-
-                <div class="order-product">
-
-                    <span>
-                        ${escapeHTML(
-                            product.name || ""
-                        )}
-                        ×
-                        ${quantity}
-                    </span>
-
-                    <strong>
-                        ${itemTotal} ريال
-                    </strong>
-
-                </div>
-
-                `;
-
-            }
-        );
-
-    }
-
-
-    return `
-
-    <div class="order-card">
-
-        <div class="order-header">
-
-            <div class="order-number">
-                🔢 الطلب #${orderNumber}
-            </div>
-
-            <div class="badge">
-                ${escapeHTML(status)}
-            </div>
-
-        </div>
-
-
-        <div class="info">
-
-            <div>
-                👤
-                <strong>الاسم:</strong>
-                ${escapeHTML(customerName)}
-            </div>
-
-            <div>
-                📱
-                <strong>الجوال:</strong>
-                ${escapeHTML(phone)}
-            </div>
-
-            <div>
-                📍
-                <strong>العنوان:</strong>
-                ${escapeHTML(address)}
-            </div>
-
-            <div>
-                📝
-                <strong>الطلب:</strong>
-                ${escapeHTML(notes)}
-            </div>
-
-        </div>
-
-
-        <div class="order-products">
-
-            <strong>
-                🛒 المنتجات
-            </strong>
-
-            ${productsHTML}
-
-        </div>
-
-
-        <div class="order-total">
-
-            <span>
-                الإجمالي
-            </span>
-
-            <span>
-                ${total} ريال
-            </span>
-
-        </div>
-
-
-        <div class="actions">
-
-            ${
-                status !== "جديد"
-                ?
-                `<button
-                    class="warning"
-                    onclick="changeStatus(
-                        '${order.id}',
-                        'جديد'
-                    )">
-                    🟡 جديد
-                </button>`
-                :
-                ""
-            }
-
-
-            ${
-                status !== "قيد التجهيز"
-                ?
-                `<button
-                    class="primary"
-                    onclick="changeStatus(
-                        '${order.id}',
-                        'قيد التجهيز'
-                    )">
-                    🔵 قيد التجهيز
-                </button>`
-                :
-                ""
-            }
-
-
-            ${
-                status !== "تم التوصيل"
-                ?
-                `<button
-                    class="success"
-                    onclick="changeStatus(
-                        '${order.id}',
-                        'تم التوصيل'
-                    )">
-                    🟢 تم التوصيل
-                </button>`
-                :
-                ""
-            }
-
-
-            <button
-            class="whatsapp"
-            style="background:#25D366;color:white;"
-            onclick="sendOrderWhatsApp('${order.id}')">
-
-            📱 واتساب
-
-            </button>
-
-        </div>
-
-    </div>
-
-    `;
-
-}
-
-
-/* =========================================
-   عرض الطلبات الحالية
-========================================= */
-
-function renderOrders(){
-
-    const box =
-    document.getElementById(
-        "ordersList"
-    );
-
-
-    const current =
-    allOrders.filter(
-        order =>
-        (order.status || "جديد")
-        !==
-        "تم التوصيل"
-    );
-
-
-    if(current.length === 0){
-
-        box.innerHTML =
-        '<div class="empty">📭 لا توجد طلبات حالية</div>';
-
-        return;
-
-    }
-
-
-    box.innerHTML =
-    current.map(orderHTML).join("");
-
-}
-
-
-/* =========================================
-   عرض الأرشيف
-========================================= */
-
-function renderArchive(){
-
-    const box =
-    document.getElementById(
-        "archiveList"
-    );
-
-
-    const archived =
-    allOrders.filter(
-        order =>
-        order.status ===
-        "تم التوصيل"
-    );
-
-
-    if(archived.length === 0){
-
-        box.innerHTML =
-        '<div class="empty">🗄️ الأرشيف فارغ</div>';
-
-        return;
-
-    }
-
-
-    box.innerHTML =
-    archived.map(orderHTML).join("");
-
-}
-
-
-/* =========================================
-   تغيير حالة الطلب
-========================================= */
-
-window.changeStatus =
-async function(
-    id,
-    newStatus
-){
-
-    try{
-
-        await updateDoc(
-
-            doc(
-                db,
-                "orders",
-                id
-            ),
-
-            {
-                status:newStatus
-            }
-
-        );
-
-
-        await loadOrders();
-
-        updateStats();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر تغيير حالة الطلب ❌"
-        );
-
-    }
-
-};
-
-
-/* =========================================
-   واتساب الطلب
-========================================= */
-
-window.sendOrderWhatsApp =
-function(id){
-
-    const order =
-    allOrders.find(
-        item => item.id === id
-    );
-
-
-    if(!order){
-
-        return;
-
-    }
-
-
-    const orderNumber =
-    order.orderNumber ||
-    order.id;
-
-
-    const name =
-    order.customerName ||
-    "غير معروف";
-
-
-    const phone =
-    order.customerPhone ||
-    "";
-
-
-    const address =
-    order.customerAddress ||
-    "";
-
-
-    const total =
-    Number(
-        order.total || 0
-    );
-
-
-    let message =
-
-`🛒 طلب من سوق مباشر
-
-🔢 رقم الطلب: ${orderNumber}
-
-👤 الاسم: ${name}
-
-📱 الجوال: ${phone}
-
-📍 العنوان:
-${address}
-
-🛍️ المنتجات:
-`;
-
-
-    if(Array.isArray(order.products)){
-
-        order.products.forEach(
-            product => {
-
-                const quantity =
-                Number(
-                    product.quantity || 1
-                );
-
-
-                const price =
-                Number(
-                    product.price || 0
-                );
-
-
-                message +=
-
-`• ${product.name} × ${quantity} = ${quantity * price} ريال
-`;
-
-            }
-        );
-
-    }
-
-
-    message +=
-
-`
-💰 الإجمالي: ${total} ريال
-`;
-
-
-    window.open(
-
-        "https://wa.me/966550496391?text=" +
-
-        encodeURIComponent(
-            message
-        ),
-
-        "_blank"
-
-    );
-
-};
-
-
-/* =========================================
-   الإحصائيات
-========================================= */
-
-function updateStats(){
-
-    document.getElementById(
-        "statProducts"
-    ).textContent =
-    allProducts.length;
-
-
-    document.getElementById(
-        "statOrders"
-    ).textContent =
-    allOrders.length;
-
-
-    const newOrders =
-    allOrders.filter(
-        order =>
-        (order.status || "جديد")
-        ===
-        "جديد"
-    ).length;
-
-
-    const doneOrders =
-    allOrders.filter(
-        order =>
-        order.status ===
-        "تم التوصيل"
-    ).length;
-
-
-    const sales =
-    allOrders
-    .filter(
-        order =>
-        order.status ===
-        "تم التوصيل"
-    )
-    .reduce(
-        (sum,order) =>
-        sum +
-        Number(
-            order.total || 0
-        ),
-        0
-    );
-
-
-    document.getElementById(
-        "statNew"
-    ).textContent =
-    newOrders;
-
-
-    document.getElementById(
-        "statDone"
-    ).textContent =
-    doneOrders;
-
-
-    document.getElementById(
-        "statSales"
-    ).textContent =
-    sales + " ريال";
-
-}
-
-
-/* =========================================
-   التنقل
-========================================= */
-
-window.showSection =
-function(sectionId){
-
-    const sections = [
-
-        "statsSection",
-        "productsSection",
-        "ordersSection",
-        "archiveSection"
-
-    ];
-
-
-    sections.forEach(id => {
-
-        document.getElementById(
-            id
-        ).classList.add("hidden");
-
-    });
-
-
-    document.getElementById(
-        sectionId
-    ).classList.remove("hidden");
-
-
-    document.querySelectorAll(
-        ".nav button"
-    ).forEach(button => {
-
-        button.classList.remove(
-            "active"
-        );
-
-    });
-
-
-    if(sectionId === "statsSection"){
-
-        document.getElementById(
-            "navStats"
-        ).classList.add("active");
-
-    }
-
-
-    if(sectionId === "productsSection"){
-
-        document.getElementById(
-            "navProducts"
-        ).classList.add("active");
-
-    }
-
-
-    if(sectionId === "ordersSection"){
-
-        document.getElementById(
-            "navOrders"
-        ).classList.add("active");
-
-    }
-
-
-    if(sectionId === "archiveSection"){
-
-        document.getElementById(
-            "navArchive"
-        ).classList.add("active");
-
-    }
-
-};
-
-
-/* =========================================
-   حماية النصوص
-========================================= */
-
-function escapeHTML(value){
-
-    return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
 
 
 /* =========================================
    تسجيل الخروج
 ========================================= */
 
-window.logout =
-async function(){
+window.logout = async function(){
 
-    await signOut(auth);
+await signOut(auth);
 
 };
+
+
+
+/* =========================================
+   التنقل
+========================================= */
+
+window.showSection = function(section){
+
+const sections = [
+
+"stats",
+"orders",
+"archive",
+"products",
+"add"
+
+];
+
+sections.forEach(name => {
+
+document
+.getElementById(name + "Section")
+.classList.add("hidden");
+
+document
+.getElementById(name + "Menu")
+.classList.remove("active");
+
+});
+
+document
+.getElementById(section + "Section")
+.classList.remove("hidden");
+
+document
+.getElementById(section + "Menu")
+.classList.add("active");
+
+};
+
+
+
+/* =========================================
+   تحميل الكل
+========================================= */
+
+async function loadAll(){
+
+await loadProducts();
+
+await loadOrders();
+
+}
+
+
+
+/* =========================================
+   المنتجات
+========================================= */
+
+let productsData = [];
+
+
+async function loadProducts(){
+
+const box =
+document.getElementById("productsList");
+
+box.innerHTML =
+'<div class="loading">جاري تحميل المنتجات...</div>';
+
+try{
+
+const snapshot =
+await getDocs(
+collection(db,"products")
+);
+
+productsData = [];
+
+snapshot.forEach(itemDoc => {
+
+productsData.push({
+
+id:itemDoc.id,
+...itemDoc.data()
+
+});
+
+});
+
+
+document.getElementById(
+"statProducts"
+).textContent =
+productsData.length;
+
+
+if(productsData.length === 0){
+
+box.innerHTML =
+'<div class="empty">لا توجد منتجات حاليًا.</div>';
+
+return;
+
+}
+
+
+let html = "";
+
+
+productsData.forEach(product => {
+
+const name =
+product.name ||
+product.اسم ||
+"بدون اسم";
+
+const price =
+Number(
+product.price ||
+product.سعر ||
+0
+);
+
+const description =
+product.description ||
+product.الوصف ||
+"";
+
+const image =
+product.image ||
+product.صورة ||
+"";
+
+
+html += `
+
+<div class="product-card">
+
+${image ? `
+<img
+src="${image}"
+onerror="this.style.display='none'"
+>
+` : ""}
+
+<div class="product-info">
+
+<strong>
+${name}
+</strong>
+
+<br>
+
+💰 ${price} ريال
+
+<br>
+
+📝 ${description || "لا يوجد وصف"}
+
+<br>
+
+📂 ${product.category || product.القسم || "غير محدد"}
+
+</div>
+
+<div class="product-actions">
+
+<button
+class="warning"
+onclick="editProduct('${product.id}')">
+
+✏️ تعديل
+
+</button>
+
+<button
+class="danger"
+onclick="removeProduct('${product.id}')">
+
+🗑️ حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML = html;
+
+
+}catch(error){
+
+console.error(error);
+
+box.innerHTML =
+'<div class="empty">تعذر تحميل المنتجات.</div>';
+
+}
+
+}
+
+
+
+/* =========================================
+   إضافة منتج
+========================================= */
+
+window.addProduct = async function(){
+
+const name =
+document.getElementById("productName")
+.value.trim();
+
+const price =
+Number(
+document.getElementById("productPrice")
+.value
+);
+
+const description =
+document.getElementById("productDescription")
+.value.trim();
+
+const category =
+document.getElementById("productCategory")
+.value;
+
+const image =
+document.getElementById("productImage")
+.value.trim();
+
+const message =
+document.getElementById("productMessage");
+
+
+message.textContent = "";
+
+if(!name){
+
+message.innerHTML =
+'<div class="error">اكتب اسم المنتج.</div>';
+
+return;
+
+}
+
+if(!price){
+
+message.innerHTML =
+'<div class="error">اكتب السعر.</div>';
+
+return;
+
+}
+
+try{
+
+await addDoc(
+collection(db,"products"),
+{
+
+name:name,
+
+price:price,
+
+description:description,
+
+category:category,
+
+image:image,
+
+shopName:"مشتاق وليد",
+
+createdAt:
+serverTimestamp()
+
+}
+);
+
+
+message.innerHTML =
+'<div class="success-message">✅ تم إضافة المنتج بنجاح.</div>';
+
+
+document.getElementById("productName").value = "";
+
+document.getElementById("productPrice").value = "";
+
+document.getElementById("productDescription").value = "";
+
+document.getElementById("productImage").value = "";
+
+document.getElementById("imagePreview").style.display = "none";
+
+
+await loadProducts();
+
+showSection("products");
+
+
+}catch(error){
+
+console.error(error);
+
+message.innerHTML =
+'<div class="error">❌ تعذر إضافة المنتج.</div>';
+
+}
+
+};
+
+
+
+/* =========================================
+   تعديل المنتج
+========================================= */
+
+window.editProduct = async function(id){
+
+const product =
+productsData.find(p => p.id === id);
+
+if(!product){
+
+alert("المنتج غير موجود.");
+
+return;
+
+}
+
+const oldName =
+product.name ||
+product.اسم ||
+"";
+
+const oldPrice =
+product.price ||
+product.سعر ||
+"";
+
+const oldDescription =
+product.description ||
+product.الوصف ||
+"";
+
+const oldImage =
+product.image ||
+product.صورة ||
+"";
+
+const newName =
+prompt(
+"اسم المنتج:",
+oldName
+);
+
+if(newName === null) return;
+
+
+const newPrice =
+prompt(
+"السعر:",
+oldPrice
+);
+
+if(newPrice === null) return;
+
+
+const newDescription =
+prompt(
+"الوصف:",
+oldDescription
+);
+
+if(newDescription === null) return;
+
+
+const newImage =
+prompt(
+"رابط الصورة:",
+oldImage
+);
+
+if(newImage === null) return;
+
+
+try{
+
+await updateDoc(
+
+doc(
+db,
+"products",
+id
+),
+
+{
+
+name:newName.trim(),
+
+price:Number(newPrice),
+
+description:newDescription.trim(),
+
+image:newImage.trim()
+
+}
+
+);
+
+
+alert("✅ تم تعديل المنتج.");
+
+await loadProducts();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ تعذر تعديل المنتج.");
+
+}
+
+};
+
+
+
+/* =========================================
+   حذف المنتج
+========================================= */
+
+window.removeProduct = async function(id){
+
+const ok =
+confirm(
+"هل أنت متأكد من حذف هذا المنتج؟"
+);
+
+if(!ok) return;
+
+
+try{
+
+await deleteDoc(
+
+doc(
+db,
+"products",
+id
+)
+
+);
+
+
+alert("✅ تم حذف المنتج.");
+
+await loadProducts();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ تعذر حذف المنتج.");
+
+}
+
+};
+
+
+
+/* =========================================
+   معاينة الصورة
+========================================= */
+
+window.previewImage = function(){
+
+const url =
+document.getElementById("productImage")
+.value.trim();
+
+const image =
+document.getElementById("imagePreview");
+
+if(url){
+
+image.src = url;
+
+image.style.display = "block";
+
+}else{
+
+image.style.display = "none";
+
+}
+
+};
+
+
+
+/* =========================================
+   الطلبات
+========================================= */
+
+let ordersData = [];
+
+
+async function loadOrders(){
+
+const ordersBox =
+document.getElementById("ordersList");
+
+const archiveBox =
+document.getElementById("archiveList");
+
+ordersBox.innerHTML =
+'<div class="loading">جاري تحميل الطلبات...</div>';
+
+archiveBox.innerHTML =
+'<div class="loading">جاري تحميل الأرشيف...</div>';
+
+
+try{
+
+const q =
+query(
+
+collection(db,"orders"),
+
+orderBy(
+"createdAt",
+"desc"
+)
+
+);
+
+const snapshot =
+await getDocs(q);
+
+ordersData = [];
+
+
+snapshot.forEach(orderDoc => {
+
+ordersData.push({
+
+id:orderDoc.id,
+...orderDoc.data()
+
+});
+
+});
+
+
+document.getElementById(
+"statOrders"
+).textContent =
+ordersData.length;
+
+
+const active =
+ordersData.filter(
+o =>
+(o.status || "جديد")
+!== "تم التوصيل"
+);
+
+
+const archive =
+ordersData.filter(
+o =>
+(o.status || "جديد")
+=== "تم التوصيل"
+);
+
+
+document.getElementById(
+"statNew"
+).textContent =
+ordersData.filter(
+o =>
+(o.status || "جديد")
+=== "جديد"
+).length;
+
+
+document.getElementById(
+"statDone"
+).textContent =
+archive.length;
+
+
+document.getElementById(
+"statArchive"
+).textContent =
+archive.length;
+
+
+const sales =
+ordersData.reduce(
+(sum,o) =>
+sum + Number(o.total || 0),
+0
+);
+
+
+document.getElementById(
+"statSales"
+).textContent =
+sales + " ريال";
+
+
+renderOrders(
+active,
+ordersBox,
+false
+);
+
+
+renderOrders(
+archive,
+archiveBox,
+true
+);
+
+
+}catch(error){
+
+console.error(error);
+
+ordersBox.innerHTML =
+'<div class="empty">تعذر تحميل الطلبات.</div>';
+
+archiveBox.innerHTML =
+'<div class="empty">تعذر تحميل الأرشيف.</div>';
+
+}
+
+}
+
+
+
+/* =========================================
+   عرض الطلبات
+========================================= */
+
+function renderOrders(
+orders,
+box,
+isArchive
+){
+
+if(orders.length === 0){
+
+box.innerHTML =
+'<div class="empty">لا توجد طلبات هنا.</div>';
+
+return;
+
+}
+
+
+let html = "";
+
+
+orders.forEach(order => {
+
+const number =
+order.orderNumber ||
+order.id;
+
+const name =
+order.customerName ||
+"غير معروف";
+
+const phone =
+order.customerPhone ||
+"غير مسجل";
+
+const address =
+order.customerAddress ||
+"غير مسجل";
+
+const notes =
+order.notes ||
+"لا توجد ملاحظات";
+
+const status =
+order.status ||
+"جديد";
+
+const total =
+Number(order.total || 0);
+
+
+let productsHTML = "";
+
+
+if(Array.isArray(order.products)){
+
+order.products.forEach(product => {
+
+const quantity =
+Number(product.quantity || 1);
+
+const price =
+Number(product.price || 0);
+
+productsHTML += `
+
+<div class="order-product">
+
+<span>
+${product.name} × ${quantity}
+</span>
+
+<strong>
+${quantity * price} ريال
+</strong>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+html += `
+
+<div class="order-card">
+
+<div class="order-header">
+
+<div class="order-number">
+🔢 ${number}
+</div>
+
+<div class="badge">
+${status}
+</div>
+
+</div>
+
+<div style="line-height:2;font-size:14px;">
+
+👤 <strong>الاسم:</strong> ${name}
+<br>
+
+📱 <strong>الجوال:</strong> ${phone}
+<br>
+
+📍 <strong>العنوان:</strong> ${address}
+<br>
+
+📝 <strong>الطلب:</strong> ${notes}
+
+</div>
+
+<div class="order-products">
+
+<strong>🛒 المنتجات</strong>
+
+${productsHTML}
+
+</div>
+
+<div class="order-total">
+
+<span>الإجمالي</span>
+
+<span>${total} ريال</span>
+
+</div>
+
+<div class="order-actions">
+
+${
+!isArchive
+?
+
+`
+
+<button
+class="primary"
+onclick="changeOrderStatus('${order.id}','قيد التجهيز')">
+
+🔵 قيد التجهيز
+
+</button>
+
+<button
+class="success"
+onclick="changeOrderStatus('${order.id}','تم التوصيل')">
+
+🟢 تم التوصيل
+
+</button>
+
+`
+
+:
+
+`
+
+<button
+class="gray"
+onclick="changeOrderStatus('${order.id}','جديد')">
+
+↩️ إعادة للطلبات
+
+</button>
+
+`
+}
+
+<button
+class="danger"
+onclick="deleteOrder('${order.id}')">
+
+🗑️ حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML = html;
+
+}
+
+
+
+/* =========================================
+   تغيير حالة الطلب
+========================================= */
+
+window.changeOrderStatus =
+async function(id,status){
+
+try{
+
+await updateDoc(
+
+doc(
+db,
+"orders",
+id
+),
+
+{
+status:status
+}
+
+);
+
+alert("✅ تم تغيير حالة الطلب.");
+
+await loadOrders();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ تعذر تغيير الحالة.");
+
+}
+
+};
+
+
+
+/* =========================================
+   حذف طلب
+========================================= */
+
+window.deleteOrder =
+async function(id){
+
+if(
+!confirm(
+"هل تريد حذف هذا الطلب نهائيًا؟"
+)
+){
+
+return;
+
+}
+
+try{
+
+await deleteDoc(
+
+doc(
+db,
+"orders",
+id
+)
+
+);
+
+alert("✅ تم حذف الطلب.");
+
+await loadOrders();
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ تعذر حذف الطلب.");
+
+}
+
+};
+
+
+
+/* =========================================
+   البداية
+========================================= */
+
+showSection("stats");
 
 </script>
 
