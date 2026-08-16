@@ -2,24 +2,30 @@
 <html lang="ar" dir="rtl">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>اختبار الموقع | سوق مباشر</title>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>اختبار Firebase | سوق مباشر</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
 
 body{
     margin:0;
     background:#f5f6f8;
-    font-family:Tahoma,Arial,sans-serif;
-    text-align:center;
-    padding:30px 15px;
+    padding:20px;
 }
 
 .box{
-    max-width:600px;
-    margin:auto;
+    max-width:650px;
+    margin:30px auto;
     background:white;
     padding:25px;
     border-radius:15px;
@@ -28,15 +34,27 @@ body{
 
 h1{
     color:#0d6efd;
+    text-align:center;
 }
 
 #result{
     margin-top:20px;
-    padding:20px;
+    padding:18px;
     border-radius:10px;
-    background:#d1e7dd;
-    color:#0f5132;
-    font-size:18px;
+    background:#fff3cd;
+    color:#664d03;
+    line-height:2;
+    word-break:break-word;
+}
+
+.success{
+    background:#d1e7dd !important;
+    color:#0f5132 !important;
+}
+
+.error{
+    background:#f8d7da !important;
+    color:#842029 !important;
 }
 
 </style>
@@ -47,23 +65,134 @@ h1{
 
 <div class="box">
 
-<h1>🔥 سوق مباشر</h1>
+<h1>🔥 اختبار سوق مباشر</h1>
 
-<p>اختبار GitHub Pages</p>
+<p style="text-align:center;">
+اختبار الاتصال بـ Firebase و Firestore
+</p>
 
 <div id="result">
-⏳ جاري الاختبار...
+⏳ جاري اختبار Firebase...
 </div>
 
 </div>
 
-<script>
 
-document.getElementById("result").innerHTML = `
-    ✅ JavaScript يعمل بنجاح
-    <br><br>
-    الموقع المنشور يعمل بشكل صحيح.
-`;
+<script type="module">
+
+const result =
+    document.getElementById("result");
+
+
+async function testFirebase(){
+
+    try{
+
+        result.innerHTML =
+            "1️⃣ جاري تحميل firebase.js...";
+
+
+        const firebaseModule =
+            await import("./firebase.js");
+
+
+        if(!firebaseModule.db){
+
+            throw new Error(
+                "لم يتم العثور على db داخل firebase.js"
+            );
+
+        }
+
+
+        result.innerHTML =
+            "2️⃣ تم تحميل firebase.js بنجاح<br>⏳ جاري الاتصال بـ Firestore...";
+
+
+        const firestoreModule =
+            await import(
+                "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+            );
+
+
+        const {
+            collection,
+            getDocs
+        } = firestoreModule;
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    firebaseModule.db,
+                    "products"
+                )
+            );
+
+
+        result.className =
+            "success";
+
+
+        result.innerHTML = `
+
+            ✅ Firebase يعمل بنجاح
+
+            <br><br>
+
+            🔥 تم الاتصال بـ Firestore
+
+            <br>
+
+            📦 عدد المنتجات:
+            <strong>${snapshot.size}</strong>
+
+            <br><br>
+
+            🎉 المشكلة ليست في Firebase
+
+        `;
+
+
+    }catch(error){
+
+        console.error(
+            "Firebase Test Error:",
+            error
+        );
+
+
+        result.className =
+            "error";
+
+
+        result.innerHTML = `
+
+            ❌ ظهر خطأ في الاتصال
+
+            <br><br>
+
+            <strong>
+            ${error.name || "Error"}
+            </strong>
+
+            <br><br>
+
+            ${error.message || error}
+
+            <br><br>
+
+            📌 أرسل لي صورة هذه الرسالة
+            وسأصلح المشكلة.
+
+        `;
+
+    }
+
+}
+
+
+testFirebase();
 
 </script>
 
