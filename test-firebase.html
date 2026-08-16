@@ -5,29 +5,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>اختبار Firebase | سوق مباشر</title>
+<title>اختبار الموقع | سوق مباشر</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    font-family:Tahoma,Arial,sans-serif;
-}
 
 body{
     margin:0;
     background:#f5f6f8;
-    padding:20px;
+    font-family:Tahoma,Arial,sans-serif;
+    text-align:center;
+    padding:30px 15px;
 }
 
 .box{
     max-width:600px;
-    margin:40px auto;
+    margin:auto;
     background:white;
     padding:25px;
     border-radius:15px;
     box-shadow:0 2px 10px rgba(0,0,0,.08);
-    text-align:center;
 }
 
 h1{
@@ -36,20 +32,11 @@ h1{
 
 #result{
     margin-top:20px;
-    padding:18px;
+    padding:20px;
     border-radius:10px;
-    background:#f1f1f1;
-    line-height:1.8;
-}
-
-.success{
-    background:#d1e7dd !important;
+    background:#d1e7dd;
     color:#0f5132;
-}
-
-.error{
-    background:#f8d7da !important;
-    color:#842029;
+    font-size:18px;
 }
 
 </style>
@@ -60,9 +47,9 @@ h1{
 
 <div class="box">
 
-<h1>🔥 اختبار سوق مباشر</h1>
+<h1>🔥 سوق مباشر</h1>
 
-<p>اختبار الاتصال بقاعدة بيانات Firebase</p>
+<p>اختبار GitHub Pages</p>
 
 <div id="result">
 ⏳ جاري الاختبار...
@@ -70,58 +57,16 @@ h1{
 
 </div>
 
+<script>
 
-<script type="module">
-
-import { db } from "./firebase.js";
-
-import {
-    collection,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-async function testFirebase(){
-
-    const result =
-        document.getElementById("result");
-
-    try{
-
-        const snapshot =
-            await getDocs(
-                collection(db,"products")
-            );
-
-        result.className = "success";
-
-        result.innerHTML = `
-            ✅ Firebase يعمل بنجاح
-            <br><br>
-            📦 عدد المنتجات:
-            <strong>${snapshot.size}</strong>
-        `;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.className = "error";
-
-        result.innerHTML = `
-            ❌ حدث خطأ
-            <br><br>
-            ${error.message}
-        `;
-
-    }
-
-}
-
-testFirebase();
+document.getElementById("result").innerHTML = `
+    ✅ JavaScript يعمل بنجاح
+    <br><br>
+    الموقع المنشور يعمل بشكل صحيح.
+`;
 
 </script>
 
 </body>
 
-    </html>
+</html>
