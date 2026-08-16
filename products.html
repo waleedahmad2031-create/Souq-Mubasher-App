@@ -338,9 +338,7 @@ class="back">
 </div>
 
 
-
 <script type="module">
-
 
 /* =========================================
    Firebase
@@ -350,11 +348,12 @@ import { db } from "./firebase.js";
 
 import {
     collection,
-    getDocs
+    getDocs,
+    addDoc,
+    serverTimestamp
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 /* =========================================
@@ -366,11 +365,9 @@ function getCart(){
     try{
 
         return JSON.parse(
-
             localStorage.getItem(
                 "souqMubasherCart"
             ) || "[]"
-
         );
 
     }catch(error){
@@ -382,14 +379,11 @@ function getCart(){
 }
 
 
-
 function updateCartCount(){
 
-    const cart =
-        getCart();
+    const cart = getCart();
 
     let count = 0;
-
 
     cart.forEach(item => {
 
@@ -399,13 +393,11 @@ function updateCartCount(){
 
     });
 
-
     document.getElementById(
         "cartCount"
     ).textContent = count;
 
 }
-
 
 
 /* =========================================
@@ -415,6 +407,260 @@ function updateCartCount(){
 let allProducts = [];
 
 
+/* =========================================
+   إعداد المشاهدات
+========================================= */
+
+/*
+   نفس المنتج لا يحسب مرة أخرى
+   من نفس الجهاز لمدة 30 دقيقة
+*/
+
+const VIEW_COOLDOWN =
+    30 * 60 * 1000;
+
+
+/* =========================================
+   تسجيل مشاهدة المنتج
+========================================= */
+
+async function recordProductView(
+    product
+){
+
+    try{
+
+        const productId =
+            String(product.id || "");
+
+        if(!productId){
+
+            return;
+
+        }
+
+
+        const storageKey =
+            "souq_view_" + productId;
+
+
+        const lastView =
+            Number(
+                localStorage.getItem(
+                    storageKey
+                ) || 0
+            );
+
+
+        const now =
+            Date.now();
+
+
+        /*
+           منع تكرار المشاهدة
+           خلال 30 دقيقة
+        */
+
+        if(
+            lastView &&
+            now - lastView <
+            VIEW_COOLDOWN
+        ){
+
+            return;
+
+        }
+
+
+        /*
+           حفظ وقت آخر مشاهدة
+        */
+
+        localStorage.setItem(
+            storageKey,
+            String(now)
+        );
+
+
+        /*
+           تسجيل المشاهدة في Firebase
+        */
+
+        await addDoc(
+
+            collection(
+                db,
+                "productEvents"
+            ),
+
+            {
+
+                type:
+                    "view",
+
+                productId:
+                    productId,
+
+                productName:
+                    String(
+                        product.name ||
+                        product.اسم ||
+                        "منتج"
+                    ),
+
+                price:
+                    Number(
+                        product.price ??
+                        product.سعر ??
+                        0
+                    ),
+
+                category:
+                    String(
+                        product.category ||
+                        product.القسم ||
+                        ""
+                    ),
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+
+        );
+
+
+        console.log(
+            "تم تسجيل مشاهدة:",
+            product.name ||
+            product.اسم ||
+            productId
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "خطأ تسجيل المشاهدة:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   مراقبة ظهور المنتجات على الشاشة
+========================================= */
+
+function observeProductViews(){
+
+    const cards =
+        document.querySelectorAll(
+            ".product"
+        );
+
+
+    if(!cards.length){
+
+        return;
+
+    }
+
+
+    /*
+       IntersectionObserver
+       يحسب المنتج عندما يظهر
+       أمام الزائر
+    */
+
+    const observer =
+        new IntersectionObserver(
+
+            (entries, observer) => {
+
+                entries.forEach(
+                    entry => {
+
+                        if(
+                            !entry.isIntersecting
+                        ){
+
+                            return;
+
+                        }
+
+
+                        const productId =
+                            entry.target.dataset
+                            .productId;
+
+
+                        if(!productId){
+
+                            return;
+
+                        }
+
+
+                        const product =
+                            allProducts.find(
+                                item =>
+                                item.id ===
+                                productId
+                            );
+
+
+                        if(!product){
+
+                            return;
+
+                        }
+
+
+                        recordProductView(
+                            product
+                        );
+
+
+                        /*
+                           نراقب البطاقة مرة واحدة
+                           في هذه الزيارة
+                        */
+
+                        observer.unobserve(
+                            entry.target
+                        );
+
+                    }
+                );
+
+            },
+
+            {
+                threshold:0.5
+            }
+
+        );
+
+
+    cards.forEach(
+        card => {
+
+            observer.observe(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   تحميل المنتجات
+========================================= */
 
 async function loadProducts(){
 
@@ -509,7 +755,6 @@ async function loadProducts(){
     }
 
 }
-
 
 
 /* =========================================
@@ -619,6 +864,9 @@ function displayProducts(products){
 
         <div
             class="product"
+            data-product-id="${escapeAttribute(
+                product.id
+            )}"
             data-name="${escapeHTML(
                 String(name).toLowerCase()
             )}"
@@ -687,7 +935,6 @@ function displayProducts(products){
         html;
 
 
-
     /* =====================================
        أزرار إضافة للسلة
     ===================================== */
@@ -708,7 +955,8 @@ function displayProducts(products){
                     const product =
                         allProducts.find(
                             item =>
-                            item.id === productId
+                            item.id ===
+                            productId
                         );
 
 
@@ -725,8 +973,14 @@ function displayProducts(products){
 
         });
 
-}
 
+    /* =====================================
+       تشغيل مراقبة المشاهدات
+    ===================================== */
+
+    observeProductViews();
+
+}
 
 
 /* =========================================
@@ -829,7 +1083,6 @@ function addToCart(product){
 }
 
 
-
 /* =========================================
    البحث
 ========================================= */
@@ -921,7 +1174,6 @@ document.getElementById(
 );
 
 
-
 /* =========================================
    حماية النصوص
 ========================================= */
@@ -990,7 +1242,6 @@ function escapeAttribute(value){
 }
 
 
-
 /* =========================================
    تشغيل
 ========================================= */
@@ -999,7 +1250,9 @@ updateCartCount();
 
 loadProducts();
 
-</script>
+    </script>
+
+
 
 
 </body>
