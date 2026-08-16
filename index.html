@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f5f6f8;
+    color:#222;
+}
+
+/* الهيدر */
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:18px 15px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+header h1{
+    font-size:25px;
+    margin-bottom:6px;
+}
+
+header p{
+    font-size:14px;
+    opacity:.9;
+}
+
+/* المحتوى */
+
+.container{
+    max-width:600px;
+    margin:auto;
+    padding:25px 15px;
+}
+
+/* الترحيب */
+
+.welcome{
+    background:white;
+    border-radius:16px;
+    padding:25px 18px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.welcome h2{
+    color:#0d6efd;
+    margin-bottom:12px;
+}
+
+.welcome p{
+    color:#666;
+    line-height:1.8;
+}
+
+/* الأزرار */
+
+.buttons{
+    margin-top:25px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+button{
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn-main{
+    background:#0d6efd;
+    color:white;
+}
+
+.btn-secondary{
+    background:#e9ecef;
+    color:#222;
+}
+
+/* الأسفل */
+
+footer{
+    text-align:center;
+    color:#888;
+    font-size:13px;
+    margin-top:35px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🛒 سوق مباشر</h1>
+
+<p>تسوق بسهولة من مكان واحد</p>
+
+</header>
+
+
+<div class="container">
+
+<div class="welcome">
+
+<h2>أهلاً بك 👋</h2>
+
+<p>
+مرحباً بك في تطبيق سوق مباشر.
+<br>
+نحن نبني تجربة تسوق بسيطة وسهلة للجميع.
+</p>
+
+
+<div class="buttons">
+
+<button class="btn-main" onclick="startShopping()">
+🛍️ ابدأ التسوق
+</button>
+
+<button class="btn-secondary" onclick="showMessage()">
+ℹ️ عن سوق مباشر
+</button>
+
+</div>
+
+</div>
+
+
+<footer>
+
+سوق مباشر © 2026
+
+</footer>
+
+</div>
+
+
+<script>
+
+function startShopping(){
+
+alert("سيتم فتح المتجر قريباً 🛒");
+
+}
+
+function showMessage(){
+
+alert("سوق مباشر — منصة تسوق بسيطة وسهلة.");
+
+}
+
+</script>
+
+</body>
+
+</html>
