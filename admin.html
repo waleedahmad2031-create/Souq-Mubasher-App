@@ -52,6 +52,15 @@ button{border:none;border-radius:10px;padding:12px 15px;font-size:15px;cursor:po
 .account-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:15px}
 .summary-card{background:#f8f9fa;padding:15px;border-radius:12px;text-align:center;border:1px solid #eee}
 .summary-card strong{display:block;font-size:22px;margin-top:6px;color:#0d6efd}
+.shop-card{background:#fff;border:1px solid #eee;border-radius:15px;padding:15px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.shop-card-header{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:10px}
+.shop-name{font-size:18px;font-weight:bold}
+.shop-balance{font-size:20px;font-weight:bold;color:#dc3545}
+.shop-meta{line-height:2;color:#555}
+.ledger-title{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.ledger-item{background:#f8f9fa;border:1px solid #eee;border-radius:12px;padding:13px;margin-bottom:10px;line-height:2}
+.ledger-item-header{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #eee;padding-bottom:7px;margin-bottom:7px}
+.search-box{margin-bottom:12px}
 @media(max-width:600px){
 .menu{grid-template-columns:repeat(2,1fr)}
 .analytics{grid-template-columns:1fr 1fr}
@@ -212,7 +221,23 @@ button{border:none;border-radius:10px;padding:12px 15px;font-size:15px;cursor:po
 </div>
 
 <div class="box">
-<h2>📚 سجل الحسابات</h2>
+<h2>🏪 حسابات البقالات</h2>
+<div class="notice">كل بقالة لها حساب مستقل. اضغط <strong>فتح الحساب</strong> لمشاهدة إجمالي مشترياتها، المدفوع، المتبقي، وجميع عمليات البيع والسداد.</div>
+<input class="search-box" type="search" id="accountSearch" placeholder="🔎 ابحث باسم البقالة أو رقم الجوال" oninput="renderShopAccounts()">
+<div id="shopAccountsList"><div class="loading">جاري تحميل حسابات البقالات...</div></div>
+</div>
+
+<div id="shopLedgerBox" class="box hidden">
+<div class="ledger-title">
+<h2 id="ledgerShopTitle">📖 حساب البقالة</h2>
+<button class="gray" onclick="closeShopLedger()">✖️ إغلاق</button>
+</div>
+<div id="ledgerSummary"></div>
+<div id="ledgerList"><div class="loading">جاري تحميل السجل...</div></div>
+</div>
+
+<div class="box">
+<h2>📚 جميع عمليات البيع</h2>
 <div id="accountsList"><div class="loading">جاري تحميل الحسابات...</div></div>
 </div>
 
@@ -456,158 +481,329 @@ catch(error){console.error(error);alert("❌ تعذر حذف الطلب.")}
 };
 
 /* =========================
-   الحسابات: نقدي / آجل
+   الحسابات: نقدي / آجل + دفتر حساب كل بقالة
 ========================= */
 
 let accountsData=[];
+let selectedShopKey="";
 
-window.calculateAccount=function(){
-const sale=Number(document.getElementById("accountSale").value||0);
-const payment=document.getElementById("accountPayment").value;
-const paidInput=document.getElementById("accountPaid");
-
-if(payment==="نقدي"){
-paidInput.value=sale>0?sale:0;
-paidInput.disabled=true;
-}else{
-paidInput.disabled=false;
+function normalizeShopName(value){
+  return String(value||"بقالة بدون اسم").trim().replace(/\s+/g," ");
 }
 
-const paid=Number(paidInput.value||0);
-const remaining=Math.max(0,sale-paid);
-document.getElementById("accountRemaining").textContent=remaining+" ريال";
+function shopKey(account){
+  return normalizeShopName(account.shopName).toLowerCase()+"|"+String(account.phone||"").trim();
+}
+
+function accountDate(account){
+  if(account.createdAt?.seconds) return new Date(account.createdAt.seconds*1000);
+  return null;
+}
+
+function formatDate(account){
+  const d=accountDate(account);
+  if(!d) return "التاريخ غير متوفر";
+  return d.toLocaleDateString("ar-SA")+" - "+d.toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"});
+}
+
+window.calculateAccount=function(){
+  const sale=Number(document.getElementById("accountSale").value||0);
+  const payment=document.getElementById("accountPayment").value;
+  const paidInput=document.getElementById("accountPaid");
+
+  if(payment==="نقدي"){
+    paidInput.value=sale>0?sale:0;
+    paidInput.disabled=true;
+  }else{
+    paidInput.disabled=false;
+  }
+
+  const paid=Number(paidInput.value||0);
+  const remaining=Math.max(0,sale-paid);
+  document.getElementById("accountRemaining").textContent=remaining+" ريال";
 };
 
 window.saveAccount=async function(){
-const shopName=document.getElementById("accountShop").value.trim();
-const phone=document.getElementById("accountPhone").value.trim();
-const saleAmount=Number(document.getElementById("accountSale").value||0);
-const paymentMethod=document.getElementById("accountPayment").value;
-const paidAmount=Number(document.getElementById("accountPaid").value||0);
-const notes=document.getElementById("accountNotes").value.trim();
-const message=document.getElementById("accountMessage");
-message.textContent="";
+  const shopName=document.getElementById("accountShop").value.trim();
+  const phone=document.getElementById("accountPhone").value.trim();
+  const saleAmount=Number(document.getElementById("accountSale").value||0);
+  const paymentMethod=document.getElementById("accountPayment").value;
+  const paidAmount=Number(document.getElementById("accountPaid").value||0);
+  const notes=document.getElementById("accountNotes").value.trim();
+  const message=document.getElementById("accountMessage");
+  message.textContent="";
 
-if(!shopName){message.innerHTML='<div class="error">اكتب اسم البقالة.</div>';return}
-if(!saleAmount||saleAmount<=0){message.innerHTML='<div class="error">اكتب قيمة البيع.</div>';return}
-if(paidAmount<0||paidAmount>saleAmount){message.innerHTML='<div class="error">المبلغ المدفوع غير صحيح.</div>';return}
+  if(!shopName){message.innerHTML='<div class="error">اكتب اسم البقالة.</div>';return}
+  if(!saleAmount||saleAmount<=0){message.innerHTML='<div class="error">اكتب قيمة البيع.</div>';return}
+  if(paidAmount<0||paidAmount>saleAmount){message.innerHTML='<div class="error">المبلغ المدفوع غير صحيح.</div>';return}
 
-const remainingAmount=saleAmount-paidAmount;
+  const remainingAmount=saleAmount-paidAmount;
 
-try{
-await addDoc(collection(db,"accounts"),{
-shopName,
-phone,
-saleAmount,
-paymentMethod,
-paidAmount,
-remainingAmount,
-notes,
-createdAt:serverTimestamp()
-});
+  try{
+    await addDoc(collection(db,"accounts"),{
+      shopName,
+      phone,
+      saleAmount,
+      paymentMethod,
+      paidAmount,
+      remainingAmount,
+      notes,
+      createdAt:serverTimestamp()
+    });
 
-message.innerHTML='<div class="success-message">✅ تم حفظ البيع في سجل الحسابات.</div>';
+    message.innerHTML='<div class="success-message">✅ تم حفظ البيع في سجل الحسابات.</div>';
 
-document.getElementById("accountShop").value="";
-document.getElementById("accountPhone").value="";
-document.getElementById("accountSale").value="";
-document.getElementById("accountPayment").value="نقدي";
-document.getElementById("accountPaid").value="0";
-document.getElementById("accountNotes").value="";
-calculateAccount();
-await loadAccounts();
-}catch(error){
-console.error(error);
-message.innerHTML='<div class="error">❌ تعذر حفظ الحساب. تأكد من صلاحيات Firebase.</div>';
+    document.getElementById("accountShop").value="";
+    document.getElementById("accountPhone").value="";
+    document.getElementById("accountSale").value="";
+    document.getElementById("accountPayment").value="نقدي";
+    document.getElementById("accountPaid").value="0";
+    document.getElementById("accountNotes").value="";
+    calculateAccount();
+    await loadAccounts();
+  }catch(error){
+    console.error(error);
+    message.innerHTML='<div class="error">❌ تعذر حفظ الحساب. تأكد من صلاحيات Firebase.</div>';
+  }
+};
+
+function getShopGroups(){
+  const groups={};
+  accountsData.forEach(account=>{
+    const key=shopKey(account);
+    if(!groups[key]){
+      groups[key]={key,shopName:normalizeShopName(account.shopName),phone:String(account.phone||""),accounts:[]};
+    }
+    groups[key].accounts.push(account);
+  });
+  return Object.values(groups).sort((a,b)=>{
+    const ar=a.accounts.reduce((x,y)=>x+Number(y.remainingAmount??Math.max(0,Number(y.saleAmount||0)-Number(y.paidAmount||0))),0);
+    const br=b.accounts.reduce((x,y)=>x+Number(y.remainingAmount??Math.max(0,Number(y.saleAmount||0)-Number(y.paidAmount||0))),0);
+    return br-ar;
+  });
 }
+
+window.renderShopAccounts=function(){
+  const box=document.getElementById("shopAccountsList");
+  if(!box)return;
+  const search=String(document.getElementById("accountSearch")?.value||"").trim().toLowerCase();
+  let groups=getShopGroups();
+  if(search){
+    groups=groups.filter(g=>(g.shopName+" "+g.phone).toLowerCase().includes(search));
+  }
+  if(!groups.length){
+    box.innerHTML='<div class="empty">لا توجد بقالات مطابقة للبحث.</div>';
+    return;
+  }
+
+  let html="";
+  groups.forEach(g=>{
+    const totalSales=g.accounts.reduce((x,a)=>x+Number(a.saleAmount||0),0);
+    const totalPaid=g.accounts.reduce((x,a)=>x+Number(a.paidAmount||0),0);
+    const totalRemaining=g.accounts.reduce((x,a)=>x+Number(a.remainingAmount??Math.max(0,Number(a.saleAmount||0)-Number(a.paidAmount||0))),0);
+    const creditSales=g.accounts.filter(a=>a.paymentMethod==="آجل").reduce((x,a)=>x+Number(a.saleAmount||0),0);
+    const last=g.accounts.slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))[0];
+    const encoded=escapeJS(g.key);
+
+    html+=`<div class="shop-card">
+      <div class="shop-card-header">
+        <div>
+          <div class="shop-name">🏪 ${escapeHTML(g.shopName)}</div>
+          <div class="shop-meta">📱 ${escapeHTML(g.phone||"بدون رقم")}<br>🧾 ${g.accounts.length} عملية</div>
+        </div>
+        <div class="shop-balance">المتبقي<br>${totalRemaining} ريال</div>
+      </div>
+      <div class="shop-meta">
+        💰 إجمالي المشتريات: <strong>${totalSales} ريال</strong><br>
+        💵 إجمالي المدفوع: <strong class="paid">${totalPaid} ريال</strong><br>
+        🕐 مبيعات الآجل: <strong>${creditSales} ريال</strong><br>
+        🕒 آخر عملية: <strong>${last?formatDate(last):"لا توجد"}</strong>
+      </div>
+      <div class="account-actions">
+        <button class="primary" onclick="openShopLedger('${encoded}')">📖 فتح الحساب</button>
+        ${totalRemaining>0?`<button class="success" onclick="payShop('${encoded}')">💵 تسجيل سداد</button>`:"<button class="gray" disabled>✅ مسدد بالكامل</button>"}
+      </div>
+    </div>`;
+  });
+  box.innerHTML=html;
+};
+
+window.openShopLedger=function(key){
+  selectedShopKey=key;
+  const group=getShopGroups().find(g=>g.key===key);
+  if(!group){alert("الحساب غير موجود.");return;}
+
+  const box=document.getElementById("shopLedgerBox");
+  box.classList.remove("hidden");
+
+  const totalSales=group.accounts.reduce((x,a)=>x+Number(a.saleAmount||0),0);
+  const totalPaid=group.accounts.reduce((x,a)=>x+Number(a.paidAmount||0),0);
+  const totalRemaining=group.accounts.reduce((x,a)=>x+Number(a.remainingAmount??Math.max(0,Number(a.saleAmount||0)-Number(a.paidAmount||0))),0);
+
+  document.getElementById("ledgerShopTitle").textContent="📖 حساب " + group.shopName;
+  document.getElementById("ledgerSummary").innerHTML=`
+    <div class="account-summary">
+      <div class="summary-card">إجمالي المشتريات<strong>${totalSales} ريال</strong></div>
+      <div class="summary-card">إجمالي المدفوع<strong>${totalPaid} ريال</strong></div>
+      <div class="summary-card">المتبقي<strong style="color:#dc3545">${totalRemaining} ريال</strong></div>
+    </div>
+    <div class="notice">📱 رقم البقالة: <strong>${escapeHTML(group.phone||"غير مسجل")}</strong></div>`;
+
+  const ledger=document.getElementById("ledgerList");
+  const list=group.accounts.slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  let html="";
+  list.forEach(account=>{
+    const sale=Number(account.saleAmount||0);
+    const paid=Number(account.paidAmount||0);
+    const remaining=Number(account.remainingAmount??Math.max(0,sale-paid));
+    html+=`<div class="ledger-item">
+      <div class="ledger-item-header">
+        <strong>${account.paymentMethod==="آجل"?"🕐 بيع آجل":"💵 بيع نقدي"}</strong>
+        <span>${formatDate(account)}</span>
+      </div>
+      💰 قيمة البيع: <strong>${sale} ريال</strong><br>
+      💵 المدفوع: <strong class="paid">${paid} ريال</strong><br>
+      📌 المتبقي: <strong class="remaining">${remaining} ريال</strong><br>
+      📝 ${escapeHTML(account.notes||"لا توجد ملاحظات")}
+      <div class="account-actions">
+        ${remaining>0?`<button class="success" onclick="payAccount('${escapeJS(account.id)}')">💵 تسجيل سداد</button>`:"<button class="gray" disabled>✅ مسدد</button>"}
+        <button class="danger" onclick="deleteAccount('${escapeJS(account.id)}')">🗑️ حذف العملية</button>
+      </div>
+    </div>`;
+  });
+  ledger.innerHTML=html||'<div class="empty">لا توجد عمليات.</div>';
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+window.closeShopLedger=function(){
+  selectedShopKey="";
+  document.getElementById("shopLedgerBox").classList.add("hidden");
+};
+
+window.payShop=async function(key){
+  const group=getShopGroups().find(g=>g.key===key);
+  if(!group){alert("الحساب غير موجود.");return}
+  const remaining=group.accounts.reduce((x,a)=>x+Number(a.remainingAmount??Math.max(0,Number(a.saleAmount||0)-Number(a.paidAmount||0))),0);
+  if(remaining<=0){alert("هذا الحساب مسدد بالكامل.");return}
+  const amount=prompt("كم دفع صاحب البقالة الآن؟\nالمتبقي عليه: "+remaining+" ريال",remaining);
+  if(amount===null)return;
+  const payment=Number(amount);
+  if(!Number.isFinite(payment)||payment<=0||payment>remaining){alert("اكتب مبلغ سداد صحيح.");return}
+
+  let left=payment;
+  const list=group.accounts.slice().sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+  try{
+    for(const account of list){
+      if(left<=0)break;
+      const oldRemaining=Number(account.remainingAmount??Math.max(0,Number(account.saleAmount||0)-Number(account.paidAmount||0)));
+      if(oldRemaining<=0)continue;
+      const used=Math.min(left,oldRemaining);
+      const newPaid=Number(account.paidAmount||0)+used;
+      const newRemaining=oldRemaining-used;
+      await updateDoc(doc(db,"accounts",account.id),{
+        paidAmount:newPaid,
+        remainingAmount:newRemaining,
+        lastPaymentAmount:used,
+        lastPaymentAt:serverTimestamp()
+      });
+      left-=used;
+    }
+    alert("✅ تم تسجيل السداد.\nالمتبقي: "+(remaining-payment)+" ريال");
+    await loadAccounts();
+    if(selectedShopKey===key)openShopLedger(key);
+  }catch(error){console.error(error);alert("❌ تعذر تسجيل السداد.");}
 };
 
 async function loadAccounts(){
-const box=document.getElementById("accountsList");
-box.innerHTML='<div class="loading">جاري تحميل الحسابات...</div>';
-try{
-const snapshot=await getDocs(collection(db,"accounts"));
-accountsData=[];
-snapshot.forEach(accountDoc=>accountsData.push({id:accountDoc.id,...accountDoc.data()}));
+  const box=document.getElementById("accountsList");
+  box.innerHTML='<div class="loading">جاري تحميل الحسابات...</div>';
+  try{
+    const snapshot=await getDocs(collection(db,"accounts"));
+    accountsData=[];
+    snapshot.forEach(accountDoc=>accountsData.push({id:accountDoc.id,...accountDoc.data()}));
+    accountsData.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
 
-accountsData.sort((a,b)=>{
-const aTime=a.createdAt?.seconds||0,bTime=b.createdAt?.seconds||0;
-return bTime-aTime;
-});
+    let totalSales=0,totalPaid=0,totalRemaining=0,cashTotal=0,creditTotal=0;
+    accountsData.forEach(a=>{
+      const sale=Number(a.saleAmount||0),paid=Number(a.paidAmount||0),remaining=Number(a.remainingAmount??Math.max(0,sale-paid));
+      totalSales+=sale;totalPaid+=paid;totalRemaining+=remaining;
+      if(a.paymentMethod==="آجل")creditTotal+=sale;else cashTotal+=sale;
+    });
 
-let totalSales=0,totalPaid=0,totalRemaining=0,cashTotal=0,creditTotal=0;
+    document.getElementById("accountTotalSales").textContent=totalSales+" ريال";
+    document.getElementById("accountTotalPaid").textContent=totalPaid+" ريال";
+    document.getElementById("accountTotalRemaining").textContent=totalRemaining+" ريال";
+    document.getElementById("accountCashTotal").textContent=cashTotal+" ريال";
+    document.getElementById("accountCreditTotal").textContent=creditTotal+" ريال";
+    document.getElementById("accountCount").textContent=accountsData.length;
+    document.getElementById("statCredit").textContent=creditTotal+" ريال";
+    document.getElementById("statRemaining").textContent=totalRemaining+" ريال";
 
-accountsData.forEach(a=>{
-const sale=Number(a.saleAmount||0),paid=Number(a.paidAmount||0),remaining=Number(a.remainingAmount??Math.max(0,sale-paid));
-totalSales+=sale;totalPaid+=paid;totalRemaining+=remaining;
-if(a.paymentMethod==="آجل")creditTotal+=sale;else cashTotal+=sale;
-});
+    renderShopAccounts();
 
-document.getElementById("accountTotalSales").textContent=totalSales+" ريال";
-document.getElementById("accountTotalPaid").textContent=totalPaid+" ريال";
-document.getElementById("accountTotalRemaining").textContent=totalRemaining+" ريال";
-document.getElementById("accountCashTotal").textContent=cashTotal+" ريال";
-document.getElementById("accountCreditTotal").textContent=creditTotal+" ريال";
-document.getElementById("accountCount").textContent=accountsData.length;
+    if(!accountsData.length){box.innerHTML='<div class="empty">لا توجد عمليات بيع مسجلة حاليًا.</div>';return}
+    let html="";
+    accountsData.forEach(account=>{
+      const sale=Number(account.saleAmount||0),paid=Number(account.paidAmount||0),remaining=Number(account.remainingAmount??Math.max(0,sale-paid));
+      const isCredit=account.paymentMethod==="آجل";
+      html+=`<div class="account-card">
+        <div class="account-header">
+          <div><strong>🏪 ${escapeHTML(account.shopName||"بقالة بدون اسم")}</strong><br><small>${escapeHTML(account.phone||"بدون رقم")}</small></div>
+          <div class="account-type ${isCredit?"credit":"cash"}">${isCredit?"🕐 آجل":"💵 نقدي"}</div>
+        </div>
+        <div style="line-height:2">
+          📅 <strong>التاريخ:</strong> ${formatDate(account)}<br>
+          💰 <strong>قيمة البيع:</strong> ${sale} ريال<br>
+          💵 <strong>المدفوع:</strong> <span class="paid">${paid} ريال</span><br>
+          📌 <strong>المتبقي:</strong> <span class="remaining">${remaining} ريال</span><br>
+          📝 <strong>ملاحظات:</strong> ${escapeHTML(account.notes||"لا توجد ملاحظات")}
+        </div>
+        <div class="account-actions">
+          <button class="primary" onclick="openShopLedger('${escapeJS(shopKey(account))}')">📖 فتح حساب البقالة</button>
+          ${remaining>0?`<button class="success" onclick="payAccount('${escapeJS(account.id)}')">💵 سداد هذه العملية</button>`:"<button class="gray" disabled>✅ مسدد</button>"}
+          <button class="danger" onclick="deleteAccount('${escapeJS(account.id)}')">🗑️ حذف</button>
+        </div>
+      </div>`;
+    });
+    box.innerHTML=html;
 
-document.getElementById("statCredit").textContent=creditTotal+" ريال";
-document.getElementById("statRemaining").textContent=totalRemaining+" ريال";
-
-if(!accountsData.length){box.innerHTML='<div class="empty">لا توجد عمليات بيع مسجلة حاليًا.</div>';return}
-
-let html="";
-accountsData.forEach(account=>{
-const sale=Number(account.saleAmount||0);
-const paid=Number(account.paidAmount||0);
-const remaining=Number(account.remainingAmount??Math.max(0,sale-paid));
-const isCredit=account.paymentMethod==="آجل";
-html+=`<div class="account-card">
-<div class="account-header">
-<div><strong>🏪 ${escapeHTML(account.shopName||"بقالة بدون اسم")}</strong><br><small>${escapeHTML(account.phone||"بدون رقم")}</small></div>
-<div class="account-type ${isCredit?"credit":"cash"}">${isCredit?"🕐 آجل":"💵 نقدي"}</div>
-</div>
-<div style="line-height:2">
-💰 <strong>قيمة البيع:</strong> ${sale} ريال<br>
-💵 <strong>المدفوع:</strong> <span class="paid">${paid} ريال</span><br>
-📌 <strong>المتبقي:</strong> <span class="remaining">${remaining} ريال</span><br>
-📝 <strong>ملاحظات:</strong> ${escapeHTML(account.notes||"لا توجد ملاحظات")}
-</div>
-<div class="account-actions">
-${remaining>0?`<button class="success" onclick="payAccount('${escapeJS(account.id)}')">💵 تسجيل سداد</button>`:""}
-<button class="danger" onclick="deleteAccount('${escapeJS(account.id)}')">🗑️ حذف</button>
-</div>
-</div>`;
-});
-box.innerHTML=html;
-}catch(error){
-console.error("Accounts Error:",error);
-box.innerHTML='<div class="empty">❌ تعذر تحميل الحسابات.<br><small>إذا ظهر هذا الخطأ بعد إضافة الكود، تحقق من Firestore Rules.</small></div>';
-}
+    if(selectedShopKey)openShopLedger(selectedShopKey);
+  }catch(error){
+    console.error("Accounts Error:",error);
+    box.innerHTML='<div class="empty">❌ تعذر تحميل الحسابات.<br><small>تحقق من Firestore Rules.</small></div>';
+  }
 }
 
 window.payAccount=async function(id){
-const account=accountsData.find(a=>a.id===id);if(!account){alert("الحساب غير موجود.");return}
-const remaining=Number(account.remainingAmount||0);if(remaining<=0){alert("هذا الحساب مسدد بالكامل.");return}
-const amount=prompt("كم دفع صاحب البقالة الآن؟",remaining);if(amount===null)return;
-const payment=Number(amount);
-if(!Number.isFinite(payment)||payment<=0||payment>remaining){alert("اكتب مبلغ سداد صحيح.");return}
-const newPaid=Number(account.paidAmount||0)+payment;
-const newRemaining=remaining-payment;
-try{
-await updateDoc(doc(db,"accounts",id),{
-paidAmount:newPaid,
-remainingAmount:newRemaining,
-lastPaymentAt:serverTimestamp()
-});
-alert("✅ تم تسجيل السداد.\nالمتبقي: "+newRemaining+" ريال");
-await loadAccounts();
-}catch(error){console.error(error);alert("❌ تعذر تسجيل السداد.")}
+  const account=accountsData.find(a=>a.id===id);
+  if(!account){alert("الحساب غير موجود.");return}
+  const remaining=Number(account.remainingAmount??Math.max(0,Number(account.saleAmount||0)-Number(account.paidAmount||0)));
+  if(remaining<=0){alert("هذه العملية مسددة بالكامل.");return}
+  const amount=prompt("كم دفع صاحب البقالة لهذه العملية؟",remaining);
+  if(amount===null)return;
+  const payment=Number(amount);
+  if(!Number.isFinite(payment)||payment<=0||payment>remaining){alert("اكتب مبلغ سداد صحيح.");return}
+  const newPaid=Number(account.paidAmount||0)+payment;
+  const newRemaining=remaining-payment;
+  try{
+    await updateDoc(doc(db,"accounts",id),{
+      paidAmount:newPaid,
+      remainingAmount:newRemaining,
+      lastPaymentAmount:payment,
+      lastPaymentAt:serverTimestamp()
+    });
+    alert("✅ تم تسجيل السداد.\nالمتبقي: "+newRemaining+" ريال");
+    await loadAccounts();
+  }catch(error){console.error(error);alert("❌ تعذر تسجيل السداد.");}
 };
 
 window.deleteAccount=async function(id){
-if(!confirm("هل تريد حذف عملية البيع هذه من سجل الحسابات؟"))return;
-try{await deleteDoc(doc(db,"accounts",id));alert("✅ تم حذف العملية.");await loadAccounts()}
-catch(error){console.error(error);alert("❌ تعذر حذف العملية.")}
+  if(!confirm("هل تريد حذف عملية البيع هذه من سجل الحسابات؟"))return;
+  try{
+    await deleteDoc(doc(db,"accounts",id));
+    alert("✅ تم حذف العملية.");
+    await loadAccounts();
+  }catch(error){console.error(error);alert("❌ تعذر حذف العملية.");}
 };
 
 /* التحليلات */
@@ -669,4 +865,4 @@ function escapeJS(value){return String(value??"").replace(/\\/g,"\\\\").replace(
 showSection("stats");
 </script>
 </body>
-</html>
+   </html>
