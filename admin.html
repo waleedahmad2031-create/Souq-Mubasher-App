@@ -112,6 +112,7 @@ button:disabled{
     border-radius:10px;
     margin-bottom:15px;
     font-size:13px;
+    line-height:1.7;
 }
 
 </style>
@@ -160,9 +161,7 @@ placeholder="أدخل كلمة المرور"
 autocomplete="current-password"
 >
 
-<button
-id="loginButton"
-onclick="login()">
+<button id="loginButton">
 
 🔑 تسجيل الدخول
 
@@ -175,13 +174,19 @@ onclick="login()">
 
 import {
     initializeApp
-} from
+}
+from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
     getAuth,
-    signInWithEmailAndPassword
-} from
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence
+}
+from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
@@ -220,7 +225,17 @@ getAuth(app);
 
 
 /* =========================================
-   إيميلات الإدارة
+   حفظ جلسة الدخول
+========================================= */
+
+await setPersistence(
+    auth,
+    browserLocalPersistence
+);
+
+
+/* =========================================
+   حسابات الإدارة
 ========================================= */
 
 const ADMIN_EMAILS = [
@@ -255,7 +270,7 @@ document.getElementById("success");
 
 
 /* =========================================
-   خطأ
+   إظهار الخطأ
 ========================================= */
 
 function showError(message){
@@ -273,11 +288,45 @@ function showError(message){
 
 
 /* =========================================
+   فتح لوحة الإدارة
+========================================= */
+
+function openAdmin(){
+
+    successBox.textContent =
+    "تم تسجيل الدخول بنجاح ✅";
+
+    successBox.style.display =
+    "block";
+
+    loginButton.disabled =
+    true;
+
+    loginButton.textContent =
+    "⏳ فتح لوحة الإدارة...";
+
+
+    /*
+       مهم:
+       استخدام ./admin.html
+       بدل المسار المطلق
+    */
+
+    setTimeout(() => {
+
+        window.location.href =
+        "./admin.html";
+
+    }, 300);
+
+}
+
+
+/* =========================================
    تسجيل الدخول
 ========================================= */
 
-window.login =
-async function(){
+async function login(){
 
     const email =
     emailInput.value
@@ -289,9 +338,6 @@ async function(){
 
 
     errorBox.style.display =
-    "none";
-
-    successBox.style.display =
     "none";
 
 
@@ -339,41 +385,59 @@ async function(){
 
     try{
 
+        const result =
         await signInWithEmailAndPassword(
+
             auth,
+
             email,
+
             password
+
         );
 
 
-        successBox.textContent =
-        "تم تسجيل الدخول بنجاح ✅";
+        const user =
+        result.user;
 
-        successBox.style.display =
-        "block";
+
+        const loggedEmail =
+        String(
+            user.email || ""
+        )
+        .toLowerCase();
+
+
+        if(
+            !ADMIN_EMAILS.includes(
+                loggedEmail
+            )
+        ){
+
+            throw new Error(
+                "هذا الحساب ليس حساب إدارة."
+            );
+
+        }
 
 
         /*
-           نعطي Firebase لحظة
-           لحفظ جلسة الدخول
+           التأكد أن Firebase
+           حفظ المستخدم فعلاً
         */
 
-        setTimeout(
-            () => {
-
-                window.location.replace(
-                    "admin.html"
-                );
-
-            },
-            500
+        await user.getIdToken(
+            true
         );
+
+
+        openAdmin();
 
 
     }catch(error){
 
         console.error(
-            "Login Error:",
+            "Firebase Login Error:",
             error
         );
 
@@ -463,7 +527,17 @@ async function(){
 
     }
 
-};
+}
+
+
+/* =========================================
+   زر الدخول
+========================================= */
+
+loginButton.addEventListener(
+    "click",
+    login
+);
 
 
 /* =========================================
@@ -483,6 +557,48 @@ passwordInput.addEventListener(
         }
 
     }
+);
+
+
+/* =========================================
+   مراقبة جلسة Firebase
+========================================= */
+
+onAuthStateChanged(
+
+    auth,
+
+    user => {
+
+        if(!user){
+
+            return;
+
+        }
+
+
+        const email =
+        String(
+            user.email || ""
+        )
+        .toLowerCase();
+
+
+        if(
+            ADMIN_EMAILS.includes(email)
+        ){
+
+            /*
+               إذا كان المستخدم
+               مسجلًا مسبقًا
+            */
+
+            openAdmin();
+
+        }
+
+    }
+
 );
 
 </script>
