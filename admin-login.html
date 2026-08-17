@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تسجيل دخول الإدارة | سوق مباشر</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#f5f6f8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.box{
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:30px 25px;
+    border-radius:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+.logo{
+    text-align:center;
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+h1{
+    text-align:center;
+    color:#0d6efd;
+    font-size:23px;
+}
+
+p{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin:8px 0 25px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#0d6efd;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:disabled{
+    background:#999;
+}
+
+.message{
+    display:none;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.error{
+    background:#f8d7da;
+    color:#842029;
+}
+
+.success{
+    background:#d1e7dd;
+    color:#0f5132;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="logo">🔐</div>
+
+<h1>إدارة سوق مباشر</h1>
+
+<p>تسجيل الدخول إلى لوحة الإدارة</p>
+
+<div id="message" class="message"></div>
+
+<label>البريد الإلكتروني</label>
+
+<input
+id="email"
+type="email"
+placeholder="أدخل بريد الإدارة"
+autocomplete="username"
+>
+
+<label>كلمة المرور</label>
+
+<input
+id="password"
+type="password"
+placeholder="أدخل كلمة المرور"
+autocomplete="current-password"
+>
+
+<button id="loginButton">
+🔑 تسجيل الدخول
+</button>
+
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
+
+    authDomain:
+    "souq-mubasher-c9d87.firebaseapp.com",
+
+    projectId:
+    "souq-mubasher-c9d87",
+
+    storageBucket:
+    "souq-mubasher-c9d87.firebasestorage.app",
+
+    messagingSenderId:
+    "34321703167",
+
+    appId:
+    "1:34321703167:web:bbea33f93d9485fc97acca"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+await setPersistence(
+    auth,
+    browserLocalPersistence
+);
+
+
+const ADMIN_EMAILS = [
+
+    "waleedahmad@gmail.com",
+    "waleedahmadahmad@gmail.com",
+    "waleedahmad2031@gmail.com"
+
+];
+
+
+const email =
+document.getElementById("email");
+
+const password =
+document.getElementById("password");
+
+const button =
+document.getElementById("loginButton");
+
+const message =
+document.getElementById("message");
+
+
+function showMessage(text,type){
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+    message.style.display =
+        "block";
+
+}
+
+
+async function login(){
+
+    const emailValue =
+        email.value.trim().toLowerCase();
+
+    const passwordValue =
+        password.value;
+
+
+    message.style.display =
+        "none";
+
+
+    if(!emailValue){
+
+        showMessage(
+            "اكتب البريد الإلكتروني.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!passwordValue){
+
+        showMessage(
+            "اكتب كلمة المرور.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!ADMIN_EMAILS.includes(emailValue)){
+
+        showMessage(
+            "هذا البريد غير مسموح له بدخول الإدارة.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ جاري تسجيل الدخول...";
+
+
+    try{
+
+        const result =
+            await signInWithEmailAndPassword(
+                auth,
+                emailValue,
+                passwordValue
+            );
+
+
+        const user =
+            result.user;
+
+
+        const loggedEmail =
+            String(user.email || "")
+            .toLowerCase();
+
+
+        if(!ADMIN_EMAILS.includes(loggedEmail)){
+
+            throw new Error(
+                "هذا الحساب ليس حساب إدارة."
+            );
+
+        }
+
+
+        showMessage(
+            "تم تسجيل الدخول بنجاح ✅",
+            "success"
+        );
+
+
+        /*
+          ننتقل مباشرة إلى لوحة الإدارة
+        */
+
+        window.location.href =
+            "admin.html";
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        let text =
+            "تعذر تسجيل الدخول.";
+
+
+        if(error.code === "auth/invalid-credential"){
+
+            text =
+                "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+        }
+
+        else if(error.code === "auth/user-not-found"){
+
+            text =
+                "هذا البريد غير موجود في Firebase Authentication.";
+
+        }
+
+        else if(error.code === "auth/wrong-password"){
+
+            text =
+                "كلمة المرور غير صحيحة.";
+
+        }
+
+        else if(error.code === "auth/invalid-email"){
+
+            text =
+                "البريد الإلكتروني غير صحيح.";
+
+        }
+
+        else if(error.code === "auth/too-many-requests"){
+
+            text =
+                "تمت محاولات كثيرة. حاول بعد قليل.";
+
+        }
+
+        else if(error.code === "auth/network-request-failed"){
+
+            text =
+                "تعذر الاتصال بالإنترنت.";
+
+        }
+
+
+        showMessage(
+            text,
+            "error"
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "🔑 تسجيل الدخول";
+
+    }
+
+}
+
+
+button.addEventListener(
+    "click",
+    login
+);
+
+
+password.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            login();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
