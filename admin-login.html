@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>تسجيل دخول الإدارة | سوق مباشر</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#f5f6f8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.login-box{
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.10);
+}
+
+.logo{
+    text-align:center;
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+h1{
+    text-align:center;
+    color:#0d6efd;
+    font-size:23px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+    font-size:14px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#0d6efd;
+}
+
+button{
+    width:100%;
+    border:none;
+    background:#0d6efd;
+    color:white;
+    padding:14px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:disabled{
+    background:#999;
+}
+
+.error{
+    display:none;
+    background:#f8d7da;
+    color:#842029;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.success{
+    display:none;
+    background:#d1e7dd;
+    color:#0f5132;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+<div class="logo">
+🔐
+</div>
+
+<h1>
+إدارة سوق مباشر
+</h1>
+
+<div class="subtitle">
+تسجيل الدخول إلى لوحة الإدارة
+</div>
+
+
+<div
+id="error"
+class="error">
+</div>
+
+
+<div
+id="success"
+class="success">
+</div>
+
+
+<label>
+البريد الإلكتروني
+</label>
+
+<input
+type="email"
+id="email"
+placeholder="أدخل بريد الإدارة"
+autocomplete="username"
+>
+
+
+<label>
+كلمة المرور
+</label>
+
+<input
+type="password"
+id="password"
+placeholder="أدخل كلمة المرور"
+autocomplete="current-password"
+>
+
+
+<button
+id="loginButton"
+onclick="login()">
+
+🔑 تسجيل الدخول
+
+</button>
+
+</div>
+
+
+<script type="module">
+
+import {
+
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+    initializeApp
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
+
+    authDomain:
+    "souq-mubasher-c9d87.firebaseapp.com",
+
+    projectId:
+    "souq-mubasher-c9d87",
+
+    storageBucket:
+    "souq-mubasher-c9d87.firebasestorage.app",
+
+    messagingSenderId:
+    "34321703167",
+
+    appId:
+    "1:34321703167:web:bbea33f93d9485fc97acca"
+
+};
+
+
+const app =
+initializeApp(
+    firebaseConfig
+);
+
+
+const auth =
+getAuth(app);
+
+
+/* =========================================
+   إيميلات الإدارة المسموح بها
+========================================= */
+
+const ADMIN_EMAILS = [
+
+    "waleedahmad@gmail.com",
+
+    "waleedahmadahmad@gmail.com",
+
+    "waleedahmad2031@gmail.com"
+
+];
+
+
+/* =========================================
+   عناصر الصفحة
+========================================= */
+
+const emailInput =
+document.getElementById("email");
+
+const passwordInput =
+document.getElementById("password");
+
+const loginButton =
+document.getElementById("loginButton");
+
+const errorBox =
+document.getElementById("error");
+
+const successBox =
+document.getElementById("success");
+
+
+/* =========================================
+   رسالة خطأ
+========================================= */
+
+function showError(message){
+
+    errorBox.textContent =
+    message;
+
+    errorBox.style.display =
+    "block";
+
+    successBox.style.display =
+    "none";
+
+}
+
+
+/* =========================================
+   تسجيل الدخول
+========================================= */
+
+window.login =
+async function(){
+
+    const email =
+    emailInput.value
+    .trim()
+    .toLowerCase();
+
+
+    const password =
+    passwordInput.value;
+
+
+    errorBox.style.display =
+    "none";
+
+
+    if(!email){
+
+        showError(
+            "اكتب البريد الإلكتروني"
+        );
+
+        return;
+
+    }
+
+
+    if(!password){
+
+        showError(
+            "اكتب كلمة المرور"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !ADMIN_EMAILS.includes(email)
+    ){
+
+        showError(
+            "هذا البريد غير مسموح له بدخول الإدارة."
+        );
+
+        return;
+
+    }
+
+
+    loginButton.disabled =
+    true;
+
+    loginButton.textContent =
+    "⏳ جاري تسجيل الدخول...";
+
+
+    try{
+
+        await signInWithEmailAndPassword(
+
+            auth,
+
+            email,
+
+            password
+
+        );
+
+
+        successBox.textContent =
+        "تم تسجيل الدخول بنجاح ✅";
+
+
+        successBox.style.display =
+        "block";
+
+
+        window.location.href =
+        "admin.html";
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        let message =
+        "فشل تسجيل الدخول";
+
+
+        if(
+            error.code ===
+            "auth/invalid-credential"
+        ){
+
+            message =
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+        }
+
+
+        else if(
+            error.code ===
+            "auth/user-not-found"
+        ){
+
+            message =
+            "هذا البريد غير مسجل في Firebase Authentication.";
+
+        }
+
+
+        else if(
+            error.code ===
+            "auth/wrong-password"
+        ){
+
+            message =
+            "كلمة المرور غير صحيحة.";
+
+        }
+
+
+        else if(
+            error.code ===
+            "auth/too-many-requests"
+        ){
+
+            message =
+            "تمت محاولات كثيرة. حاول لاحقًا.";
+
+        }
+
+
+        else{
+
+            message =
+            error.message;
+
+        }
+
+
+        showError(
+            message
+        );
+
+
+        loginButton.disabled =
+        false;
+
+        loginButton.textContent =
+        "🔑 تسجيل الدخول";
+
+    }
+
+};
+
+
+/* =========================================
+   إذا كان مسجلًا مسبقًا
+========================================= */
+
+onAuthStateChanged(
+
+    auth,
+
+    user => {
+
+        if(!user){
+
+            return;
+
+        }
+
+
+        const email =
+        String(
+            user.email || ""
+        )
+        .toLowerCase();
+
+
+        if(
+            ADMIN_EMAILS.includes(email)
+        ){
+
+            window.location.href =
+            "admin.html";
+
+        }
+
+    }
+
+);
+
+</script>
+
+</body>
+
+</html>
