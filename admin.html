@@ -621,7 +621,7 @@ window.renderShopAccounts=function(){
       </div>
       <div class="account-actions">
         <button class="primary" onclick="openShopLedger('${encoded}')">📖 فتح الحساب</button>
-        ${totalRemaining>0?`<button class="success" onclick="payShop('${encoded}')">💵 تسجيل سداد</button>`:"<button class="gray" disabled>✅ مسدد بالكامل</button>"}
+        ${totalRemaining>0 ? '<button class="success" onclick="payShop(\''+encoded+'\')">💵 تسجيل سداد</button>' : '<button class="gray" disabled>✅ مسدد بالكامل</button>'}
       </div>
     </div>`;
   });
@@ -666,7 +666,7 @@ window.openShopLedger=function(key){
       📌 المتبقي: <strong class="remaining">${remaining} ريال</strong><br>
       📝 ${escapeHTML(account.notes||"لا توجد ملاحظات")}
       <div class="account-actions">
-        ${remaining>0?`<button class="success" onclick="payAccount('${escapeJS(account.id)}')">💵 تسجيل سداد</button>`:"<button class="gray" disabled>✅ مسدد</button>"}
+        ${remaining>0 ? '<button class="success" onclick="payAccount(\''+escapeJS(account.id)+'\')">💵 تسجيل سداد</button>' : '<button class="gray" disabled>✅ مسدد</button>'}
         <button class="danger" onclick="deleteAccount('${escapeJS(account.id)}')">🗑️ حذف العملية</button>
       </div>
     </div>`;
@@ -760,7 +760,7 @@ async function loadAccounts(){
         </div>
         <div class="account-actions">
           <button class="primary" onclick="openShopLedger('${escapeJS(shopKey(account))}')">📖 فتح حساب البقالة</button>
-          ${remaining>0?`<button class="success" onclick="payAccount('${escapeJS(account.id)}')">💵 سداد هذه العملية</button>`:"<button class="gray" disabled>✅ مسدد</button>"}
+          ${remaining>0 ? '<button class="success" onclick="payAccount(\''+escapeJS(account.id)+'\')">💵 سداد هذه العملية</button>' : '<button class="gray" disabled>✅ مسدد</button>'}
           <button class="danger" onclick="deleteAccount('${escapeJS(account.id)}')">🗑️ حذف</button>
         </div>
       </div>`;
