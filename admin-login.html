@@ -74,10 +74,6 @@ input{
     outline:none;
 }
 
-input:focus{
-    border-color:#0d6efd;
-}
-
 button{
     width:100%;
     border:none;
@@ -122,13 +118,9 @@ button:disabled{
 
 <div class="login-box">
 
-<div class="logo">
-🔐
-</div>
+<div class="logo">🔐</div>
 
-<h1>
-إدارة سوق مباشر
-</h1>
+<h1>إدارة سوق مباشر</h1>
 
 <div class="subtitle">
 تسجيل الدخول إلى لوحة الإدارة
@@ -138,9 +130,7 @@ button:disabled{
 
 <div id="success" class="success"></div>
 
-<label>
-البريد الإلكتروني
-</label>
+<label>البريد الإلكتروني</label>
 
 <input
 type="email"
@@ -149,9 +139,7 @@ placeholder="أدخل بريد الإدارة"
 autocomplete="username"
 >
 
-<label>
-كلمة المرور
-</label>
+<label>كلمة المرور</label>
 
 <input
 type="password"
@@ -160,9 +148,7 @@ placeholder="أدخل كلمة المرور"
 autocomplete="current-password"
 >
 
-<button
-id="loginButton"
-onclick="login()">
+<button id="loginButton">
 
 🔑 تسجيل الدخول
 
@@ -175,14 +161,15 @@ onclick="login()">
 
 import {
     initializeApp
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 /* =========================================
@@ -220,7 +207,17 @@ getAuth(app);
 
 
 /* =========================================
-   إيميلات الإدارة
+   حفظ تسجيل الدخول
+========================================= */
+
+await setPersistence(
+    auth,
+    browserLocalPersistence
+);
+
+
+/* =========================================
+   حسابات الإدارة
 ========================================= */
 
 const ADMIN_EMAILS = [
@@ -255,7 +252,7 @@ document.getElementById("success");
 
 
 /* =========================================
-   خطأ
+   إظهار الخطأ
 ========================================= */
 
 function showError(message){
@@ -273,216 +270,266 @@ function showError(message){
 
 
 /* =========================================
-   تسجيل الدخول
+   فتح الإدارة
 ========================================= */
 
-window.login =
-async function(){
+function openAdmin(){
 
-    const email =
-    emailInput.value
-    .trim()
-    .toLowerCase();
-
-    const password =
-    passwordInput.value;
-
-
-    errorBox.style.display =
-    "none";
+    successBox.textContent =
+    "تم تسجيل الدخول بنجاح ✅";
 
     successBox.style.display =
-    "none";
-
-
-    if(!email){
-
-        showError(
-            "اكتب البريد الإلكتروني."
-        );
-
-        return;
-
-    }
-
-
-    if(!password){
-
-        showError(
-            "اكتب كلمة المرور."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        !ADMIN_EMAILS.includes(email)
-    ){
-
-        showError(
-            "هذا البريد غير مسموح له بدخول الإدارة."
-        );
-
-        return;
-
-    }
-
+    "block";
 
     loginButton.disabled =
     true;
 
     loginButton.textContent =
-    "⏳ جاري تسجيل الدخول...";
+    "⏳ فتح الإدارة...";
 
 
-    try{
+    /*
+       الانتقال إلى admin.html
+    */
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
+    setTimeout(() => {
+
+        window.location.replace(
+            "./admin.html"
         );
 
+    }, 500);
 
-        successBox.textContent =
-        "تم تسجيل الدخول بنجاح ✅";
-
-        successBox.style.display =
-        "block";
-
-
-        /*
-           نعطي Firebase لحظة
-           لحفظ جلسة الدخول
-        */
-
-        setTimeout(
-            () => {
-
-                window.location.replace(
-                    "admin.html"
-                );
-
-            },
-            500
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "Login Error:",
-            error
-        );
-
-
-        let message =
-        "تعذر تسجيل الدخول.";
-
-
-        if(
-            error.code ===
-            "auth/invalid-credential"
-        ){
-
-            message =
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/user-not-found"
-        ){
-
-            message =
-            "هذا البريد غير موجود في Firebase Authentication.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/wrong-password"
-        ){
-
-            message =
-            "كلمة المرور غير صحيحة.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/invalid-email"
-        ){
-
-            message =
-            "البريد الإلكتروني غير صحيح.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/too-many-requests"
-        ){
-
-            message =
-            "تمت محاولات كثيرة. حاول بعد قليل.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/network-request-failed"
-        ){
-
-            message =
-            "تعذر الاتصال بالإنترنت.";
-
-        }
-
-        else{
-
-            message =
-            error.message || message;
-
-        }
-
-
-        showError(
-            message
-        );
-
-
-        loginButton.disabled =
-        false;
-
-        loginButton.textContent =
-        "🔑 تسجيل الدخول";
-
-    }
-
-};
+}
 
 
 /* =========================================
-   Enter
+   تسجيل الدخول
 ========================================= */
 
-passwordInput.addEventListener(
-    "keydown",
-    event => {
+loginButton.addEventListener(
+    "click",
+    async function(){
+
+        const email =
+        emailInput.value
+        .trim()
+        .toLowerCase();
+
+        const password =
+        passwordInput.value;
+
+
+        errorBox.style.display =
+        "none";
+
+
+        if(!email){
+
+            showError(
+                "اكتب البريد الإلكتروني"
+            );
+
+            return;
+
+        }
+
+
+        if(!password){
+
+            showError(
+                "اكتب كلمة المرور"
+            );
+
+            return;
+
+        }
+
 
         if(
-            event.key === "Enter"
+            !ADMIN_EMAILS.includes(email)
         ){
 
-            login();
+            showError(
+                "هذا البريد غير مسموح له بدخول الإدارة."
+            );
+
+            return;
+
+        }
+
+
+        loginButton.disabled =
+        true;
+
+        loginButton.textContent =
+        "⏳ جاري تسجيل الدخول...";
+
+
+        try{
+
+            const result =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+            const user =
+            result.user;
+
+
+            const userEmail =
+            String(
+                user.email || ""
+            )
+            .toLowerCase();
+
+
+            if(
+                !ADMIN_EMAILS.includes(
+                    userEmail
+                )
+            ){
+
+                showError(
+                    "هذا الحساب ليس حساب إدارة."
+                );
+
+                loginButton.disabled =
+                false;
+
+                loginButton.textContent =
+                "🔑 تسجيل الدخول";
+
+                return;
+
+            }
+
+
+            openAdmin();
+
+
+        }catch(error){
+
+            console.error(
+                "Login Error:",
+                error
+            );
+
+
+            let message =
+            "فشل تسجيل الدخول.";
+
+
+            if(
+                error.code ===
+                "auth/invalid-credential"
+            ){
+
+                message =
+                "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/user-not-found"
+            ){
+
+                message =
+                "البريد غير موجود في Firebase Authentication.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/wrong-password"
+            ){
+
+                message =
+                "كلمة المرور غير صحيحة.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/invalid-email"
+            ){
+
+                message =
+                "البريد الإلكتروني غير صحيح.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/too-many-requests"
+            ){
+
+                message =
+                "محاولات كثيرة. حاول بعد قليل.";
+
+            }
+
+            else{
+
+                message =
+                error.message || message;
+
+            }
+
+
+            showError(message);
+
+
+            loginButton.disabled =
+            false;
+
+            loginButton.textContent =
+            "🔑 تسجيل الدخول";
 
         }
 
     }
+);
+
+
+/* =========================================
+   إذا كان مسجل دخول مسبقًا
+========================================= */
+
+onAuthStateChanged(
+
+    auth,
+
+    user => {
+
+        if(!user){
+
+            return;
+
+        }
+
+
+        const email =
+        String(
+            user.email || ""
+        )
+        .toLowerCase();
+
+
+        if(
+            ADMIN_EMAILS.includes(email)
+        ){
+
+            openAdmin();
+
+        }
+
+    }
+
 );
 
 </script>
