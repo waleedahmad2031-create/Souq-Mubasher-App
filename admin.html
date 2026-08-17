@@ -391,6 +391,88 @@ margin-bottom:15px;
 line-height:1.7;
 }
 
+.account-summary{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-bottom:15px;
+}
+
+.account-summary-card{
+background:#f8f9fa;
+border:1px solid #eee;
+border-radius:12px;
+padding:15px;
+text-align:center;
+}
+
+.account-summary-card strong{
+display:block;
+font-size:22px;
+margin-top:8px;
+}
+
+.debt-number{
+color:#dc3545 !important;
+}
+
+.paid-number{
+color:#198754 !important;
+}
+
+.account-card{
+background:white;
+border-radius:15px;
+padding:16px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.07);
+border-right:5px solid #ffc107;
+}
+
+.account-card.paid{
+border-right-color:#198754;
+}
+
+.account-shop{
+font-size:18px;
+font-weight:bold;
+color:#0d6efd;
+}
+
+.account-row{
+display:flex;
+justify-content:space-between;
+gap:10px;
+padding:7px 0;
+border-bottom:1px solid #f1f1f1;
+line-height:1.7;
+}
+
+.account-row:last-child{
+border-bottom:none;
+}
+
+.account-remaining{
+color:#dc3545;
+font-weight:bold;
+font-size:18px;
+}
+
+.account-paid{
+color:#198754;
+font-weight:bold;
+}
+
+.account-actions{
+display:flex;
+gap:8px;
+margin-top:12px;
+}
+
+.account-actions button{
+flex:1;
+}
+
 @media(max-width:500px){
 
 .stats{
@@ -413,6 +495,14 @@ padding:14px;
 font-size:16px;
 }
 
+.account-summary{
+grid-template-columns:1fr 1fr;
+}
+
+.account-row{
+display:block;
+}
+
 }
 
 </style>
@@ -429,7 +519,11 @@ font-size:16px;
 
 </header>
 
+
 <div class="container">
+
+
+<!-- تسجيل الدخول -->
 
 <div id="loginSection" class="box">
 
@@ -463,7 +557,11 @@ onclick="login()">
 
 </div>
 
+
+<!-- لوحة الإدارة -->
+
 <div id="adminSection" class="hidden">
+
 
 <div class="box">
 
@@ -481,6 +579,9 @@ onclick="logout()">
 
 </div>
 
+
+<!-- القائمة -->
+
 <div class="menu">
 
 <button
@@ -491,6 +592,7 @@ onclick="showSection('stats')">
 
 </button>
 
+
 <button
 id="ordersMenu"
 onclick="showSection('orders')">
@@ -498,6 +600,7 @@ onclick="showSection('orders')">
 📦 الطلبات
 
 </button>
+
 
 <button
 id="archiveMenu"
@@ -507,6 +610,7 @@ onclick="showSection('archive')">
 
 </button>
 
+
 <button
 id="productsMenu"
 onclick="showSection('products')">
@@ -514,6 +618,16 @@ onclick="showSection('products')">
 🛍️ المنتجات
 
 </button>
+
+
+<button
+id="accountsMenu"
+onclick="showSection('accounts')">
+
+💰 الحسابات
+
+</button>
+
 
 <button
 id="addMenu"
@@ -525,7 +639,11 @@ onclick="showSection('add')">
 
 </div>
 
+
+<!-- الإحصائيات -->
+
 <div id="statsSection" class="section">
+
 
 <div class="box">
 
@@ -567,6 +685,7 @@ onclick="showSection('add')">
 
 </div>
 
+
 <div class="box">
 
 <h2>📈 تحليلات سوق مباشر</h2>
@@ -589,6 +708,7 @@ class="analytics-number">
 
 </div>
 
+
 <div class="analytics-card">
 
 <div class="analytics-title">
@@ -605,6 +725,7 @@ class="analytics-value">
 
 </div>
 
+
 <div class="analytics-card">
 
 <div class="analytics-title">
@@ -620,6 +741,7 @@ class="analytics-value">
 </div>
 
 </div>
+
 
 <div class="analytics-card">
 
@@ -641,6 +763,7 @@ class="analytics-value">
 
 </div>
 
+
 <div class="box">
 
 <h2>👁️ أكثر المنتجات مشاهدة</h2>
@@ -656,6 +779,7 @@ class="rank-list">
 </div>
 
 </div>
+
 
 <div class="box">
 
@@ -673,6 +797,7 @@ class="rank-list">
 
 </div>
 
+
 <div class="box">
 
 <h2>📍 أكثر المناطق طلبًا</h2>
@@ -689,7 +814,11 @@ class="rank-list">
 
 </div>
 
+
 </div>
+
+
+<!-- الطلبات -->
 
 <div id="ordersSection" class="section hidden">
 
@@ -709,6 +838,9 @@ class="rank-list">
 
 </div>
 
+
+<!-- الأرشيف -->
+
 <div id="archiveSection" class="section hidden">
 
 <div class="box">
@@ -726,6 +858,9 @@ class="rank-list">
 </div>
 
 </div>
+
+
+<!-- المنتجات -->
 
 <div id="productsSection" class="section hidden">
 
@@ -745,6 +880,179 @@ class="rank-list">
 
 </div>
 
+
+<!-- الحسابات -->
+
+<div id="accountsSection" class="section hidden">
+
+
+<div class="box">
+
+<h2>💰 حسابات البقالات</h2>
+
+<div class="notice">
+
+هنا تسجل مبيعات البقالات سواء كانت نقدية أو آجلة، وتتابع المبالغ المتبقية ومواعيد السداد.
+
+</div>
+
+
+<div class="account-summary">
+
+
+<div class="account-summary-card">
+
+💳 إجمالي المبالغ المدفوعة
+
+<strong
+id="totalPaid"
+class="paid-number">
+
+0 ريال
+
+</strong>
+
+</div>
+
+
+<div class="account-summary-card">
+
+📒 إجمالي الديون
+
+<strong
+id="totalDebt"
+class="debt-number">
+
+0 ريال
+
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- تسجيل بيع -->
+
+<div class="box">
+
+<h2>➕ تسجيل بيع للبقالة</h2>
+
+
+<label>اسم البقالة</label>
+
+<input
+type="text"
+id="accountShop"
+placeholder="مثال: بقالة أبو محمد"
+>
+
+
+<label>رقم الجوال</label>
+
+<input
+type="tel"
+id="accountPhone"
+placeholder="رقم صاحب البقالة"
+>
+
+
+<label>قيمة البيع</label>
+
+<input
+type="number"
+id="accountAmount"
+placeholder="مثال: 1500"
+>
+
+
+<label>طريقة الدفع</label>
+
+<select id="accountPayment">
+
+<option value="نقدي">
+💵 نقدي
+</option>
+
+<option value="آجل">
+📒 آجل
+</option>
+
+</select>
+
+
+<div
+id="dueDateBox"
+class="hidden">
+
+<label>موعد السداد</label>
+
+<input
+type="date"
+id="accountDueDate"
+>
+
+</div>
+
+
+<label>المبلغ المدفوع</label>
+
+<input
+type="number"
+id="accountPaid"
+value="0"
+placeholder="0"
+>
+
+
+<label>ملاحظات</label>
+
+<textarea
+id="accountNotes"
+placeholder="مثال: الحساب إلى غدًا"
+></textarea>
+
+
+<button
+class="success"
+style="width:100%;"
+onclick="addAccount()">
+
+💾 حفظ البيع
+
+</button>
+
+
+<div id="accountMessage"></div>
+
+</div>
+
+
+<!-- سجل الحسابات -->
+
+<div class="box">
+
+<h2>📒 سجل الحسابات</h2>
+
+<div id="accountsList">
+
+<div class="loading">
+جاري تحميل الحسابات...
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- إضافة منتج -->
+
 <div id="addSection" class="section hidden">
 
 <div class="box">
@@ -755,6 +1063,7 @@ class="rank-list">
 اكتب بيانات المنتج ثم اضغط حفظ المنتج.
 </div>
 
+
 <label>اسم المنتج</label>
 
 <input
@@ -762,6 +1071,7 @@ type="text"
 id="productName"
 placeholder="مثال: أرز"
 >
+
 
 <label>السعر</label>
 
@@ -771,12 +1081,14 @@ id="productPrice"
 placeholder="مثال: 2500"
 >
 
+
 <label>الوصف</label>
 
 <textarea
 id="productDescription"
 placeholder="وصف المنتج"
 ></textarea>
+
 
 <label>القسم</label>
 
@@ -800,6 +1112,7 @@ placeholder="وصف المنتج"
 
 </select>
 
+
 <label>رابط صورة المنتج</label>
 
 <input
@@ -809,10 +1122,12 @@ placeholder="ضع رابط الصورة هنا"
 oninput="previewImage()"
 >
 
+
 <img
 id="imagePreview"
 class="image-preview"
 >
+
 
 <button
 class="success"
@@ -823,23 +1138,28 @@ onclick="addProduct()">
 
 </button>
 
+
 <div id="productMessage"></div>
 
 </div>
 
 </div>
 
+
 </div>
 
 </div>
+
 
 <script type="module">
+
 
 import {
 initializeApp
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
 getAuth,
@@ -849,6 +1169,7 @@ onAuthStateChanged
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
 getFirestore,
@@ -864,6 +1185,7 @@ orderBy
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 const firebaseConfig = {
 
@@ -887,17 +1209,23 @@ appId:
 
 };
 
+
 const app =
 initializeApp(firebaseConfig);
 
+
 const auth =
 getAuth(app);
+
 
 const db =
 getFirestore(app);
 
 
-/* تسجيل الدخول */
+
+/* =========================================
+   تسجيل الدخول
+========================================= */
 
 window.login = async function(){
 
@@ -914,6 +1242,7 @@ document.getElementById("loginError");
 
 error.textContent = "";
 
+
 if(!email){
 
 error.textContent =
@@ -923,6 +1252,7 @@ return;
 
 }
 
+
 if(!password){
 
 error.textContent =
@@ -931,6 +1261,7 @@ error.textContent =
 return;
 
 }
+
 
 try{
 
@@ -952,7 +1283,10 @@ error.textContent =
 };
 
 
-/* مراقبة الدخول */
+
+/* =========================================
+   مراقبة الدخول
+========================================= */
 
 onAuthStateChanged(
 auth,
@@ -964,22 +1298,27 @@ document
 .getElementById("loginSection")
 .classList.add("hidden");
 
+
 document
 .getElementById("adminSection")
 .classList.remove("hidden");
+
 
 document
 .getElementById("adminEmail")
 .textContent =
 "تم تسجيل الدخول: " + user.email;
 
+
 await loadAll();
+
 
 }else{
 
 document
 .getElementById("loginSection")
 .classList.remove("hidden");
+
 
 document
 .getElementById("adminSection")
@@ -990,7 +1329,10 @@ document
 });
 
 
-/* تسجيل الخروج */
+
+/* =========================================
+   تسجيل الخروج
+========================================= */
 
 window.logout = async function(){
 
@@ -999,7 +1341,10 @@ await signOut(auth);
 };
 
 
-/* التنقل */
+
+/* =========================================
+   التنقل
+========================================= */
 
 window.showSection = function(section){
 
@@ -1008,8 +1353,10 @@ const sections = [
 "orders",
 "archive",
 "products",
+"accounts",
 "add"
 ];
+
 
 sections.forEach(name => {
 
@@ -1017,24 +1364,37 @@ document
 .getElementById(name + "Section")
 .classList.add("hidden");
 
+
 document
 .getElementById(name + "Menu")
 .classList.remove("active");
 
 });
 
+
 document
 .getElementById(section + "Section")
 .classList.remove("hidden");
+
 
 document
 .getElementById(section + "Menu")
 .classList.add("active");
 
+
+if(section === "accounts"){
+
+loadAccounts();
+
+}
+
 };
 
 
-/* تحميل الكل */
+
+/* =========================================
+   تحميل الكل
+========================================= */
 
 async function loadAll(){
 
@@ -1044,24 +1404,32 @@ loadProducts(),
 
 loadOrders(),
 
-loadAnalytics()
+loadAnalytics(),
+
+loadAccounts()
 
 ]);
 
 }
 
 
-/* المنتجات */
+
+/* =========================================
+   المنتجات
+========================================= */
 
 let productsData = [];
+
 
 async function loadProducts(){
 
 const box =
 document.getElementById("productsList");
 
+
 box.innerHTML =
 '<div class="loading">جاري تحميل المنتجات...</div>';
+
 
 try{
 
@@ -1070,7 +1438,9 @@ await getDocs(
 collection(db,"products")
 );
 
+
 productsData = [];
+
 
 snapshot.forEach(itemDoc => {
 
@@ -1083,10 +1453,12 @@ id:itemDoc.id,
 
 });
 
+
 document.getElementById(
 "statProducts"
 ).textContent =
 productsData.length;
+
 
 if(productsData.length === 0){
 
@@ -1097,7 +1469,9 @@ return;
 
 }
 
+
 let html = "";
+
 
 productsData.forEach(product => {
 
@@ -1106,6 +1480,7 @@ product.name ||
 product.اسم ||
 "بدون اسم";
 
+
 const price =
 Number(
 product.price ??
@@ -1113,20 +1488,24 @@ product.سعر ??
 0
 );
 
+
 const description =
 product.description ||
 product.الوصف ||
 "";
+
 
 const image =
 product.image ||
 product.صورة ||
 "";
 
+
 const category =
 product.category ||
 product.القسم ||
 "غير محدد";
+
 
 html += `
 
@@ -1138,6 +1517,7 @@ src="${escapeAttribute(image)}"
 onerror="this.style.display='none'"
 >
 ` : ""}
+
 
 <div class="product-info">
 
@@ -1159,6 +1539,7 @@ ${escapeHTML(name)}
 
 </div>
 
+
 <div class="product-actions">
 
 <button
@@ -1168,6 +1549,7 @@ onclick="editProduct('${escapeJS(product.id)}')">
 ✏️ تعديل
 
 </button>
+
 
 <button
 class="danger"
@@ -1185,11 +1567,14 @@ onclick="removeProduct('${escapeJS(product.id)}')">
 
 });
 
+
 box.innerHTML = html;
+
 
 }catch(error){
 
 console.error(error);
+
 
 box.innerHTML =
 '<div class="empty">تعذر تحميل المنتجات.</div>';
@@ -1199,7 +1584,10 @@ box.innerHTML =
 }
 
 
-/* إضافة منتج */
+
+/* =========================================
+   إضافة منتج
+========================================= */
 
 window.addProduct = async function(){
 
@@ -1207,28 +1595,35 @@ const name =
 document.getElementById("productName")
 .value.trim();
 
+
 const price =
 Number(
 document.getElementById("productPrice")
 .value
 );
 
+
 const description =
 document.getElementById("productDescription")
 .value.trim();
+
 
 const category =
 document.getElementById("productCategory")
 .value;
 
+
 const image =
 document.getElementById("productImage")
 .value.trim();
 
+
 const message =
 document.getElementById("productMessage");
 
+
 message.textContent = "";
+
 
 if(!name){
 
@@ -1239,6 +1634,7 @@ return;
 
 }
 
+
 if(!price){
 
 message.innerHTML =
@@ -1248,6 +1644,7 @@ return;
 
 }
 
+
 try{
 
 await addDoc(
@@ -1255,32 +1652,48 @@ collection(db,"products"),
 {
 
 name:name,
+
 price:price,
+
 description:description,
+
 category:category,
+
 image:image,
+
 shopName:"مشتاق وليد",
+
 createdAt:serverTimestamp()
 
 }
 );
 
+
 message.innerHTML =
 '<div class="success-message">✅ تم إضافة المنتج بنجاح.</div>';
 
+
 document.getElementById("productName").value = "";
+
 document.getElementById("productPrice").value = "";
+
 document.getElementById("productDescription").value = "";
+
 document.getElementById("productImage").value = "";
+
 document.getElementById("imagePreview").style.display = "none";
+
 
 await loadProducts();
 
+
 showSection("products");
+
 
 }catch(error){
 
 console.error(error);
+
 
 message.innerHTML =
 '<div class="error">❌ تعذر إضافة المنتج.</div>';
@@ -1290,12 +1703,16 @@ message.innerHTML =
 };
 
 
-/* تعديل المنتج */
+
+/* =========================================
+   تعديل المنتج
+========================================= */
 
 window.editProduct = async function(id){
 
 const product =
 productsData.find(p => p.id === id);
+
 
 if(!product){
 
@@ -1305,45 +1722,70 @@ return;
 
 }
 
+
 const oldName =
 product.name ||
 product.اسم ||
 "";
+
 
 const oldPrice =
 product.price ??
 product.سعر ??
 "";
 
+
 const oldDescription =
 product.description ||
 product.الوصف ||
 "";
+
 
 const oldImage =
 product.image ||
 product.صورة ||
 "";
 
+
 const newName =
-prompt("اسم المنتج:",oldName);
+prompt(
+"اسم المنتج:",
+oldName
+);
+
 
 if(newName === null) return;
 
+
 const newPrice =
-prompt("السعر:",oldPrice);
+prompt(
+"السعر:",
+oldPrice
+);
+
 
 if(newPrice === null) return;
 
+
 const newDescription =
-prompt("الوصف:",oldDescription);
+prompt(
+"الوصف:",
+oldDescription
+);
+
 
 if(newDescription === null) return;
 
+
 const newImage =
-prompt("رابط الصورة:",oldImage);
+prompt(
+"رابط الصورة:",
+oldImage
+);
+
 
 if(newImage === null) return;
+
 
 try{
 
@@ -1358,21 +1800,28 @@ id
 {
 
 name:newName.trim(),
+
 price:Number(newPrice),
+
 description:newDescription.trim(),
+
 image:newImage.trim()
 
 }
 
 );
 
+
 alert("✅ تم تعديل المنتج.");
 
+
 await loadProducts();
+
 
 }catch(error){
 
 console.error(error);
+
 
 alert("❌ تعذر تعديل المنتج.");
 
@@ -1381,7 +1830,10 @@ alert("❌ تعذر تعديل المنتج.");
 };
 
 
-/* حذف المنتج */
+
+/* =========================================
+   حذف المنتج
+========================================= */
 
 window.removeProduct = async function(id){
 
@@ -1390,7 +1842,9 @@ confirm(
 "هل أنت متأكد من حذف هذا المنتج؟"
 );
 
+
 if(!ok) return;
+
 
 try{
 
@@ -1404,13 +1858,17 @@ id
 
 );
 
+
 alert("✅ تم حذف المنتج.");
 
+
 await loadProducts();
+
 
 }catch(error){
 
 console.error(error);
+
 
 alert("❌ تعذر حذف المنتج.");
 
@@ -1419,7 +1877,10 @@ alert("❌ تعذر حذف المنتج.");
 };
 
 
-/* معاينة الصورة */
+
+/* =========================================
+   معاينة الصورة
+========================================= */
 
 window.previewImage = function(){
 
@@ -1427,12 +1888,15 @@ const url =
 document.getElementById("productImage")
 .value.trim();
 
+
 const image =
 document.getElementById("imagePreview");
+
 
 if(url){
 
 image.src = url;
+
 image.style.display = "block";
 
 }else{
@@ -1444,23 +1908,31 @@ image.style.display = "none";
 };
 
 
-/* الطلبات */
+
+/* =========================================
+   الطلبات
+========================================= */
 
 let ordersData = [];
+
 
 async function loadOrders(){
 
 const ordersBox =
 document.getElementById("ordersList");
 
+
 const archiveBox =
 document.getElementById("archiveList");
+
 
 ordersBox.innerHTML =
 '<div class="loading">جاري تحميل الطلبات...</div>';
 
+
 archiveBox.innerHTML =
 '<div class="loading">جاري تحميل الأرشيف...</div>';
+
 
 try{
 
@@ -1470,10 +1942,13 @@ collection(db,"orders"),
 orderBy("createdAt","desc")
 );
 
+
 const snapshot =
 await getDocs(q);
 
+
 ordersData = [];
+
 
 snapshot.forEach(orderDoc => {
 
@@ -1486,10 +1961,12 @@ id:orderDoc.id,
 
 });
 
+
 document.getElementById(
 "statOrders"
 ).textContent =
 ordersData.length;
+
 
 const active =
 ordersData.filter(
@@ -1498,12 +1975,14 @@ o =>
 !== "تم التوصيل"
 );
 
+
 const archive =
 ordersData.filter(
 o =>
 (o.status || "جديد")
 === "تم التوصيل"
 );
+
 
 document.getElementById(
 "statNew"
@@ -1514,10 +1993,12 @@ o =>
 === "جديد"
 ).length;
 
+
 document.getElementById(
 "statDone"
 ).textContent =
 archive.length;
+
 
 document.getElementById(
 "statArchive"
@@ -1525,7 +2006,7 @@ document.getElementById(
 archive.length;
 
 
-/* المبيعات الآن تعتمد على الإجمالي النهائي */
+/* المبيعات */
 
 const sales =
 ordersData.reduce(
@@ -1539,10 +2020,12 @@ o.total ??
 0
 );
 
+
 document.getElementById(
 "statSales"
 ).textContent =
 sales + " ريال";
+
 
 renderOrders(
 active,
@@ -1550,18 +2033,22 @@ ordersBox,
 false
 );
 
+
 renderOrders(
 archive,
 archiveBox,
 true
 );
 
+
 }catch(error){
 
 console.error(error);
 
+
 ordersBox.innerHTML =
 '<div class="empty">تعذر تحميل الطلبات.</div>';
+
 
 archiveBox.innerHTML =
 '<div class="empty">تعذر تحميل الأرشيف.</div>';
@@ -1571,7 +2058,10 @@ archiveBox.innerHTML =
 }
 
 
-/* عرض الطلبات */
+
+/* =========================================
+   عرض الطلبات
+========================================= */
 
 function renderOrders(
 orders,
@@ -1588,7 +2078,9 @@ return;
 
 }
 
+
 let html = "";
+
 
 orders.forEach(order => {
 
@@ -1596,13 +2088,16 @@ const number =
 order.orderNumber ||
 order.id;
 
+
 const name =
 order.customerName ||
 "غير معروف";
 
+
 const phone =
 order.customerPhone ||
 "غير مسجل";
+
 
 const district =
 order.deliveryDistrict ||
@@ -1611,23 +2106,28 @@ order.الحي ||
 order.customerAddress ||
 "غير مسجل";
 
+
 const notes =
 order.notes ||
 "لا توجد ملاحظات";
 
+
 const status =
 order.status ||
 "جديد";
+
 
 const productsTotal =
 Number(
 order.total || 0
 );
 
+
 const deliveryFee =
 Number(
 order.deliveryFee || 0
 );
+
 
 const finalTotal =
 Number(
@@ -1635,7 +2135,9 @@ order.finalTotal ??
 (productsTotal + deliveryFee)
 );
 
+
 let productsHTML = "";
+
 
 if(Array.isArray(order.products)){
 
@@ -1644,20 +2146,28 @@ order.products.forEach(product => {
 const quantity =
 Number(product.quantity || 1);
 
+
 const price =
 Number(product.price || 0);
+
 
 productsHTML += `
 
 <div class="order-product">
 
 <span>
+
 ${escapeHTML(product.name || "منتج")}
+
 × ${quantity}
+
 </span>
 
+
 <strong>
+
 ${quantity * price} ريال
+
 </strong>
 
 </div>
@@ -1668,9 +2178,11 @@ ${quantity * price} ريال
 
 }
 
+
 html += `
 
 <div class="order-card">
+
 
 <div class="order-header">
 
@@ -1680,6 +2192,7 @@ html += `
 
 </div>
 
+
 <div class="badge">
 
 ${escapeHTML(status)}
@@ -1687,6 +2200,7 @@ ${escapeHTML(status)}
 </div>
 
 </div>
+
 
 <div style="line-height:2;font-size:14px;">
 
@@ -1710,6 +2224,7 @@ ${escapeHTML(notes)}
 
 </div>
 
+
 <div class="order-products">
 
 <strong>🛒 المنتجات</strong>
@@ -1717,6 +2232,7 @@ ${escapeHTML(notes)}
 ${productsHTML}
 
 </div>
+
 
 <div class="order-total">
 
@@ -1730,6 +2246,7 @@ ${productsTotal} ريال
 
 </div>
 
+
 <div class="delivery-box">
 
 <div>
@@ -1742,7 +2259,9 @@ ${deliveryFee} ريال
 
 </div>
 
+
 <br>
+
 
 <div>
 
@@ -1755,6 +2274,7 @@ ${finalTotal} ريال
 </div>
 
 </div>
+
 
 <div class="order-actions">
 
@@ -1772,6 +2292,7 @@ onclick="setDeliveryFee('${escapeJS(order.id)}')">
 
 </button>
 
+
 <button
 class="success"
 onclick="sendOrderWhatsApp('${escapeJS(order.id)}')">
@@ -1780,6 +2301,7 @@ onclick="sendOrderWhatsApp('${escapeJS(order.id)}')">
 
 </button>
 
+
 <button
 class="primary"
 onclick="changeOrderStatus('${escapeJS(order.id)}','قيد التجهيز')">
@@ -1787,6 +2309,7 @@ onclick="changeOrderStatus('${escapeJS(order.id)}','قيد التجهيز')">
 🔵 قيد التجهيز
 
 </button>
+
 
 <button
 class="success"
@@ -1813,6 +2336,7 @@ onclick="changeOrderStatus('${escapeJS(order.id)}','جديد')">
 `
 }
 
+
 <button
 class="danger"
 onclick="deleteOrder('${escapeJS(order.id)}')">
@@ -1829,9 +2353,11 @@ onclick="deleteOrder('${escapeJS(order.id)}')">
 
 });
 
+
 box.innerHTML = html;
 
 }
+
 
 
 /* =========================================
@@ -1846,6 +2372,7 @@ ordersData.find(
 item => item.id === id
 );
 
+
 if(!order){
 
 alert("الطلب غير موجود.");
@@ -1854,10 +2381,12 @@ return;
 
 }
 
+
 const currentFee =
 Number(
 order.deliveryFee || 0
 );
+
 
 const fee =
 prompt(
@@ -1865,14 +2394,17 @@ prompt(
 currentFee
 );
 
+
 if(fee === null){
 
 return;
 
 }
 
+
 const deliveryFee =
 Number(fee);
+
 
 if(
 !Number.isFinite(deliveryFee)
@@ -1888,14 +2420,17 @@ return;
 
 }
 
+
 const productsTotal =
 Number(
 order.total || 0
 );
 
+
 const finalTotal =
 productsTotal +
 deliveryFee;
+
 
 try{
 
@@ -1919,24 +2454,31 @@ finalTotal
 
 );
 
+
 alert(
 "✅ تم حفظ سعر التوصيل.\n\n" +
+
 "قيمة المنتجات: " +
 productsTotal +
 " ريال\n" +
+
 "التوصيل: " +
 deliveryFee +
 " ريال\n" +
+
 "الإجمالي النهائي: " +
 finalTotal +
 " ريال"
 );
 
+
 await loadOrders();
+
 
 }catch(error){
 
 console.error(error);
+
 
 alert(
 "❌ تعذر حفظ سعر التوصيل."
@@ -1945,6 +2487,7 @@ alert(
 }
 
 };
+
 
 
 /* =========================================
@@ -1959,6 +2502,7 @@ ordersData.find(
 item => item.id === id
 );
 
+
 if(!order){
 
 alert("الطلب غير موجود.");
@@ -1967,11 +2511,13 @@ return;
 
 }
 
+
 const phone =
 String(
 order.customerPhone || ""
 )
 .trim();
+
 
 if(!phone){
 
@@ -1983,15 +2529,18 @@ return;
 
 }
 
+
 const deliveryFee =
 Number(
 order.deliveryFee || 0
 );
 
+
 const productsTotal =
 Number(
 order.total || 0
 );
+
 
 const finalTotal =
 Number(
@@ -2000,10 +2549,7 @@ order.finalTotal ??
 );
 
 
-/*
-   إذا لم يتم تحديد التوصيل
-   نطلب من الإدارة تحديده أولًا
-*/
+/* إذا لم يتم تحديد التوصيل */
 
 if(
 order.deliveryFee === undefined
@@ -2016,6 +2562,7 @@ confirm(
 "لم يتم تحديد سعر التوصيل.\n\nهل تريد تحديده الآن؟"
 );
 
+
 if(answer){
 
 await setDeliveryFee(id);
@@ -2027,9 +2574,7 @@ return;
 }
 
 
-/*
-   تجهيز رقم واتساب
-*/
+/* رقم واتساب */
 
 let whatsappNumber =
 phone.replace(/\D/g,"");
@@ -2055,25 +2600,22 @@ whatsappNumber;
 }
 
 
-/*
-   تجهيز المنتجات
-*/
+/* المنتجات */
 
 let productsText = "";
+
 
 if(Array.isArray(order.products)){
 
 order.products.forEach(product => {
 
 const quantity =
-Number(
-product.quantity || 1
-);
+Number(product.quantity || 1);
+
 
 const price =
-Number(
-product.price || 0
-);
+Number(product.price || 0);
+
 
 productsText +=
 "• " +
@@ -2093,9 +2635,11 @@ const number =
 order.orderNumber ||
 order.id;
 
+
 const name =
 order.customerName ||
 "العميل";
+
 
 const district =
 order.deliveryDistrict ||
@@ -2103,6 +2647,7 @@ order.district ||
 order.الحي ||
 order.customerAddress ||
 "غير محدد";
+
 
 const message =
 
@@ -2153,7 +2698,10 @@ url,
 };
 
 
-/* تغيير حالة الطلب */
+
+/* =========================================
+   تغيير حالة الطلب
+========================================= */
 
 window.changeOrderStatus =
 async function(id,status){
@@ -2174,15 +2722,19 @@ status:status
 
 );
 
+
 alert(
 "✅ تم تغيير حالة الطلب."
 );
 
+
 await loadOrders();
+
 
 }catch(error){
 
 console.error(error);
+
 
 alert(
 "❌ تعذر تغيير الحالة."
@@ -2193,7 +2745,10 @@ alert(
 };
 
 
-/* حذف طلب */
+
+/* =========================================
+   حذف طلب
+========================================= */
 
 window.deleteOrder =
 async function(id){
@@ -2208,6 +2763,7 @@ return;
 
 }
 
+
 try{
 
 await deleteDoc(
@@ -2220,15 +2776,19 @@ id
 
 );
 
+
 alert(
 "✅ تم حذف الطلب."
 );
 
+
 await loadOrders();
+
 
 }catch(error){
 
 console.error(error);
+
 
 alert(
 "❌ تعذر حذف الطلب."
@@ -2239,7 +2799,895 @@ alert(
 };
 
 
-/* التحليلات */
+
+/* =========================================
+   الحسابات
+========================================= */
+
+let accountsData = [];
+
+
+/* إظهار تاريخ السداد عند اختيار آجل */
+
+document
+.getElementById("accountPayment")
+.addEventListener(
+"change",
+function(){
+
+const dueBox =
+document.getElementById("dueDateBox");
+
+
+if(this.value === "آجل"){
+
+dueBox.classList.remove("hidden");
+
+}else{
+
+dueBox.classList.add("hidden");
+
+}
+
+});
+
+
+
+/* =========================================
+   إضافة بيع
+========================================= */
+
+window.addAccount =
+async function(){
+
+const shopName =
+document.getElementById("accountShop")
+.value.trim();
+
+
+const phone =
+document.getElementById("accountPhone")
+.value.trim();
+
+
+const amount =
+Number(
+document.getElementById("accountAmount")
+.value
+);
+
+
+const payment =
+document.getElementById("accountPayment")
+.value;
+
+
+const dueDate =
+document.getElementById("accountDueDate")
+.value;
+
+
+let paid =
+Number(
+document.getElementById("accountPaid")
+.value || 0
+);
+
+
+const notes =
+document.getElementById("accountNotes")
+.value.trim();
+
+
+const message =
+document.getElementById("accountMessage");
+
+
+message.textContent = "";
+
+
+if(!shopName){
+
+message.innerHTML =
+'<div class="error">اكتب اسم البقالة.</div>';
+
+return;
+
+}
+
+
+if(
+!Number.isFinite(amount)
+||
+amount <= 0
+){
+
+message.innerHTML =
+'<div class="error">اكتب قيمة بيع صحيحة.</div>';
+
+return;
+
+}
+
+
+if(paid < 0){
+
+paid = 0;
+
+}
+
+
+if(paid > amount){
+
+message.innerHTML =
+'<div class="error">المبلغ المدفوع لا يمكن أن يكون أكبر من قيمة البيع.</div>';
+
+return;
+
+}
+
+
+if(
+payment === "آجل"
+&&
+!dueDate
+){
+
+message.innerHTML =
+'<div class="error">حدد موعد السداد.</div>';
+
+return;
+
+}
+
+
+/* النقدي = كامل المبلغ مدفوع */
+
+if(payment === "نقدي"){
+
+paid = amount;
+
+}
+
+
+const remaining =
+Math.max(
+amount - paid,
+0
+);
+
+
+try{
+
+await addDoc(
+
+collection(
+db,
+"accounts"
+),
+
+{
+
+shopName:
+shopName,
+
+phone:
+phone,
+
+amount:
+amount,
+
+paymentType:
+payment,
+
+dueDate:
+payment === "آجل"
+?
+dueDate
+:
+"",
+
+paid:
+paid,
+
+remaining:
+remaining,
+
+notes:
+notes,
+
+status:
+remaining === 0
+?
+"مسدد"
+:
+"باقي",
+
+createdAt:
+serverTimestamp()
+
+}
+
+);
+
+
+message.innerHTML =
+'<div class="success-message">✅ تم تسجيل البيع بنجاح.</div>';
+
+
+document.getElementById(
+"accountShop"
+).value = "";
+
+
+document.getElementById(
+"accountPhone"
+).value = "";
+
+
+document.getElementById(
+"accountAmount"
+).value = "";
+
+
+document.getElementById(
+"accountPayment"
+).value =
+"نقدي";
+
+
+document.getElementById(
+"accountDueDate"
+).value = "";
+
+
+document.getElementById(
+"accountPaid"
+).value =
+"0";
+
+
+document.getElementById(
+"accountNotes"
+).value = "";
+
+
+document.getElementById(
+"dueDateBox"
+).classList.add("hidden");
+
+
+await loadAccounts();
+
+
+}catch(error){
+
+console.error(error);
+
+
+message.innerHTML =
+'<div class="error">❌ تعذر حفظ الحساب.</div>';
+
+}
+
+};
+
+
+
+/* =========================================
+   تحميل الحسابات
+========================================= */
+
+async function loadAccounts(){
+
+const box =
+document.getElementById(
+"accountsList"
+);
+
+
+if(!box){
+
+return;
+
+}
+
+
+box.innerHTML =
+'<div class="loading">جاري تحميل الحسابات...</div>';
+
+
+try{
+
+const snapshot =
+await getDocs(
+collection(db,"accounts")
+);
+
+
+accountsData = [];
+
+
+snapshot.forEach(accountDoc => {
+
+accountsData.push({
+
+id:
+accountDoc.id,
+
+...accountDoc.data()
+
+});
+
+});
+
+
+/* ترتيب الأحدث */
+
+accountsData.sort(
+(a,b) => {
+
+const aTime =
+a.createdAt?.seconds || 0;
+
+
+const bTime =
+b.createdAt?.seconds || 0;
+
+
+return bTime - aTime;
+
+}
+);
+
+
+/* الإجماليات */
+
+const totalDebt =
+accountsData.reduce(
+(sum,item) =>
+sum +
+Number(item.remaining || 0),
+0
+);
+
+
+const totalPaid =
+accountsData.reduce(
+(sum,item) =>
+sum +
+Number(item.paid || 0),
+0
+);
+
+
+document.getElementById(
+"totalDebt"
+).textContent =
+totalDebt + " ريال";
+
+
+document.getElementById(
+"totalPaid"
+).textContent =
+totalPaid + " ريال";
+
+
+if(accountsData.length === 0){
+
+box.innerHTML =
+'<div class="empty">لا توجد حسابات حتى الآن.</div>';
+
+return;
+
+}
+
+
+let html = "";
+
+
+accountsData.forEach(account => {
+
+const amount =
+Number(account.amount || 0);
+
+
+const paid =
+Number(account.paid || 0);
+
+
+const remaining =
+Number(account.remaining || 0);
+
+
+const paymentType =
+account.paymentType ||
+"نقدي";
+
+
+const status =
+account.status ||
+(
+remaining === 0
+?
+"مسدد"
+:
+"باقي"
+);
+
+
+let dueText = "";
+
+
+if(account.dueDate){
+
+const date =
+new Date(
+account.dueDate +
+"T00:00:00"
+);
+
+
+dueText =
+date.toLocaleDateString(
+"ar-SA"
+);
+
+}
+
+
+html += `
+
+<div
+class="account-card
+${remaining === 0 ? "paid" : ""}"
+>
+
+
+<div class="order-header">
+
+<div class="account-shop">
+
+🏪
+${escapeHTML(
+account.shopName ||
+"بقالة"
+)}
+
+</div>
+
+
+<div class="badge">
+
+${escapeHTML(status)}
+
+</div>
+
+</div>
+
+
+<div class="account-row">
+
+<span>
+📱 رقم الجوال
+</span>
+
+<strong>
+${escapeHTML(
+account.phone ||
+"غير مسجل"
+)}
+</strong>
+
+</div>
+
+
+<div class="account-row">
+
+<span>
+💰 قيمة البيع
+</span>
+
+<strong>
+${amount} ريال
+</strong>
+
+</div>
+
+
+<div class="account-row">
+
+<span>
+💳 طريقة الدفع
+</span>
+
+<strong>
+${escapeHTML(paymentType)}
+</strong>
+
+</div>
+
+
+${
+paymentType === "آجل"
+?
+`
+
+<div class="account-row">
+
+<span>
+📅 موعد السداد
+</span>
+
+<strong>
+${escapeHTML(
+dueText ||
+"غير محدد"
+)}
+</strong>
+
+</div>
+
+`
+:
+""
+}
+
+
+<div class="account-row">
+
+<span>
+✅ المدفوع
+</span>
+
+<strong class="account-paid">
+
+${paid} ريال
+
+</strong>
+
+</div>
+
+
+<div class="account-row">
+
+<span>
+🔴 المتبقي
+</span>
+
+<strong
+class="account-remaining"
+style="
+color:${remaining > 0
+? "#dc3545"
+: "#198754"};
+">
+
+${remaining} ريال
+
+</strong>
+
+</div>
+
+
+${
+account.notes
+?
+`
+
+<div class="account-row">
+
+<span>
+📝 الملاحظات
+</span>
+
+<strong>
+${escapeHTML(account.notes)}
+</strong>
+
+</div>
+
+`
+:
+""
+}
+
+
+<div class="account-actions">
+
+
+${
+remaining > 0
+?
+`
+
+<button
+class="success"
+onclick="payAccount('${escapeJS(account.id)}')">
+
+💵 تسجيل سداد
+
+</button>
+
+`
+:
+`
+
+<button
+class="gray"
+disabled>
+
+✅ مسدد بالكامل
+
+</button>
+
+`
+}
+
+
+<button
+class="danger"
+onclick="deleteAccount('${escapeJS(account.id)}')">
+
+🗑️ حذف
+
+</button>
+
+
+</div>
+
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML = html;
+
+
+}catch(error){
+
+console.error(error);
+
+
+box.innerHTML =
+'<div class="empty">❌ تعذر تحميل الحسابات.</div>';
+
+}
+
+};
+
+
+
+/* =========================================
+   تسجيل سداد
+========================================= */
+
+window.payAccount =
+async function(id){
+
+const account =
+accountsData.find(
+item => item.id === id
+);
+
+
+if(!account){
+
+alert("الحساب غير موجود.");
+
+return;
+
+}
+
+
+const remaining =
+Number(
+account.remaining || 0
+);
+
+
+if(remaining <= 0){
+
+alert(
+"هذا الحساب مسدد بالفعل."
+);
+
+return;
+
+}
+
+
+const payment =
+prompt(
+"المبلغ الذي دفعه صاحب البقالة:",
+remaining
+);
+
+
+if(payment === null){
+
+return;
+
+}
+
+
+const paidNow =
+Number(payment);
+
+
+if(
+!Number.isFinite(paidNow)
+||
+paidNow <= 0
+){
+
+alert(
+"اكتب مبلغًا صحيحًا."
+);
+
+return;
+
+}
+
+
+if(paidNow > remaining){
+
+alert(
+"المبلغ أكبر من المتبقي."
+);
+
+return;
+
+}
+
+
+const oldPaid =
+Number(
+account.paid || 0
+);
+
+
+const newPaid =
+oldPaid +
+paidNow;
+
+
+const newRemaining =
+Math.max(
+Number(account.amount || 0)
+-
+newPaid,
+0
+);
+
+
+const newStatus =
+newRemaining === 0
+?
+"مسدد"
+:
+"باقي";
+
+
+try{
+
+await updateDoc(
+
+doc(
+db,
+"accounts",
+id
+),
+
+{
+
+paid:
+newPaid,
+
+remaining:
+newRemaining,
+
+status:
+newStatus
+
+}
+
+);
+
+
+alert(
+
+"✅ تم تسجيل السداد.\n\n" +
+
+"المدفوع الآن: " +
+paidNow +
+" ريال\n" +
+
+"المتبقي: " +
+newRemaining +
+" ريال"
+
+);
+
+
+await loadAccounts();
+
+
+}catch(error){
+
+console.error(error);
+
+
+alert(
+"❌ تعذر تسجيل السداد."
+);
+
+}
+
+};
+
+
+
+/* =========================================
+   حذف حساب
+========================================= */
+
+window.deleteAccount =
+async function(id){
+
+if(
+!confirm(
+"هل تريد حذف هذا الحساب نهائيًا؟"
+)
+){
+
+return;
+
+}
+
+
+try{
+
+await deleteDoc(
+
+doc(
+db,
+"accounts",
+id
+)
+
+);
+
+
+alert(
+"✅ تم حذف الحساب."
+);
+
+
+await loadAccounts();
+
+
+}catch(error){
+
+console.error(error);
+
+
+alert(
+"❌ تعذر حذف الحساب."
+);
+
+}
+
+};
+
+
+
+/* =========================================
+   التحليلات
+========================================= */
 
 async function loadAnalytics(){
 
@@ -2250,7 +3698,9 @@ await getDocs(
 collection(db,"productEvents")
 );
 
+
 let events = [];
+
 
 eventsSnapshot.forEach(eventDoc => {
 
@@ -2263,18 +3713,22 @@ id:eventDoc.id,
 
 });
 
+
 const views =
 events.filter(
 event =>
 event.type === "view"
 ).length;
 
+
 document.getElementById(
 "statViews"
 ).textContent =
 views;
 
+
 const viewMap = {};
+
 
 events
 .filter(
@@ -2288,21 +3742,26 @@ event.productName ||
 event.name ||
 "منتج غير معروف";
 
+
 if(!viewMap[name]){
 
 viewMap[name] = 0;
 
 }
 
+
 viewMap[name]++;
 
 });
 
+
 const viewRanking =
 Object.entries(viewMap)
 .sort(
-(a,b) => b[1] - a[1]
+(a,b) =>
+b[1] - a[1]
 );
+
 
 if(viewRanking.length > 0){
 
@@ -2323,6 +3782,7 @@ document.getElementById(
 
 }
 
+
 renderRanking(
 "viewsRanking",
 viewRanking,
@@ -2330,9 +3790,11 @@ viewRanking,
 );
 
 
+
 /* المبيعات */
 
 const salesMap = {};
+
 
 ordersData.forEach(order => {
 
@@ -2342,6 +3804,7 @@ return;
 
 }
 
+
 order.products.forEach(product => {
 
 const name =
@@ -2349,10 +3812,12 @@ product.name ||
 product.productName ||
 "منتج غير معروف";
 
+
 const quantity =
 Number(
 product.quantity || 1
 );
+
 
 if(!salesMap[name]){
 
@@ -2360,17 +3825,21 @@ salesMap[name] = 0;
 
 }
 
+
 salesMap[name] += quantity;
 
 });
 
 });
 
+
 const salesRanking =
 Object.entries(salesMap)
 .sort(
-(a,b) => b[1] - a[1]
+(a,b) =>
+b[1] - a[1]
 );
+
 
 if(salesRanking.length > 0){
 
@@ -2391,6 +3860,7 @@ document.getElementById(
 
 }
 
+
 renderRanking(
 "salesRanking",
 salesRanking,
@@ -2398,9 +3868,11 @@ salesRanking,
 );
 
 
+
 /* المناطق */
 
 const districtMap = {};
+
 
 ordersData.forEach(order => {
 
@@ -2414,11 +3886,13 @@ order.customerAddress ||
 )
 .trim();
 
+
 if(!district){
 
 return;
 
 }
+
 
 if(!districtMap[district]){
 
@@ -2426,15 +3900,19 @@ districtMap[district] = 0;
 
 }
 
+
 districtMap[district]++;
 
 });
 
+
 const districtRanking =
 Object.entries(districtMap)
 .sort(
-(a,b) => b[1] - a[1]
+(a,b) =>
+b[1] - a[1]
 );
+
 
 if(districtRanking.length > 0){
 
@@ -2455,11 +3933,13 @@ document.getElementById(
 
 }
 
+
 renderRanking(
 "districtRanking",
 districtRanking,
 "طلب"
 );
+
 
 }catch(error){
 
@@ -2468,20 +3948,24 @@ console.error(
 error
 );
 
+
 document.getElementById(
 "statViews"
 ).textContent =
 "0";
+
 
 document.getElementById(
 "mostViewed"
 ).textContent =
 "تعذر التحميل";
 
+
 document.getElementById(
 "bestSelling"
 ).textContent =
 "تعذر التحميل";
+
 
 document.getElementById(
 "topDistrict"
@@ -2493,7 +3977,10 @@ document.getElementById(
 }
 
 
-/* عرض الترتيب */
+
+/* =========================================
+   عرض الترتيب
+========================================= */
 
 function renderRanking(
 elementId,
@@ -2506,6 +3993,7 @@ document.getElementById(
 elementId
 );
 
+
 if(!ranking.length){
 
 box.innerHTML =
@@ -2515,10 +4003,13 @@ return;
 
 }
 
+
 const top =
 ranking.slice(0,10);
 
+
 let html = "";
+
 
 top.forEach(
 (item,index) => {
@@ -2530,9 +4021,11 @@ html += `
 <div class="rank-name">
 
 ${index + 1}️⃣
+
 ${escapeHTML(item[0])}
 
 </div>
+
 
 <div class="rank-count">
 
@@ -2546,12 +4039,16 @@ ${item[1]} ${unit}
 
 });
 
+
 box.innerHTML = html;
 
 }
 
 
-/* حماية النصوص */
+
+/* =========================================
+   حماية النصوص
+========================================= */
 
 function escapeHTML(value){
 
@@ -2564,6 +4061,7 @@ return String(value ?? "")
 
 }
 
+
 function escapeAttribute(value){
 
 return String(value ?? "")
@@ -2571,6 +4069,7 @@ return String(value ?? "")
 .replace(/'/g,"%27");
 
 }
+
 
 function escapeJS(value){
 
@@ -2583,12 +4082,16 @@ return String(value ?? "")
 }
 
 
-/* البداية */
+
+/* =========================================
+   البداية
+========================================= */
 
 showSection("stats");
+
 
 </script>
 
 </body>
 
-                      </html>
+   </html>
