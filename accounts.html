@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>حسابات سوق مباشر</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#222;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:18px;
+    text-align:center;
+}
+
+header h1{
+    font-size:22px;
+}
+
+header p{
+    margin-top:6px;
+    font-size:13px;
+    opacity:.9;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+    padding:18px 14px;
+}
+
+.box{
+    background:white;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.box h2{
+    color:#0d6efd;
+    font-size:19px;
+    margin-bottom:15px;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    margin-bottom:10px;
+    font-size:14px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#0d6efd;
+}
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:12px 15px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.add{
+    width:100%;
+    background:#198754;
+    color:white;
+}
+
+.add:disabled{
+    background:#999;
+}
+
+.payment{
+    background:#0d6efd;
+    color:white;
+    width:100%;
+    margin-top:10px;
+}
+
+.danger{
+    background:#dc3545;
+    color:white;
+}
+
+.shop{
+    border:1px solid #eee;
+    border-radius:13px;
+    padding:15px;
+    margin-bottom:14px;
+    background:#fff;
+}
+
+.shop-title{
+    color:#0d6efd;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.balance{
+    background:#f1f4f8;
+    border-radius:10px;
+    padding:12px;
+    margin-top:10px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.debt{
+    color:#dc3545;
+}
+
+.paid{
+    color:#198754;
+}
+
+.line{
+    border-bottom:1px solid #eee;
+    padding:10px 0;
+    line-height:1.8;
+}
+
+.small{
+    color:#777;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:25px;
+}
+
+.error{
+    background:#f8d7da;
+    color:#842029;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:12px;
+    line-height:1.7;
+}
+
+.loading{
+    text-align:center;
+    color:#777;
+    padding:25px;
+}
+
+.back{
+    width:100%;
+    background:#6c757d;
+    color:white;
+    margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>💰 حسابات سوق مباشر</h1>
+
+<p>
+دفتر حسابات البقالات
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- إضافة حركة -->
+
+<div class="box">
+
+<h2>➕ إضافة حركة حساب</h2>
+
+<div id="errorBox"
+class="error"
+style="display:none">
+</div>
+
+<input
+type="text"
+id="shopName"
+placeholder="اسم البقالة"
+>
+
+<input
+type="text"
+id="productName"
+placeholder="المنتج"
+>
+
+<input
+type="number"
+id="amount"
+placeholder="المبلغ بالريال"
+>
+
+<button
+id="addSale"
+class="add">
+
+➕ إضافة بيع آجل
+
+</button>
+
+<button
+id="addPayment"
+class="payment">
+
+💵 تسجيل سداد
+
+</button>
+
+</div>
+
+
+<!-- الحسابات -->
+
+<div class="box">
+
+<h2>📒 دفتر الحسابات</h2>
+
+<div id="accountsList"
+class="loading">
+
+جاري تحميل الحسابات...
+
+</div>
+
+</div>
+
+
+<button
+class="back"
+onclick="window.location.href='admin.html'">
+
+⬅️ العودة إلى الإدارة
+
+</button>
+
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    orderBy,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================================
+   Firebase
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
+
+    authDomain:
+    "souq-mubasher-c9d87.firebaseapp.com",
+
+    projectId:
+    "souq-mubasher-c9d87",
+
+    storageBucket:
+    "souq-mubasher-c9d87.firebasestorage.app",
+
+    messagingSenderId:
+    "34321703167",
+
+    appId:
+    "1:34321703167:web:bbea33f93d9485fc97acca"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
+
+/* =========================================
+   الإدارة
+========================================= */
+
+const ADMIN_EMAILS = [
+
+    "waleedahmad@gmail.com",
+
+    "waleedahmadahmad@gmail.com",
+
+    "waleedahmad2031@gmail.com"
+
+];
+
+
+/* =========================================
+   العناصر
+========================================= */
+
+const shopNameInput =
+document.getElementById("shopName");
+
+const productNameInput =
+document.getElementById("productName");
+
+const amountInput =
+document.getElementById("amount");
+
+const addSaleButton =
+document.getElementById("addSale");
+
+const addPaymentButton =
+document.getElementById("addPayment");
+
+const accountsList =
+document.getElementById("accountsList");
+
+const errorBox =
+document.getElementById("errorBox");
+
+
+/* =========================================
+   التحقق
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        if(!user){
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+
+        }
+
+        const email =
+            String(user.email || "")
+            .toLowerCase();
+
+        if(
+            !ADMIN_EMAILS.includes(email)
+        ){
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+
+        }
+
+        await loadAccounts();
+
+    }
+);
+
+
+/* =========================================
+   إظهار الخطأ
+========================================= */
+
+function showError(message){
+
+    errorBox.textContent =
+        message;
+
+    errorBox.style.display =
+        "block";
+
+}
+
+
+/* =========================================
+   إضافة حركة
+========================================= */
+
+async function addMovement(type){
+
+    errorBox.style.display =
+        "none";
+
+    const shopName =
+        shopNameInput.value.trim();
+
+    const productName =
+        productNameInput.value.trim();
+
+    const amount =
+        Number(amountInput.value);
+
+
+    if(!shopName){
+
+        showError(
+            "اكتب اسم البقالة."
+        );
+
+        return;
+
+    }
+
+    if(!amount || amount <= 0){
+
+        showError(
+            "اكتب مبلغًا صحيحًا."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        type === "sale" &&
+        !productName
+    ){
+
+        showError(
+            "اكتب اسم المنتج."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        type === "sale"
+        ? addSaleButton
+        : addPaymentButton;
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "⏳ جاري الحفظ...";
+
+
+    try{
+
+        await addDoc(
+
+            collection(
+                db,
+                "accounts"
+            ),
+
+            {
+
+                shopName:
+                    shopName,
+
+                productName:
+                    productName,
+
+                amount:
+                    amount,
+
+                type:
+                    type,
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+
+        );
+
+
+        productNameInput.value = "";
+
+        amountInput.value = "";
+
+        alert(
+            type === "sale"
+            ? "تم تسجيل البيع الآجل ✅"
+            : "تم تسجيل السداد ✅"
+        );
+
+
+        await loadAccounts();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showError(
+            "تعذر حفظ الحركة: " +
+            error.message
+        );
+
+    }
+
+
+    button.disabled =
+        false;
+
+    button.textContent =
+        type === "sale"
+        ? "➕ إضافة بيع آجل"
+        : "💵 تسجيل سداد";
+
+}
+
+
+/* =========================================
+   زر البيع الآجل
+========================================= */
+
+addSaleButton.addEventListener(
+    "click",
+    () => {
+
+        addMovement("sale");
+
+    }
+);
+
+
+/* =========================================
+   زر السداد
+========================================= */
+
+addPaymentButton.addEventListener(
+    "click",
+    () => {
+
+        addMovement("payment");
+
+    }
+);
+
+
+/* =========================================
+   تحميل الحسابات
+========================================= */
+
+async function loadAccounts(){
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "accounts"
+                )
+            );
+
+
+        const movements =
+            snapshot.docs.map(
+                doc => ({
+
+                    id:
+                        doc.id,
+
+                    ...doc.data()
+
+                })
+            );
+
+
+        renderAccounts(
+            movements
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        accountsList.innerHTML = `
+
+            <div class="error">
+
+            ❌ تعذر تحميل الحسابات
+
+            <br><br>
+
+            ${escapeHTML(
+                error.message
+            )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   عرض الحسابات
+========================================= */
+
+function renderAccounts(movements){
+
+    if(!movements.length){
+
+        accountsList.innerHTML = `
+
+            <div class="empty">
+
+            لا توجد حركات حسابية حتى الآن.
+
+            <br><br>
+
+            أضف أول بيع آجل أو سداد.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const shops = {};
+
+
+    movements.forEach(
+        movement => {
+
+            const shop =
+                movement.shopName ||
+                "بقالة بدون اسم";
+
+
+            if(!shops[shop]){
+
+                shops[shop] = {
+
+                    balance:0,
+
+                    movements:[]
+
+                };
+
+            }
+
+
+            const amount =
+                Number(
+                    movement.amount || 0
+                );
+
+
+            if(
+                movement.type === "payment"
+            ){
+
+                shops[shop].balance -=
+                    amount;
+
+            }else{
+
+                shops[shop].balance +=
+                    amount;
+
+            }
+
+
+            shops[shop].movements.push(
+                movement
+            );
+
+        }
+    );
+
+
+    accountsList.innerHTML =
+        Object.entries(shops)
+        .map(
+            ([shop,data]) => {
+
+                const balance =
+                    data.balance;
+
+
+                const balanceClass =
+                    balance > 0
+                    ? "debt"
+                    : "paid";
+
+
+                const balanceText =
+                    balance > 0
+                    ? `عليه ${balance} ريال`
+                    : balance < 0
+                    ? `له ${Math.abs(balance)} ريال`
+                    : "الحساب مسدد";
+
+
+                const lines =
+                    data.movements
+                    .slice()
+                    .reverse()
+                    .map(
+                        movement => {
+
+                            const amount =
+                                Number(
+                                    movement.amount || 0
+                                );
+
+
+                            if(
+                                movement.type ===
+                                "payment"
+                            ){
+
+                                return `
+
+                                <div class="line">
+
+                                💵 <b>سداد</b>
+
+                                <br>
+
+                                المبلغ:
+                                ${amount} ريال
+
+                                </div>
+
+                                `;
+
+                            }
+
+
+                            return `
+
+                            <div class="line">
+
+                            🛒 <b>بيع آجل</b>
+
+                            <br>
+
+                            المنتج:
+                            ${escapeHTML(
+                                movement.productName ||
+                                ""
+                            )}
+
+                            <br>
+
+                            المبلغ:
+                            ${amount} ريال
+
+                            </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+                return `
+
+                <div class="shop">
+
+                    <div class="shop-title">
+
+                    🏪
+                    ${escapeHTML(shop)}
+
+                    </div>
+
+
+                    <div class="balance ${balanceClass}">
+
+                    الرصيد:
+                    ${balanceText}
+
+                    </div>
+
+
+                    <div style="margin-top:12px">
+
+                    ${lines}
+
+                    </div>
+
+                </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =========================================
+   حماية النصوص
+========================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+</script>
+
+</body>
+
+  </html>
