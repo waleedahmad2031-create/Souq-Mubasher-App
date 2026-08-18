@@ -1119,14 +1119,45 @@ function renderOrders(){
                     💰 ${total} ريال
                     </div>
 
-                    <div>
+                    <div style="margin-top:8px">
+
                     الحالة:
+
                     <span class="badge">
                     ${escapeHTML(status)}
                     </span>
+
                     </div>
 
-                    <div style="margin-top:8px">
+
+                    <div style="margin-top:12px">
+
+                    <button
+                    class="action"
+                    onclick="changeOrderStatus('${order.id}','جديد')">
+
+                    🆕 جديد
+
+                    </button>
+
+
+                    <button
+                    class="action warning"
+                    onclick="changeOrderStatus('${order.id}','تم التجهيز')">
+
+                    📦 تم التجهيز
+
+                    </button>
+
+
+                    <button
+                    class="action success"
+                    onclick="changeOrderStatus('${order.id}','تم التوصيل')">
+
+                    🚚 تم التوصيل
+
+                    </button>
+
 
                     <button
                     class="action success"
@@ -1147,6 +1178,66 @@ function renderOrders(){
 
 }
 
+
+/* =========================================
+   تغيير حالة الطلب
+========================================= */
+
+window.changeOrderStatus =
+async function(id,status){
+
+    try{
+
+        await updateDoc(
+
+            doc(
+                db,
+                "orders",
+                id
+            ),
+
+            {
+                status: status
+            }
+
+        );
+
+
+        const order =
+            orders.find(
+                item => item.id === id
+            );
+
+
+        if(order){
+
+            order.status =
+                status;
+
+        }
+
+
+        renderOrders();
+
+        updateDashboard();
+
+
+    }catch(error){
+
+        console.error(
+            "Status Error:",
+            error
+        );
+
+
+        alert(
+            "تعذر تغيير حالة الطلب:\n" +
+            error.message
+        );
+
+    }
+
+};
 
 /* =========================================
    أرشيف
