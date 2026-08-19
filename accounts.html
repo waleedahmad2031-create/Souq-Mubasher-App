@@ -1364,18 +1364,18 @@ async function addMovement(type){
 
     }catch(error){
 
-        console.error(
-            "Account Error:",
-            error
-        );
+    console.error("FIREBASE ERROR:", error);
 
-
-        showAccountError(
-            "تعذر حفظ الحركة:\n" +
-            error.message
-        );
+    alert(
+        "خطأ Firebase:\n\n" +
+        error.code +
+        "\n\n" +
+        error.message
+    );
 
     }
+
+    
 
 
     button.disabled =
