@@ -42,7 +42,7 @@ header p{
 }
 
 .container{
-    max-width:850px;
+    max-width:800px;
     margin:auto;
     padding:18px 14px;
 }
@@ -84,14 +84,14 @@ button{
     font-weight:bold;
 }
 
-button:disabled{
-    background:#999 !important;
-}
-
 .add{
     width:100%;
     background:#198754;
     color:white;
+}
+
+.add:disabled{
+    background:#999;
 }
 
 .payment{
@@ -101,22 +101,11 @@ button:disabled{
     margin-top:10px;
 }
 
-.deposit{
+.back{
     width:100%;
-    background:#198754;
-    color:white;
-}
-
-.withdraw{
-    width:100%;
-    background:#dc3545;
+    background:#6c757d;
     color:white;
     margin-top:10px;
-}
-
-.danger{
-    background:#dc3545;
-    color:white;
 }
 
 .shop{
@@ -157,12 +146,13 @@ button:disabled{
     line-height:1.8;
 }
 
-.small{
+.empty{
+    text-align:center;
     color:#777;
-    font-size:12px;
+    padding:25px;
 }
 
-.empty{
+.loading{
     text-align:center;
     color:#777;
     padding:25px;
@@ -186,67 +176,8 @@ button:disabled{
     line-height:1.7;
 }
 
-.loading{
-    text-align:center;
+.small{
     color:#777;
-    padding:25px;
-}
-
-.back{
-    width:100%;
-    background:#6c757d;
-    color:white;
-    margin-top:10px;
-}
-
-.money-card{
-    background:#f1f4f8;
-    border-radius:14px;
-    padding:20px;
-    text-align:center;
-    margin-bottom:15px;
-}
-
-.money-card .title{
-    color:#555;
-    font-size:14px;
-}
-
-.money-card .amount{
-    font-size:30px;
-    font-weight:bold;
-    color:#198754;
-    margin-top:8px;
-}
-
-.transaction{
-    border-bottom:1px solid #eee;
-    padding:12px 0;
-    line-height:1.8;
-}
-
-.transaction:last-child{
-    border-bottom:0;
-}
-
-.deposit-text{
-    color:#198754;
-    font-weight:bold;
-}
-
-.withdraw-text{
-    color:#dc3545;
-    font-weight:bold;
-}
-
-.actions{
-    margin-top:10px;
-}
-
-.delete-btn{
-    background:#dc3545;
-    color:white;
-    padding:7px 10px;
     font-size:12px;
 }
 
@@ -260,9 +191,7 @@ button:disabled{
 
 <h1>💰 حسابات سوق مباشر</h1>
 
-<p>
-دفتر الحسابات والأموال
-</p>
+<p>دفتر حسابات البقالات</p>
 
 </header>
 
@@ -270,125 +199,13 @@ button:disabled{
 <div class="container">
 
 
-<!-- =====================================
-     حسابي الشخصي
-===================================== -->
+<!-- إضافة حركة -->
 
 <div class="box">
 
-<h2>💰 حسابي أنا</h2>
+<h2>➕ إضافة حركة حساب</h2>
 
-<div id="moneyMessage"
-class="error"
-style="display:none">
-</div>
-
-
-<div class="money-card">
-
-<div class="title">
-الرصيد الحالي
-</div>
-
-<div
-id="myBalance"
-class="amount">
-
-0 ريال
-
-</div>
-
-</div>
-
-
-<h3 style="margin-bottom:12px;color:#198754;">
-➕ تسجيل إيداع
-</h3>
-
-
-<input
-type="number"
-id="depositAmount"
-placeholder="مبلغ الإيداع بالريال"
->
-
-
-<input
-type="text"
-id="depositNote"
-placeholder="ملاحظة الإيداع - مثال: راتب، رأس مال، توفير"
->
-
-
-<button
-id="depositButton"
-class="deposit">
-
-➕ حفظ الإيداع
-
-</button>
-
-
-<h3
-style="margin-top:20px;margin-bottom:12px;color:#dc3545;">
-
-➖ تسجيل سحب
-
-</h3>
-
-
-<input
-type="number"
-id="withdrawAmount"
-placeholder="مبلغ السحب بالريال"
->
-
-
-<input
-type="text"
-id="withdrawNote"
-placeholder="ملاحظة السحب - مثال: مصاريف، شراء، تحويل"
->
-
-
-<button
-id="withdrawButton"
-class="withdraw">
-
-➖ حفظ السحب
-
-</button>
-
-</div>
-
-
-<!-- =====================================
-     سجل أموالي
-===================================== -->
-
-<div class="box">
-
-<h2>📋 سجل إيداعاتي وسحوباتي</h2>
-
-<div id="transactionsList"
-class="loading">
-
-جاري تحميل الحركات...
-
-</div>
-
-</div>
-
-
-<!-- =====================================
-     حسابات البقالات
-===================================== -->
-
-<div class="box">
-
-<h2>🏪 حسابات البقالات</h2>
-
-<div id="errorBox"
+<div id="messageBox"
 class="error"
 style="display:none">
 </div>
@@ -404,7 +221,7 @@ placeholder="اسم البقالة"
 <input
 type="text"
 id="productName"
-placeholder="المنتج"
+placeholder="المنتج — مطلوب للبيع الآجل فقط"
 >
 
 
@@ -435,9 +252,11 @@ class="payment">
 </div>
 
 
+<!-- دفتر الحسابات -->
+
 <div class="box">
 
-<h2>📒 دفتر حسابات البقالات</h2>
+<h2>📒 دفتر الحسابات</h2>
 
 <div id="accountsList"
 class="loading">
@@ -463,28 +282,33 @@ onclick="window.location.href='admin.html'">
 
 <script type="module">
 
+
+/* =========================================
+   Firebase
+========================================= */
+
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
     getAuth,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 import {
     getFirestore,
     collection,
     addDoc,
     getDocs,
-    deleteDoc,
-    doc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 /* =========================================
-   Firebase
+   إعداد Firebase
 ========================================= */
 
 const firebaseConfig = {
@@ -509,18 +333,21 @@ const firebaseConfig = {
 
 };
 
+
 const app =
 initializeApp(firebaseConfig);
 
+
 const auth =
 getAuth(app);
+
 
 const db =
 getFirestore(app);
 
 
 /* =========================================
-   المدير
+   بريد المدير
 ========================================= */
 
 const ADMIN_EMAILS = [
@@ -535,93 +362,66 @@ const ADMIN_EMAILS = [
 
 
 /* =========================================
-   عناصر حسابي
-========================================= */
-
-const depositAmount =
-document.getElementById(
-    "depositAmount"
-);
-
-const depositNote =
-document.getElementById(
-    "depositNote"
-);
-
-const withdrawAmount =
-document.getElementById(
-    "withdrawAmount"
-);
-
-const withdrawNote =
-document.getElementById(
-    "withdrawNote"
-);
-
-const depositButton =
-document.getElementById(
-    "depositButton"
-);
-
-const withdrawButton =
-document.getElementById(
-    "withdrawButton"
-);
-
-const myBalance =
-document.getElementById(
-    "myBalance"
-);
-
-const transactionsList =
-document.getElementById(
-    "transactionsList"
-);
-
-const moneyMessage =
-document.getElementById(
-    "moneyMessage"
-);
-
-
-/* =========================================
-   عناصر حسابات البقالات
+   العناصر
 ========================================= */
 
 const shopNameInput =
-document.getElementById(
-    "shopName"
-);
+document.getElementById("shopName");
+
 
 const productNameInput =
-document.getElementById(
-    "productName"
-);
+document.getElementById("productName");
+
 
 const amountInput =
-document.getElementById(
-    "amount"
-);
+document.getElementById("amount");
+
 
 const addSaleButton =
-document.getElementById(
-    "addSale"
-);
+document.getElementById("addSale");
+
 
 const addPaymentButton =
-document.getElementById(
-    "addPayment"
-);
+document.getElementById("addPayment");
+
 
 const accountsList =
-document.getElementById(
-    "accountsList"
-);
+document.getElementById("accountsList");
 
-const errorBox =
-document.getElementById(
-    "errorBox"
-);
+
+const messageBox =
+document.getElementById("messageBox");
+
+
+/* =========================================
+   رسالة
+========================================= */
+
+function showMessage(
+    message,
+    type = "error"
+){
+
+    messageBox.textContent =
+        message;
+
+    messageBox.className =
+        type === "success"
+        ? "success"
+        : "error";
+
+    messageBox.style.display =
+        "block";
+
+}
+
+
+function hideMessage(){
+
+    messageBox.style.display =
+        "none";
+
+}
 
 
 /* =========================================
@@ -643,13 +443,19 @@ onAuthStateChanged(
 
 
         const email =
-            String(user.email || "")
+            String(
+                user.email || ""
+            )
             .toLowerCase();
 
 
         if(
             !ADMIN_EMAILS.includes(email)
         ){
+
+            alert(
+                "هذا الحساب ليس حساب مدير."
+            );
 
             window.location.href =
                 "admin-login.html";
@@ -659,592 +465,60 @@ onAuthStateChanged(
         }
 
 
-        await loadAllData();
+        console.log(
+            "ADMIN:",
+            email
+        );
+
+
+        await loadAccounts();
 
     }
 );
 
 
 /* =========================================
-   تحميل كل البيانات
-========================================= */
-
-async function loadAllData(){
-
-    await Promise.all([
-
-        loadTransactions(),
-
-        loadAccounts()
-
-    ]);
-
-}
-
-
-/* =========================================
-   إظهار خطأ الأموال
-========================================= */
-
-function showMoneyError(message){
-
-    moneyMessage.textContent =
-        message;
-
-    moneyMessage.style.display =
-        "block";
-
-}
-
-
-/* =========================================
-   إضافة إيداع
-========================================= */
-
-depositButton.addEventListener(
-    "click",
-    async () => {
-
-        moneyMessage.style.display =
-            "none";
-
-
-        const amount =
-            Number(
-                depositAmount.value
-            );
-
-
-        const note =
-            depositNote.value.trim();
-
-
-        if(
-            !amount ||
-            amount <= 0
-        ){
-
-            showMoneyError(
-                "اكتب مبلغ إيداع صحيح."
-            );
-
-            return;
-
-        }
-
-
-        if(!note){
-
-            showMoneyError(
-                "اكتب ملاحظة للإيداع."
-            );
-
-            return;
-
-        }
-
-
-        depositButton.disabled =
-            true;
-
-        depositButton.textContent =
-            "⏳ جاري الحفظ...";
-
-
-        try{
-
-            await addDoc(
-
-                collection(
-                    db,
-                    "adminTransactions"
-                ),
-
-                {
-
-                    type:
-                        "إيداع",
-
-                    amount:
-                        amount,
-
-                    note:
-                        note,
-
-                    createdAt:
-                        serverTimestamp()
-
-                }
-
-            );
-
-
-            depositAmount.value =
-                "";
-
-            depositNote.value =
-                "";
-
-
-            alert(
-                "تم حفظ الإيداع بنجاح ✅"
-            );
-
-
-            await loadTransactions();
-
-
-        }catch(error){
-
-            console.error(
-                "Deposit Error:",
-                error
-            );
-
-
-            showMoneyError(
-                "تعذر حفظ الإيداع:\n" +
-                error.message
-            );
-
-        }
-
-
-        depositButton.disabled =
-            false;
-
-        depositButton.textContent =
-            "➕ حفظ الإيداع";
-
-    }
-);
-
-
-/* =========================================
-   إضافة سحب
-========================================= */
-
-withdrawButton.addEventListener(
-    "click",
-    async () => {
-
-        moneyMessage.style.display =
-            "none";
-
-
-        const amount =
-            Number(
-                withdrawAmount.value
-            );
-
-
-        const note =
-            withdrawNote.value.trim();
-
-
-        if(
-            !amount ||
-            amount <= 0
-        ){
-
-            showMoneyError(
-                "اكتب مبلغ سحب صحيح."
-            );
-
-            return;
-
-        }
-
-
-        if(!note){
-
-            showMoneyError(
-                "اكتب ملاحظة للسحب."
-            );
-
-            return;
-
-        }
-
-
-        withdrawButton.disabled =
-            true;
-
-        withdrawButton.textContent =
-            "⏳ جاري الحفظ...";
-
-
-        try{
-
-            await addDoc(
-
-                collection(
-                    db,
-                    "adminTransactions"
-                ),
-
-                {
-
-                    type:
-                        "سحب",
-
-                    amount:
-                        amount,
-
-                    note:
-                        note,
-
-                    createdAt:
-                        serverTimestamp()
-
-                }
-
-            );
-
-
-            withdrawAmount.value =
-                "";
-
-            withdrawNote.value =
-                "";
-
-
-            alert(
-                "تم حفظ السحب بنجاح ✅"
-            );
-
-
-            await loadTransactions();
-
-
-        }catch(error){
-
-            console.error(
-                "Withdraw Error:",
-                error
-            );
-
-
-            showMoneyError(
-                "تعذر حفظ السحب:\n" +
-                error.message
-            );
-
-        }
-
-
-        withdrawButton.disabled =
-            false;
-
-        withdrawButton.textContent =
-            "➖ حفظ السحب";
-
-    }
-);
-
-
-/* =========================================
-   تحميل إيداعاتي وسحوباتي
-========================================= */
-
-async function loadTransactions(){
-
-    try{
-
-        const snapshot =
-            await getDocs(
-
-                collection(
-                    db,
-                    "adminTransactions"
-                )
-
-            );
-
-
-        const transactions =
-            snapshot.docs.map(
-                item => ({
-
-                    id:
-                        item.id,
-
-                    ...item.data()
-
-                })
-            );
-
-
-        renderTransactions(
-            transactions
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "Transactions Error:",
-            error
-        );
-
-
-        transactionsList.innerHTML = `
-
-            <div class="error">
-
-            ❌ تعذر تحميل الإيداعات والسحوبات
-
-            <br><br>
-
-            ${escapeHTML(
-                error.message
-            )}
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================
-   عرض الإيداعات والسحوبات
-========================================= */
-
-function renderTransactions(
-    transactions
-){
-
-    let balance = 0;
-
-
-    transactions.forEach(
-        transaction => {
-
-            const amount =
-                Number(
-                    transaction.amount || 0
-                );
-
-
-            if(
-                transaction.type ===
-                "إيداع"
-            ){
-
-                balance +=
-                    amount;
-
-            }else if(
-                transaction.type ===
-                "سحب"
-            ){
-
-                balance -=
-                    amount;
-
-            }
-
-        }
-    );
-
-
-    myBalance.textContent =
-        balance + " ريال";
-
-
-    if(!transactions.length){
-
-        transactionsList.innerHTML = `
-
-            <div class="empty">
-
-            لا توجد إيداعات أو سحوبات حتى الآن.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    transactions.sort(
-        (a,b) => {
-
-            const dateA =
-                a.createdAt?.toMillis
-                ? a.createdAt.toMillis()
-                : 0;
-
-            const dateB =
-                b.createdAt?.toMillis
-                ? b.createdAt.toMillis()
-                : 0;
-
-            return dateB - dateA;
-
-        }
-    );
-
-
-    transactionsList.innerHTML =
-        transactions.map(
-            transaction => {
-
-                const amount =
-                    Number(
-                        transaction.amount || 0
-                    );
-
-
-                const isDeposit =
-                    transaction.type ===
-                    "إيداع";
-
-
-                return `
-
-                <div class="transaction">
-
-                    <div class="${
-                        isDeposit
-                        ? "deposit-text"
-                        : "withdraw-text"
-                    }">
-
-                    ${
-                        isDeposit
-                        ? "➕ إيداع"
-                        : "➖ سحب"
-                    }
-
-                    :
-
-                    ${
-                        amount
-                    } ريال
-
-                    </div>
-
-
-                    <div>
-
-                    📝
-
-                    ${
-                        escapeHTML(
-                            transaction.note ||
-                            ""
-                        )
-                    }
-
-                    </div>
-
-
-                    <div class="small">
-
-                    ${
-                        formatDate(
-                            transaction.createdAt
-                        )
-                    }
-
-                    </div>
-
-
-                    <div class="actions">
-
-                    <button
-                    class="delete-btn"
-                    onclick="deleteTransaction('${transaction.id}')">
-
-                    🗑️ حذف
-
-                    </button>
-
-                    </div>
-
-                </div>
-
-                `;
-
-            }
-        ).join("");
-
-}
-
-
-/* =========================================
-   حذف حركة مالية
-========================================= */
-
-window.deleteTransaction =
-async function(id){
-
-    const confirmed =
-        confirm(
-            "هل تريد حذف هذه الحركة نهائيًا؟"
-        );
-
-
-    if(!confirmed){
-
-        return;
-
-    }
-
-
-    try{
-
-        await deleteDoc(
-
-            doc(
-                db,
-                "adminTransactions",
-                id
-            )
-
-        );
-
-
-        await loadTransactions();
-
-
-        alert(
-            "تم حذف الحركة ✅"
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "Delete Transaction Error:",
-            error
-        );
-
-
-        showMoneyError(
-            "تعذر حذف الحركة:\n" +
-            error.message
-        );
-
-    }
-
-};
-
-
-/* =========================================
-   حسابات البقالات
+   إضافة حركة
 ========================================= */
 
 async function addMovement(type){
 
-    errorBox.style.display =
-        "none";
+    hideMessage();
+
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
+
+        showMessage(
+            "لم يتم تسجيل الدخول كمدير."
+        );
+
+        return;
+
+    }
+
+
+    const email =
+        String(
+            user.email || ""
+        )
+        .toLowerCase();
+
+
+    if(
+        !ADMIN_EMAILS.includes(email)
+    ){
+
+        showMessage(
+            "الحساب الحالي ليس ضمن حسابات المدير."
+        );
+
+        return;
+
+    }
 
 
     const shopName =
@@ -1261,9 +535,11 @@ async function addMovement(type){
         );
 
 
+    /* التحقق */
+
     if(!shopName){
 
-        showAccountError(
+        showMessage(
             "اكتب اسم البقالة."
         );
 
@@ -1277,7 +553,7 @@ async function addMovement(type){
         amount <= 0
     ){
 
-        showAccountError(
+        showMessage(
             "اكتب مبلغًا صحيحًا."
         );
 
@@ -1291,7 +567,7 @@ async function addMovement(type){
         !productName
     ){
 
-        showAccountError(
+        showMessage(
             "اكتب اسم المنتج."
         );
 
@@ -1316,34 +592,55 @@ async function addMovement(type){
 
     try{
 
-        await addDoc(
+        /* ================================
+           حفظ الحركة في Firestore
+        ================================= */
 
-            collection(
-                db,
-                "accounts"
-            ),
+        const result =
+            await addDoc(
 
-            {
+                collection(
+                    db,
+                    "accounts"
+                ),
 
-                shopName:
-                    shopName,
+                {
 
-                productName:
-                    productName,
+                    shopName:
+                        shopName,
 
-                amount:
-                    amount,
+                    productName:
+                        type === "sale"
+                        ? productName
+                        : "",
 
-                type:
-                    type,
+                    amount:
+                        amount,
 
-                createdAt:
-                    serverTimestamp()
+                    type:
+                        type,
 
-            }
+                    createdAt:
+                        serverTimestamp(),
 
+                    createdBy:
+                        user.uid,
+
+                    adminEmail:
+                        email
+
+                }
+
+            );
+
+
+        console.log(
+            "تم حفظ الحركة:",
+            result.id
         );
 
+
+        /* تنظيف */
 
         productNameInput.value =
             "";
@@ -1352,10 +649,11 @@ async function addMovement(type){
             "";
 
 
-        alert(
+        showMessage(
             type === "sale"
-            ? "تم تسجيل البيع الآجل ✅"
-            : "تم تسجيل السداد ✅"
+            ? "تم تسجيل البيع الآجل بنجاح ✅"
+            : "تم تسجيل السداد بنجاح ✅",
+            "success"
         );
 
 
@@ -1364,18 +662,31 @@ async function addMovement(type){
 
     }catch(error){
 
-    console.error("FIREBASE ERROR:", error);
+        console.error(
+            "FIREBASE ERROR:",
+            error
+        );
 
-    alert(
-        "خطأ Firebase:\n\n" +
-        error.code +
-        "\n\n" +
-        error.message
-    );
+
+        /* عرض الخطأ الحقيقي */
+
+        showMessage(
+            "خطأ Firebase:\n\n" +
+            "الكود: " +
+            error.code +
+            "\n\n" +
+            error.message
+        );
+
+
+        alert(
+            "خطأ Firebase:\n\n" +
+            error.code +
+            "\n\n" +
+            error.message
+        );
 
     }
-
-    
 
 
     button.disabled =
@@ -1391,27 +702,12 @@ async function addMovement(type){
 
 
 /* =========================================
-   إظهار خطأ الحسابات
-========================================= */
-
-function showAccountError(message){
-
-    errorBox.textContent =
-        message;
-
-    errorBox.style.display =
-        "block";
-
-}
-
-
-/* =========================================
-   زر البيع الآجل
+   بيع آجل
 ========================================= */
 
 addSaleButton.addEventListener(
     "click",
-    () => {
+    function(){
 
         addMovement(
             "sale"
@@ -1422,12 +718,12 @@ addSaleButton.addEventListener(
 
 
 /* =========================================
-   زر السداد
+   سداد
 ========================================= */
 
 addPaymentButton.addEventListener(
     "click",
-    () => {
+    function(){
 
         addMovement(
             "payment"
@@ -1438,10 +734,16 @@ addPaymentButton.addEventListener(
 
 
 /* =========================================
-   تحميل حسابات البقالات
+   تحميل الحسابات
 ========================================= */
 
 async function loadAccounts(){
+
+    accountsList.innerHTML =
+        `<div class="loading">
+        ⏳ جاري تحميل الحسابات...
+        </div>`;
+
 
     try{
 
@@ -1469,6 +771,12 @@ async function loadAccounts(){
             );
 
 
+        console.log(
+            "عدد الحركات:",
+            movements.length
+        );
+
+
         renderAccounts(
             movements
         );
@@ -1477,7 +785,7 @@ async function loadAccounts(){
     }catch(error){
 
         console.error(
-            "Accounts Error:",
+            "LOAD ACCOUNTS ERROR:",
             error
         );
 
@@ -1486,7 +794,15 @@ async function loadAccounts(){
 
             <div class="error">
 
-            ❌ تعذر تحميل حسابات البقالات
+            ❌ تعذر تحميل الحسابات
+
+            <br><br>
+
+            كود الخطأ:
+
+            ${escapeHTML(
+                error.code
+            )}
 
             <br><br>
 
@@ -1504,14 +820,16 @@ async function loadAccounts(){
 
 
 /* =========================================
-   عرض حسابات البقالات
+   عرض الحسابات
 ========================================= */
 
 function renderAccounts(
     movements
 ){
 
-    if(!movements.length){
+    if(
+        !movements.length
+    ){
 
         accountsList.innerHTML = `
 
@@ -1543,7 +861,9 @@ function renderAccounts(
                 "بقالة بدون اسم";
 
 
-            if(!shops[shop]){
+            if(
+                !shops[shop]
+            ){
 
                 shops[shop] = {
 
@@ -1578,16 +898,20 @@ function renderAccounts(
             }
 
 
-            shops[shop].movements.push(
-                movement
-            );
+            shops[shop]
+                .movements
+                .push(
+                    movement
+                );
 
         }
     );
 
 
     accountsList.innerHTML =
+
         Object.entries(shops)
+
         .map(
             ([shop,data]) => {
 
@@ -1601,18 +925,55 @@ function renderAccounts(
                     : "paid";
 
 
-                const balanceText =
+                let balanceText;
+
+
+                if(
                     balance > 0
-                    ? `عليه ${balance} ريال`
-                    : balance < 0
-                    ? `له ${Math.abs(balance)} ريال`
-                    : "الحساب مسدد";
+                ){
+
+                    balanceText =
+                        `عليه ${balance} ريال`;
+
+                }else if(
+                    balance < 0
+                ){
+
+                    balanceText =
+                        `له ${Math.abs(balance)} ريال`;
+
+                }else{
+
+                    balanceText =
+                        "الحساب مسدد";
+
+                }
 
 
                 const lines =
+
                     data.movements
+
                     .slice()
-                    .reverse()
+
+                    .sort(
+                        (a,b) => {
+
+                            const dateA =
+                                a.createdAt?.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+                            const dateB =
+                                b.createdAt?.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+                            return dateB - dateA;
+
+                        }
+                    )
+
                     .map(
                         movement => {
 
@@ -1631,12 +992,16 @@ function renderAccounts(
 
                                 <div class="line">
 
-                                💵 <b>سداد</b>
+                                💵
+                                <b>
+                                سداد
+                                </b>
 
                                 <br>
 
                                 المبلغ:
-                                ${amount} ريال
+                                ${amount}
+                                ريال
 
                                 </div>
 
@@ -1649,7 +1014,10 @@ function renderAccounts(
 
                             <div class="line">
 
-                            🛒 <b>بيع آجل</b>
+                            🛒
+                            <b>
+                            بيع آجل
+                            </b>
 
                             <br>
 
@@ -1662,7 +1030,8 @@ function renderAccounts(
                             <br>
 
                             المبلغ:
-                            ${amount} ريال
+                            ${amount}
+                            ريال
 
                             </div>
 
@@ -1670,6 +1039,7 @@ function renderAccounts(
 
                         }
                     )
+
                     .join("");
 
 
@@ -1685,7 +1055,8 @@ function renderAccounts(
                     </div>
 
 
-                    <div class="balance ${balanceClass}">
+                    <div
+                    class="balance ${balanceClass}">
 
                     الرصيد:
                     ${balanceText}
@@ -1693,7 +1064,8 @@ function renderAccounts(
                     </div>
 
 
-                    <div style="margin-top:12px">
+                    <div
+                    style="margin-top:12px">
 
                     ${lines}
 
@@ -1705,40 +1077,8 @@ function renderAccounts(
 
             }
         )
+
         .join("");
-
-}
-
-
-/* =========================================
-   التاريخ
-========================================= */
-
-function formatDate(timestamp){
-
-    if(
-        !timestamp ||
-        !timestamp.toDate
-    ){
-
-        return "الآن";
-
-    }
-
-
-    try{
-
-        return timestamp
-            .toDate()
-            .toLocaleString(
-                "ar-SA"
-            );
-
-    }catch(error){
-
-        return "التاريخ غير متوفر";
-
-    }
 
 }
 
@@ -1749,32 +1089,34 @@ function formatDate(timestamp){
 
 function escapeHTML(value){
 
-    return String(value ?? "")
+    return String(
+        value ?? ""
+    )
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -1782,4 +1124,4 @@ function escapeHTML(value){
 
 </body>
 
-    </html>
+</html>
