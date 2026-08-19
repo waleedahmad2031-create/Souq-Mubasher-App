@@ -1,3 +1,5 @@
+ملف admin.html — لوحة الإدارة مع الحساب المالي
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -214,136 +216,138 @@ th{
 
 
 /* =========================================
-   إضافة المنتجات
+   الحساب المالي
 ========================================= */
 
-.product-form{
+.money-cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.money-card{
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.money-card .title{
+    color:#666;
+    font-size:14px;
+}
+
+.money-card .amount{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.balance{
+    color:#0d6efd;
+}
+
+.deposit{
+    color:#198754;
+}
+
+.withdraw{
+    color:#dc3545;
+}
+
+.money-form{
     background:#f8f9fa;
     padding:15px;
     border-radius:12px;
     margin-bottom:18px;
 }
 
-.product-form h3{
-    color:#0d6efd;
-    margin-bottom:15px;
-    font-size:17px;
-}
-
-.product-form input,
-.product-form textarea{
+.money-form input,
+.money-form textarea,
+.money-form select{
     width:100%;
     padding:12px;
     margin-bottom:10px;
     border:1px solid #ddd;
     border-radius:9px;
     font-size:14px;
-    outline:none;
     background:white;
+    outline:none;
 }
 
-.product-form input:focus,
-.product-form textarea:focus{
-    border-color:#0d6efd;
-}
-
-.product-form textarea{
-    min-height:80px;
+.money-form textarea{
+    min-height:70px;
     resize:vertical;
 }
 
-.add-product-button{
-    width:100%;
+.money-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.money-buttons button{
     border:0;
     border-radius:9px;
     padding:13px;
-    background:#198754;
     color:white;
     font-size:15px;
     font-weight:bold;
     cursor:pointer;
 }
 
-.add-product-button:disabled{
-    background:#999;
+.deposit-button{
+    background:#198754;
 }
 
-
-/* =========================================
-   صورة المنتج
-========================================= */
-
-.product-image{
-    width:100%;
-    max-width:220px;
-    height:180px;
-    object-fit:cover;
-    border-radius:12px;
-    display:block;
-    margin:0 auto 15px;
-    background:#f1f1f1;
+.withdraw-button{
+    background:#dc3545;
 }
 
-.no-image{
-    width:100%;
-    max-width:220px;
-    height:180px;
-    border-radius:12px;
-    background:#f1f1f1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto 15px;
-    color:#888;
-}
-
-
-/* =========================================
-   نموذج التعديل
-========================================= */
-
-.edit-form{
-    display:none;
-    background:#f8f9fa;
-    padding:15px;
-    border-radius:12px;
-    margin-top:12px;
-}
-
-.edit-form input,
-.edit-form textarea{
-    width:100%;
-    padding:11px;
-    margin-bottom:9px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    font-size:14px;
+.transaction{
     background:white;
+    border-radius:13px;
+    padding:15px;
+    margin-bottom:10px;
+    box-shadow:0 2px 7px rgba(0,0,0,.06);
+    border-right:5px solid #0d6efd;
 }
 
-.edit-form textarea{
-    min-height:70px;
-    resize:vertical;
+.transaction.deposit-border{
+    border-right-color:#198754;
 }
 
-.edit-buttons{
-    display:flex;
-    gap:7px;
+.transaction.withdraw-border{
+    border-right-color:#dc3545;
 }
 
-.edit-buttons button{
-    flex:1;
+.transaction-title{
+    font-weight:bold;
+    margin-bottom:6px;
 }
 
+.transaction-date{
+    color:#777;
+    font-size:12px;
+}
 
-/* =========================================
-   أزرار المنتجات
-========================================= */
+.transaction-note{
+    margin-top:7px;
+    color:#555;
+}
 
-.product-actions{
-    margin-top:12px;
-    border-top:1px solid #eee;
-    padding-top:10px;
+.transaction-amount{
+    font-size:20px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.transaction-balance{
+    margin-top:5px;
+    color:#666;
+    font-size:13px;
 }
 
 @media(max-width:600px){
@@ -352,18 +356,16 @@ th{
         grid-template-columns:1fr 1fr;
     }
 
+    .money-cards{
+        grid-template-columns:1fr;
+    }
+
+    .money-buttons{
+        grid-template-columns:1fr;
+    }
+
     table{
         min-width:650px;
-    }
-
-    .table-scroll{
-        overflow-x:auto;
-    }
-
-    .product-image,
-    .no-image{
-        max-width:100%;
-        height:200px;
     }
 
 }
@@ -373,7 +375,6 @@ th{
 </head>
 
 <body>
-
 
 <header>
 
@@ -409,8 +410,13 @@ onclick="showSection('archive',this)">
 </button>
 
 <button
-onclick="window.location.href='accounts.html'">
-💰 الحسابات
+onclick="showSection('money',this)">
+💰 حسابي المالي
+</button>
+
+<button
+onclick="showSection('accounts',this)">
+📒 حسابات البقالات
 </button>
 
 <button
@@ -535,6 +541,129 @@ class="loading">
 </div>
 
 
+<!-- الحساب المالي -->
+
+<div
+id="money"
+class="section">
+
+<div class="admin-box">
+
+<h2>💰 حسابي المالي</h2>
+
+
+<div class="money-cards">
+
+<div class="money-card">
+
+<div class="title">
+الرصيد الحالي
+</div>
+
+<div
+id="currentBalance"
+class="amount balance">
+0 ريال
+</div>
+
+</div>
+
+
+<div class="money-card">
+
+<div class="title">
+إجمالي الإيداعات
+</div>
+
+<div
+id="totalDeposits"
+class="amount deposit">
+0 ريال
+</div>
+
+</div>
+
+
+<div class="money-card">
+
+<div class="title">
+إجمالي السحوبات
+</div>
+
+<div
+id="totalWithdrawals"
+class="amount withdraw">
+0 ريال
+</div>
+
+</div>
+
+</div>
+
+
+<div class="money-form">
+
+<h3 style="margin-bottom:15px;color:#0d6efd">
+➕ تسجيل حركة مالية
+</h3>
+
+
+<input
+type="number"
+id="moneyAmount"
+placeholder="المبلغ بالريال"
+min="1"
+step="0.01"
+>
+
+
+<textarea
+id="moneyNote"
+placeholder="ملاحظة: مثال راتب، شراء بضاعة، سحب شخصي...">
+</textarea>
+
+
+<div class="money-buttons">
+
+<button
+class="deposit-button"
+id="depositButton">
+
+➕ تسجيل إيداع
+
+</button>
+
+
+<button
+class="withdraw-button"
+id="withdrawButton">
+
+➖ تسجيل سحب
+
+</button>
+
+</div>
+
+</div>
+
+
+<h3 style="margin-bottom:12px;color:#0d6efd">
+📋 سجل الحركات المالية
+</h3>
+
+
+<div id="moneyList"
+class="loading">
+
+جاري تحميل الحركات...
+
+</div>
+
+</div>
+
+</div>
+
+
 <!-- الحسابات -->
 
 <div
@@ -543,7 +672,7 @@ class="section">
 
 <div class="admin-box">
 
-<h2>💰 حسابات البقالة</h2>
+<h2>📒 حسابات البقالات</h2>
 
 <div id="accountsList"
 class="loading">
@@ -567,8 +696,6 @@ class="section">
 
 <h2>🛒 المنتجات</h2>
 
-
-<!-- إضافة منتج -->
 
 <div class="product-form">
 
@@ -725,6 +852,7 @@ import {
     deleteDoc,
     addDoc,
     updateDoc,
+    setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -785,14 +913,11 @@ const ADMIN_EMAILS = [
 ========================================= */
 
 let orders = [];
-
 let archivedOrders = [];
-
 let accounts = [];
-
 let products = [];
-
 let events = [];
+let moneyTransactions = [];
 
 
 /* =========================================
@@ -843,7 +968,7 @@ onAuthStateChanged(
 
 
 /* =========================================
-   تحميل كل البيانات
+   تحميل البيانات
 ========================================= */
 
 async function loadAll(){
@@ -855,7 +980,8 @@ async function loadAll(){
             archiveSnap,
             accountsSnap,
             productsSnap,
-            eventsSnap
+            eventsSnap,
+            moneySnap
         ] = await Promise.all([
 
             getDocs(
@@ -876,76 +1002,103 @@ async function loadAll(){
 
             getDocs(
                 collection(db,"productEvents")
+            ),
+
+            getDocs(
+                collection(db,"cashTransactions")
             )
 
         ]);
 
 
-       orders =
-    ordersSnap.docs.map(
-        d => ({
-            id:d.id,
-            ...d.data()
-        })
-    );
+        orders =
+        ordersSnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
 
-orders.sort((a, b) => {
 
-    const dateA =
-        a.createdAt?.toMillis
-        ? a.createdAt.toMillis()
-        : 0;
+        orders.sort((a,b) => {
 
-    const dateB =
-        b.createdAt?.toMillis
-        ? b.createdAt.toMillis()
-        : 0;
+            const dateA =
+                a.createdAt?.toMillis
+                ? a.createdAt.toMillis()
+                : 0;
 
-    return dateB - dateA;
+            const dateB =
+                b.createdAt?.toMillis
+                ? b.createdAt.toMillis()
+                : 0;
 
-});
-            
-                
-                
-                    
-            
-            
+            return dateB - dateA;
+
+        });
 
 
         archivedOrders =
-            archiveSnap.docs.map(
-                d => ({
-                    id:d.id,
-                    ...d.data()
-                })
-            );
+        archiveSnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
 
 
         accounts =
-            accountsSnap.docs.map(
-                d => ({
-                    id:d.id,
-                    ...d.data()
-                })
-            );
+        accountsSnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
 
 
         products =
-            productsSnap.docs.map(
-                d => ({
-                    id:d.id,
-                    ...d.data()
-                })
-            );
+        productsSnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
 
 
         events =
-            eventsSnap.docs.map(
-                d => ({
-                    id:d.id,
-                    ...d.data()
-                })
-            );
+        eventsSnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+
+        moneyTransactions =
+        moneySnap.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+
+        moneyTransactions.sort(
+            (a,b) => {
+
+                const dateA =
+                    a.createdAt?.toMillis
+                    ? a.createdAt.toMillis()
+                    : 0;
+
+                const dateB =
+                    b.createdAt?.toMillis
+                    ? b.createdAt.toMillis()
+                    : 0;
+
+                return dateB - dateA;
+
+            }
+        );
 
 
         updateDashboard();
@@ -964,6 +1117,8 @@ orders.sort((a, b) => {
 
         renderAreas();
 
+        renderMoney();
+
     }catch(error){
 
         console.error(error);
@@ -975,6 +1130,427 @@ orders.sort((a, b) => {
     }
 
 }
+
+
+/* =========================================
+   الحساب المالي
+========================================= */
+
+function calculateMoney(){
+
+    let deposits = 0;
+    let withdrawals = 0;
+
+    moneyTransactions.forEach(
+        transaction => {
+
+            const amount =
+                Number(
+                    transaction.amount || 0
+                );
+
+            if(
+                transaction.type === "deposit"
+            ){
+
+                deposits += amount;
+
+            }
+
+            if(
+                transaction.type === "withdraw"
+            ){
+
+                withdrawals += amount;
+
+            }
+
+        }
+    );
+
+    return {
+
+        deposits,
+        withdrawals,
+        balance:
+            deposits - withdrawals
+
+    };
+
+}
+
+
+function renderMoney(){
+
+    const money =
+        calculateMoney();
+
+
+    document.getElementById(
+        "currentBalance"
+    ).textContent =
+        money.balance + " ريال";
+
+
+    document.getElementById(
+        "totalDeposits"
+    ).textContent =
+        money.deposits + " ريال";
+
+
+    document.getElementById(
+        "totalWithdrawals"
+    ).textContent =
+        money.withdrawals + " ريال";
+
+
+    const box =
+        document.getElementById(
+            "moneyList"
+        );
+
+
+    if(!moneyTransactions.length){
+
+        box.innerHTML =
+            `<div class="empty">
+
+            لا توجد حركات مالية حتى الآن.
+
+            </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        moneyTransactions.map(
+            transaction => {
+
+                const amount =
+                    Number(
+                        transaction.amount || 0
+                    );
+
+
+                const isDeposit =
+                    transaction.type === "deposit";
+
+
+                const typeText =
+                    isDeposit
+                    ? "إيداع"
+                    : "سحب";
+
+
+                const sign =
+                    isDeposit
+                    ? "+"
+                    : "-";
+
+
+                let dateText =
+                    "بدون تاريخ";
+
+
+                if(
+                    transaction.createdAt?.toDate
+                ){
+
+                    dateText =
+                    transaction.createdAt
+                    .toDate()
+                    .toLocaleString(
+                        "ar-SA"
+                    );
+
+                }
+
+
+                return `
+
+                <div class="transaction
+                    ${isDeposit
+                        ? "deposit-border"
+                        : "withdraw-border"}">
+
+                    <div class="transaction-title">
+
+                        ${isDeposit ? "📥" : "📤"}
+                        ${typeText}
+
+                    </div>
+
+
+                    <div class="transaction-date">
+
+                        📅 ${escapeHTML(dateText)}
+
+                    </div>
+
+
+                    <div class="transaction-amount
+                        ${isDeposit
+                            ? "deposit"
+                            : "withdraw"}">
+
+                        ${sign}${amount} ريال
+
+                    </div>
+
+
+                    <div class="transaction-balance">
+
+                        الرصيد بعد العملية:
+                        ${Number(
+                            transaction.balanceAfter || 0
+                        )} ريال
+
+                    </div>
+
+
+                    ${
+                        transaction.note
+                        ?
+                        `
+                        <div class="transaction-note">
+
+                            📝
+                            ${escapeHTML(
+                                transaction.note
+                            )}
+
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    <button
+                    class="action danger"
+                    onclick="deleteMoneyTransaction('${transaction.id}')">
+
+                    🗑️ حذف
+
+                    </button>
+
+                </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================
+   إضافة إيداع
+========================================= */
+
+async function addMoneyTransaction(type){
+
+    const amount =
+        Number(
+            document.getElementById(
+                "moneyAmount"
+            ).value
+        );
+
+
+    const note =
+        document.getElementById(
+            "moneyNote"
+        ).value.trim();
+
+
+    if(!amount || amount <= 0){
+
+        alert(
+            "اكتب مبلغًا صحيحًا."
+        );
+
+        return;
+
+    }
+
+
+    const money =
+        calculateMoney();
+
+
+    if(
+        type === "withdraw" &&
+        amount > money.balance
+    ){
+
+        alert(
+            "لا يمكن تسجيل السحب.\n\n" +
+            "المبلغ أكبر من الرصيد الحالي."
+        );
+
+        return;
+
+    }
+
+
+    const newBalance =
+        type === "deposit"
+        ? money.balance + amount
+        : money.balance - amount;
+
+
+    try{
+
+        await addDoc(
+
+            collection(
+                db,
+                "cashTransactions"
+            ),
+
+            {
+
+                type:
+                    type,
+
+                amount:
+                    amount,
+
+                note:
+                    note,
+
+                balanceAfter:
+                    newBalance,
+
+                createdAt:
+                    serverTimestamp(),
+
+                createdBy:
+                    auth.currentUser?.email || ""
+
+            }
+
+        );
+
+
+        document.getElementById(
+            "moneyAmount"
+        ).value = "";
+
+
+        document.getElementById(
+            "moneyNote"
+        ).value = "";
+
+
+        await loadAll();
+
+
+        alert(
+            type === "deposit"
+            ? "تم تسجيل الإيداع بنجاح ✅"
+            : "تم تسجيل السحب بنجاح ✅"
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "تعذر حفظ الحركة:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+document.getElementById(
+    "depositButton"
+).addEventListener(
+    "click",
+    () => addMoneyTransaction("deposit")
+);
+
+
+document.getElementById(
+    "withdrawButton"
+).addEventListener(
+    "click",
+    () => addMoneyTransaction("withdraw")
+);
+
+
+/* =========================================
+   حذف حركة مالية
+========================================= */
+
+window.deleteMoneyTransaction =
+async function(id){
+
+    const transaction =
+        moneyTransactions.find(
+            item => item.id === id
+        );
+
+
+    if(!transaction){
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "هل تريد حذف هذه الحركة المالية؟\n\n" +
+            "بعد الحذف سيتم إعادة حساب الرصيد."
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "cashTransactions",
+                id
+            )
+
+        );
+
+
+        await loadAll();
+
+
+        alert(
+            "تم حذف الحركة وإعادة حساب الرصيد ✅"
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "تعذر حذف الحركة:\n" +
+            error.message
+        );
+
+    }
+
+};
 
 
 /* =========================================
@@ -1179,10 +1755,6 @@ function renderOrders(){
 }
 
 
-/* =========================================
-   تغيير حالة الطلب
-========================================= */
-
 window.changeOrderStatus =
 async function(id,status){
 
@@ -1238,6 +1810,7 @@ async function(id,status){
     }
 
 };
+
 
 /* =========================================
    أرشيف
@@ -1320,10 +1893,6 @@ function renderArchive(){
 }
 
 
-/* =========================================
-   الحسابات
-========================================= */
-
 function renderAccounts(){
 
     const box =
@@ -1338,11 +1907,6 @@ function renderAccounts(){
             `<div class="empty">
 
             لا توجد حسابات حاليًا.
-
-            <br><br>
-
-            الحسابات ستظهر هنا عند إضافة
-            حساب بقالة.
 
             </div>`;
 
@@ -1567,8 +2131,6 @@ function renderProducts(){
                     </div>
 
 
-                    <!-- نموذج التعديل -->
-
                     <div
                     id="edit-${product.id}"
                     class="edit-form">
@@ -1605,7 +2167,6 @@ function renderProducts(){
                         value="${escapeHTML(image)}"
                         placeholder="رابط صورة المنتج"
                         >
-
 
                         <div class="edit-buttons">
 
@@ -1751,20 +2312,15 @@ document
 
                 {
 
-                    name:
-                        name,
+                    name:name,
 
-                    price:
-                        price,
+                    price:price,
 
-                    category:
-                        category,
+                    category:category,
 
-                    description:
-                        description,
+                    description:description,
 
-                    image:
-                        image,
+                    image:image,
 
                     shopName:
                         "مشتاق وليد",
@@ -1841,7 +2397,7 @@ document
 
 
 /* =========================================
-   فتح وإغلاق تعديل المنتج
+   تعديل المنتج
 ========================================= */
 
 window.toggleEdit =
@@ -1853,33 +2409,16 @@ function(id){
         );
 
 
-    if(!form){
-
-        return;
-
-    }
+    if(!form)return;
 
 
-    if(
+    form.style.display =
         form.style.display === "block"
-    ){
-
-        form.style.display =
-            "none";
-
-    }else{
-
-        form.style.display =
-            "block";
-
-    }
+        ? "none"
+        : "block";
 
 };
 
-
-/* =========================================
-   حفظ تعديل المنتج
-========================================= */
 
 window.saveProduct =
 async function(id){
@@ -1916,32 +2455,10 @@ async function(id){
         ).value.trim();
 
 
-    if(!name){
+    if(!name || !price || price <= 0 || !category){
 
         alert(
-            "اكتب اسم المنتج."
-        );
-
-        return;
-
-    }
-
-
-    if(!price || price <= 0){
-
-        alert(
-            "اكتب سعر المنتج."
-        );
-
-        return;
-
-    }
-
-
-    if(!category){
-
-        alert(
-            "اكتب قسم المنتج."
+            "أكمل بيانات المنتج بشكل صحيح."
         );
 
         return;
@@ -1961,20 +2478,11 @@ async function(id){
 
             {
 
-                name:
-                    name,
-
-                price:
-                    price,
-
-                category:
-                    category,
-
-                description:
-                    description,
-
-                image:
-                    image
+                name:name,
+                price:price,
+                category:category,
+                description:description,
+                image:image
 
             }
 
@@ -1991,12 +2499,6 @@ async function(id){
 
     }catch(error){
 
-        console.error(
-            "Update Product Error:",
-            error
-        );
-
-
         alert(
             "تعذر تعديل المنتج:\n" +
             error.message
@@ -2007,10 +2509,6 @@ async function(id){
 };
 
 
-/* =========================================
-   حذف المنتج
-========================================= */
-
 window.deleteProduct =
 async function(id){
 
@@ -2020,32 +2518,19 @@ async function(id){
         );
 
 
-    if(!product){
-
-        return;
-
-    }
+    if(!product)return;
 
 
-    const name =
-        product.name ||
-        product.اسم ||
-        "هذا المنتج";
-
-
-    const confirmed =
-        confirm(
+    if(
+        !confirm(
             "هل تريد حذف المنتج:\n\n" +
-            name +
-            "\n\nلا يمكن التراجع عن الحذف."
-        );
-
-
-    if(!confirmed){
-
-        return;
-
-    }
+            (
+                product.name ||
+                product.اسم ||
+                "هذا المنتج"
+            )
+        )
+    )return;
 
 
     try{
@@ -2061,21 +2546,15 @@ async function(id){
         );
 
 
+        await loadAll();
+
+
         alert(
             "تم حذف المنتج بنجاح ✅"
         );
 
 
-        await loadAll();
-
-
     }catch(error){
-
-        console.error(
-            "Delete Product Error:",
-            error
-        );
-
 
         alert(
             "تعذر حذف المنتج:\n" +
@@ -2259,9 +2738,7 @@ function renderSales(){
 
         box.innerHTML =
             `<div class="empty">
-
             لا توجد مبيعات مسجلة حتى الآن.
-
             </div>`;
 
         return;
@@ -2296,7 +2773,7 @@ function renderSales(){
 
 
 /* =========================================
-   المناطق الأكثر شراء
+   المناطق
 ========================================= */
 
 function renderAreas(){
@@ -2406,43 +2883,32 @@ async function(id){
         );
 
 
-    if(!order){
-
-        return;
-
-    }
+    if(!order)return;
 
 
     try{
 
-        await import(
-            "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
-        )
-        .then(async firestore => {
+        await setDoc(
 
-            await firestore.setDoc(
+            doc(
+                db,
+                "archivedOrders",
+                id
+            ),
 
-                firestore.doc(
-                    db,
-                    "archivedOrders",
-                    id
-                ),
-
-                order
-            );
+            order
+        );
 
 
-            await firestore.deleteDoc(
+        await deleteDoc(
 
-                firestore.doc(
-                    db,
-                    "orders",
-                    id
-                )
+            doc(
+                db,
+                "orders",
+                id
+            )
 
-            );
-
-        });
+        );
 
 
         await loadAll();
@@ -2452,10 +2918,11 @@ async function(id){
             "تم نقل الطلب إلى الأرشيف ✅"
         );
 
+
     }catch(error){
 
         alert(
-            "تعذر أرشفة الطلب: " +
+            "تعذر أرشفة الطلب:\n" +
             error.message
         );
 
@@ -2475,21 +2942,19 @@ async function(id){
         !confirm(
             "هل تريد حذف هذا الطلب نهائيًا؟"
         )
-    ){
-
-        return;
-
-    }
+    )return;
 
 
     try{
 
         await deleteDoc(
+
             doc(
                 db,
                 "archivedOrders",
                 id
             )
+
         );
 
 
@@ -2499,7 +2964,7 @@ async function(id){
     }catch(error){
 
         alert(
-            "تعذر الحذف: " +
+            "تعذر الحذف:\n" +
             error.message
         );
 
@@ -2559,30 +3024,11 @@ function escapeHTML(value){
 
     return String(value ?? "")
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
@@ -2601,7 +3047,8 @@ function showLoadError(message){
         "productsList",
         "viewsList",
         "salesList",
-        "areasList"
+        "areasList",
+        "moneyList"
 
     ];
 
@@ -2609,21 +3056,27 @@ function showLoadError(message){
     boxes.forEach(
         id => {
 
-            document.getElementById(
-                id
-            ).innerHTML = `
+            const box =
+                document.getElementById(id);
 
-            <div class="error">
 
-            ❌ تعذر تحميل البيانات
+            if(box){
 
-            <br><br>
+                box.innerHTML = `
 
-            ${escapeHTML(message)}
+                <div class="error">
 
-            </div>
+                ❌ تعذر تحميل البيانات
 
-            `;
+                <br><br>
+
+                ${escapeHTML(message)}
+
+                </div>
+
+                `;
+
+            }
 
         }
     );
@@ -2653,4 +3106,4 @@ document
 
 </body>
 
-                      </html>
+    </html>
