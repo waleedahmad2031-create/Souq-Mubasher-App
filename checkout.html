@@ -62,8 +62,7 @@ label{
     font-weight:bold;
 }
 
-input,
-textarea{
+input{
     width:100%;
     border:1px solid #ddd;
     border-radius:10px;
@@ -74,14 +73,8 @@ textarea{
     background:white;
 }
 
-input:focus,
-textarea:focus{
+input:focus{
     border-color:#0d6efd;
-}
-
-textarea{
-    min-height:90px;
-    resize:vertical;
 }
 
 .order-item{
@@ -175,11 +168,14 @@ style="display:none;">
 <div id="content">
 
 
-<!-- بيانات العميل -->
+<!-- =========================
+     بيانات العميل
+========================= -->
 
 <div class="box">
 
 <h2>👤 بيانات الطلب</h2>
+
 
 <label>
 الاسم
@@ -189,6 +185,7 @@ style="display:none;">
 type="text"
 id="name"
 placeholder="اكتب اسمك"
+autocomplete="name"
 >
 
 
@@ -200,10 +197,9 @@ placeholder="اكتب اسمك"
 type="tel"
 id="phone"
 placeholder="اكتب رقم الجوال"
+autocomplete="tel"
 >
 
-
-<!-- الحي -->
 
 <label>
 الحي
@@ -213,32 +209,15 @@ placeholder="اكتب رقم الجوال"
 type="text"
 id="deliveryArea"
 placeholder="مثال: السبل، السحول، إب القديمة"
+autocomplete="address-level2"
 >
-
-
-<label>
-العنوان
-</label>
-
-<textarea
-id="address"
-placeholder="اكتب عنوان التوصيل"
-></textarea>
-
-
-<label>
-الطلب
-</label>
-
-<textarea
-id="notes"
-placeholder="اكتب طلبك"
-></textarea>
 
 </div>
 
 
-<!-- تفاصيل الطلب -->
+<!-- =========================
+     تفاصيل الطلب
+========================= -->
 
 <div class="box">
 
@@ -296,7 +275,7 @@ const ADMIN_WHATSAPP =
 
 
 /* =========================================
-   قراءة السلة مباشرة
+   قراءة السلة
 ========================================= */
 
 let cart = [];
@@ -323,13 +302,20 @@ try{
 function loadOrder(){
 
     const content =
-        document.getElementById("content");
+        document.getElementById(
+            "content"
+        );
 
     const empty =
-        document.getElementById("empty");
+        document.getElementById(
+            "empty"
+        );
 
 
-    if(!Array.isArray(cart) || cart.length === 0){
+    if(
+        !Array.isArray(cart) ||
+        cart.length === 0
+    ){
 
         content.style.display =
             "none";
@@ -350,10 +336,16 @@ function loadOrder(){
     cart.forEach(item => {
 
         const quantity =
-            Number(item.quantity || 1);
+            Number(
+                item.quantity || 1
+            );
+
 
         const price =
-            Number(item.price || 0);
+            Number(
+                item.price || 0
+            );
+
 
         const itemTotal =
             price * quantity;
@@ -367,7 +359,10 @@ function loadOrder(){
         <div class="order-item">
 
             <span>
-                ${item.name} × ${quantity}
+                ${escapeHTML(
+                    item.name || "منتج"
+                )}
+                × ${quantity}
             </span>
 
             <strong>
@@ -422,21 +417,15 @@ async function(){
         ).value.trim();
 
 
-    const address =
-        document.getElementById(
-            "address"
-        ).value.trim();
-
-
-    const notes =
-        document.getElementById(
-            "notes"
-        ).value.trim();
-
+    /* ================================
+       التحقق
+    ================================= */
 
     if(!name){
 
-        alert("اكتب الاسم أولًا");
+        alert(
+            "اكتب الاسم أولًا"
+        );
 
         return;
 
@@ -445,7 +434,9 @@ async function(){
 
     if(!phone){
 
-        alert("اكتب رقم الجوال");
+        alert(
+            "اكتب رقم الجوال"
+        );
 
         return;
 
@@ -454,43 +445,32 @@ async function(){
 
     if(!deliveryArea){
 
-        alert("اكتب الحي أولًا");
+        alert(
+            "اكتب الحي أولًا"
+        );
 
         return;
 
     }
 
 
-    if(!address){
+    if(
+        !Array.isArray(cart) ||
+        cart.length === 0
+    ){
 
-        alert("اكتب العنوان");
-
-        return;
-
-    }
-
-
-    if(!notes){
-
-        alert("اكتب الطلب");
+        alert(
+            "السلة فارغة"
+        );
 
         return;
 
     }
 
 
-    if(cart.length === 0){
-
-        alert("السلة فارغة");
-
-        return;
-
-    }
-
-
-    /* =====================================
+    /* =================================
        حساب الإجمالي
-    ===================================== */
+    ================================= */
 
     const total =
         cart.reduce(
@@ -500,9 +480,15 @@ async function(){
                 return sum +
 
                 (
-                    Number(item.price || 0) *
+                    Number(
+                        item.price || 0
+                    )
 
-                    Number(item.quantity || 1)
+                    *
+
+                    Number(
+                        item.quantity || 1
+                    )
                 );
 
             },
@@ -512,9 +498,9 @@ async function(){
         );
 
 
-    /* =====================================
+    /* =================================
        رقم الطلب
-    ===================================== */
+    ================================= */
 
     const orderNumber =
         Date.now()
@@ -522,9 +508,45 @@ async function(){
         .slice(-6);
 
 
-    /* =====================================
+    /* =================================
+       تجهيز المنتجات
+    ================================= */
+
+    const products =
+        cart.map(item => {
+
+            return {
+
+                id:
+                    item.id || "",
+
+                name:
+                    item.name || "منتج",
+
+                price:
+                    Number(
+                        item.price || 0
+                    ),
+
+                quantity:
+                    Number(
+                        item.quantity || 1
+                    ),
+
+                image:
+                    item.image || "",
+
+                description:
+                    item.description || ""
+
+            };
+
+        });
+
+
+    /* =================================
        تجهيز الطلب
-    ===================================== */
+    ================================= */
 
     const order = {
 
@@ -537,29 +559,14 @@ async function(){
         customerPhone:
             phone,
 
-        customerCity:
-            "غير محدد",
-
-        customerAddress:
-            address,
-
         deliveryArea:
             deliveryArea,
 
-        orderType:
-            "توصيل",
-
-        deliveryTime:
-            "غير محدد",
-
         products:
-            cart,
+            products,
 
         status:
             "جديد",
-
-        notes:
-            notes,
 
         total:
             total
@@ -582,7 +589,7 @@ async function(){
     try{
 
         /* =================================
-           تحميل Firebase عند تأكيد الطلب فقط
+           Firebase
         ================================= */
 
         const firebaseApp =
@@ -673,12 +680,6 @@ async function(){
 📍 الحي:
 ${deliveryArea}
 
-🏠 العنوان:
-${address}
-
-📝 الطلب:
-${notes}
-
 🛍️ المنتجات:
 `;
 
@@ -686,10 +687,16 @@ ${notes}
         cart.forEach(item => {
 
             const quantity =
-                Number(item.quantity || 1);
+                Number(
+                    item.quantity || 1
+                );
+
 
             const price =
-                Number(item.price || 0);
+                Number(
+                    item.price || 0
+                );
+
 
             const itemTotal =
                 price * quantity;
@@ -697,7 +704,7 @@ ${notes}
 
             message +=
 
-`• ${item.name} × ${quantity} = ${itemTotal} ريال
+`• ${item.name || "منتج"} × ${quantity} = ${itemTotal} ريال
 `;
 
         });
@@ -752,7 +759,9 @@ ${notes}
             "https://wa.me/" +
             ADMIN_WHATSAPP +
             "?text=" +
-            encodeURIComponent(message);
+            encodeURIComponent(
+                message
+            );
 
 
         window.location.href =
@@ -787,6 +796,44 @@ ${notes}
     }
 
 };
+
+
+/* =========================================
+   حماية النصوص
+========================================= */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
 
 </script>
 
