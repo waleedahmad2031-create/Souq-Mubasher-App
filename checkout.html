@@ -203,6 +203,19 @@ placeholder="اكتب رقم الجوال"
 >
 
 
+<!-- الحي -->
+
+<label>
+الحي
+</label>
+
+<input
+type="text"
+id="deliveryArea"
+placeholder="مثال: السبل، السحول، إب القديمة"
+>
+
+
 <label>
 العنوان
 </label>
@@ -403,6 +416,12 @@ async function(){
         ).value.trim();
 
 
+    const deliveryArea =
+        document.getElementById(
+            "deliveryArea"
+        ).value.trim();
+
+
     const address =
         document.getElementById(
             "address"
@@ -427,6 +446,15 @@ async function(){
     if(!phone){
 
         alert("اكتب رقم الجوال");
+
+        return;
+
+    }
+
+
+    if(!deliveryArea){
+
+        alert("اكتب الحي أولًا");
 
         return;
 
@@ -516,7 +544,7 @@ async function(){
             address,
 
         deliveryArea:
-            "غير محدد",
+            deliveryArea,
 
         orderType:
             "توصيل",
@@ -642,7 +670,10 @@ async function(){
 
 📱 الجوال: ${phone}
 
-📍 العنوان:
+📍 الحي:
+${deliveryArea}
+
+🏠 العنوان:
 ${address}
 
 📝 الطلب:
@@ -761,4 +792,4 @@ ${notes}
 
 </body>
 
-</html>
+    </html>
