@@ -1,0 +1,3309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>لوحة إدارة سوق مباشر</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#222;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:18px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+header h1{
+    font-size:23px;
+}
+
+header p{
+    margin-top:6px;
+    font-size:13px;
+    opacity:.9;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px 15px;
+}
+
+.admin-box{
+    background:white;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.admin-box h2{
+    color:#0d6efd;
+    font-size:19px;
+    margin-bottom:15px;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.menu button{
+    border:0;
+    border-radius:12px;
+    padding:14px 8px;
+    background:white;
+    box-shadow:0 2px 7px rgba(0,0,0,.08);
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.menu button.active{
+    background:#0d6efd;
+    color:white;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.stat .number{
+    font-size:27px;
+    font-weight:bold;
+    color:#0d6efd;
+    margin-top:8px;
+}
+
+.item{
+    background:white;
+    border-radius:13px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 2px 7px rgba(0,0,0,.06);
+    line-height:1.8;
+}
+
+.item h3{
+    color:#0d6efd;
+    margin-bottom:7px;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 9px;
+    border-radius:15px;
+    background:#e7f1ff;
+    color:#0d6efd;
+    font-size:12px;
+}
+
+button.action{
+    border:0;
+    border-radius:8px;
+    padding:9px 12px;
+    margin:4px 2px;
+    cursor:pointer;
+    background:#0d6efd;
+    color:white;
+}
+
+button.danger{
+    background:#dc3545;
+}
+
+button.success{
+    background:#198754;
+}
+
+button.warning{
+    background:#ffc107;
+    color:#222;
+}
+
+button.gray{
+    background:#6c757d;
+}
+
+.empty{
+    background:white;
+    padding:30px;
+    text-align:center;
+    border-radius:14px;
+    color:#777;
+}
+
+.loading{
+    text-align:center;
+    padding:25px;
+    color:#777;
+}
+
+.error{
+    background:#f8d7da;
+    color:#842029;
+    padding:15px;
+    border-radius:12px;
+    line-height:1.8;
+}
+
+.logout{
+    width:100%;
+    border:0;
+    padding:13px;
+    border-radius:10px;
+    background:#dc3545;
+    color:white;
+    font-size:15px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+
+/* ===============================
+   النماذج
+================================ */
+
+.form-box{
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:18px;
+}
+
+.form-box h3{
+    color:#0d6efd;
+    margin-bottom:15px;
+}
+
+.form-box input,
+.form-box textarea,
+.form-box select{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    font-size:14px;
+    outline:none;
+    background:white;
+}
+
+.form-box textarea{
+    min-height:80px;
+    resize:vertical;
+}
+
+.form-button{
+    width:100%;
+    border:0;
+    border-radius:9px;
+    padding:13px;
+    background:#198754;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+
+/* ===============================
+   الخزينة
+================================ */
+
+.balance-box{
+    background:#0d6efd;
+    color:white;
+    border-radius:15px;
+    padding:25px;
+    text-align:center;
+    margin-bottom:18px;
+}
+
+.balance-box small{
+    display:block;
+    opacity:.9;
+}
+
+.balance-box strong{
+    display:block;
+    font-size:32px;
+    margin-top:8px;
+}
+
+.finance-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.finance-buttons button{
+    border:0;
+    padding:14px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.deposit{
+    background:#198754;
+}
+
+.withdraw{
+    background:#dc3545;
+}
+
+.finance-form{
+    display:none;
+    margin-top:15px;
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:12px;
+}
+
+
+/* ===============================
+   المنتجات
+================================ */
+
+.product-image{
+    width:100%;
+    max-width:220px;
+    height:180px;
+    object-fit:cover;
+    border-radius:12px;
+    display:block;
+    margin:0 auto 15px;
+    background:#f1f1f1;
+}
+
+.no-image{
+    width:100%;
+    max-width:220px;
+    height:180px;
+    border-radius:12px;
+    background:#f1f1f1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 15px;
+    color:#888;
+}
+
+.edit-form{
+    display:none;
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:12px;
+    margin-top:12px;
+}
+
+.edit-form input,
+.edit-form textarea{
+    width:100%;
+    padding:11px;
+    margin-bottom:9px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+    background:white;
+}
+
+.edit-form textarea{
+    min-height:70px;
+    resize:vertical;
+}
+
+.edit-buttons{
+    display:flex;
+    gap:7px;
+}
+
+.edit-buttons button{
+    flex:1;
+}
+
+.product-actions{
+    margin-top:12px;
+    border-top:1px solid #eee;
+    padding-top:10px;
+}
+
+
+@media(max-width:600px){
+
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .product-image,
+    .no-image{
+        max-width:100%;
+        height:200px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+<h1>🛠️ لوحة إدارة سوق مباشر</h1>
+
+<p id="adminEmail">
+جاري التحقق من المدير...
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- ===============================
+     القائمة
+================================ -->
+
+<div class="menu">
+
+<button class="active"
+onclick="showSection('dashboard',this)">
+📊 الرئيسية
+</button>
+
+<button
+onclick="showSection('orders',this)">
+📦 الطلبات
+</button>
+
+<button
+onclick="showSection('archive',this)">
+🗄️ الأرشيف
+</button>
+
+<button
+onclick="showSection('accounts',this)">
+💰 الحسابات
+</button>
+
+<button
+onclick="showSection('treasury',this)">
+💵 خزينة الإدارة
+</button>
+
+<button
+onclick="showSection('products',this)">
+🛒 المنتجات
+</button>
+
+<button
+onclick="showSection('views',this)">
+👁️ المشاهدات
+</button>
+
+<button
+onclick="showSection('sales',this)">
+🔥 الأكثر مبيعًا
+</button>
+
+<button
+onclick="showSection('areas',this)">
+📍 المناطق الأكثر شراء
+</button>
+
+</div>
+
+
+<!-- ===============================
+     الرئيسية
+================================ -->
+
+<div id="dashboard"
+class="section active">
+
+<div class="admin-box">
+
+<h2>📊 ملخص سوق مباشر</h2>
+
+<div class="cards">
+
+<div class="stat">
+الطلبات
+<div id="totalOrders"
+class="number">
+0
+</div>
+</div>
+
+<div class="stat">
+المشاهدات
+<div id="totalViews"
+class="number">
+0
+</div>
+</div>
+
+<div class="stat">
+المنتجات
+<div id="totalProducts"
+class="number">
+0
+</div>
+</div>
+
+<div class="stat">
+المبيعات
+<div id="totalSales"
+class="number">
+0
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     الطلبات
+================================ -->
+
+<div id="orders"
+class="section">
+
+<div class="admin-box">
+
+<h2>📦 الطلبات</h2>
+
+<div id="ordersList"
+class="loading">
+جاري تحميل الطلبات...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     الأرشيف
+================================ -->
+
+<div id="archive"
+class="section">
+
+<div class="admin-box">
+
+<h2>🗄️ أرشيف الطلبات</h2>
+
+<div id="archiveList"
+class="loading">
+جاري تحميل الأرشيف...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     حسابات البقالات
+================================ -->
+
+<div id="accounts"
+class="section">
+
+<div class="admin-box">
+
+<h2>💰 حسابات البقالات</h2>
+
+<div class="form-box">
+
+<h3>➕ إضافة حركة حساب</h3>
+
+<input
+type="text"
+id="accountShop"
+placeholder="اسم البقالة">
+
+<input
+type="text"
+id="accountProduct"
+placeholder="اسم المنتج">
+
+<input
+type="number"
+id="accountBuy"
+placeholder="سعر الشراء">
+
+<input
+type="number"
+id="accountSell"
+placeholder="سعر البيع">
+
+<input
+type="number"
+id="accountProfit"
+placeholder="الربح">
+
+<button
+class="form-button"
+onclick="addAccount()">
+
+➕ إضافة الحساب
+
+</button>
+
+</div>
+
+
+<div id="accountsList"
+class="loading">
+
+جاري تحميل الحسابات...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     خزينة الإدارة
+================================ -->
+
+<div id="treasury"
+class="section">
+
+<div class="admin-box">
+
+<h2>💵 خزينة الإدارة</h2>
+
+
+<div class="balance-box">
+
+<small>
+الرصيد الحالي
+</small>
+
+<strong id="treasuryBalance">
+0 ريال
+</strong>
+
+</div>
+
+
+<div class="finance-buttons">
+
+<button
+class="deposit"
+onclick="openFinanceForm('deposit')">
+
+➕ إيداع
+
+</button>
+
+<button
+class="withdraw"
+onclick="openFinanceForm('withdraw')">
+
+➖ سحب
+
+</button>
+
+</div>
+
+
+<div
+id="financeForm"
+class="finance-form">
+
+<h3 id="financeTitle">
+إضافة عملية
+</h3>
+
+<input
+type="number"
+id="financeAmount"
+placeholder="المبلغ بالريال">
+
+<input
+type="text"
+id="financeNote"
+placeholder="ملاحظة مثل: رأس مال أو مصروف">
+
+<button
+class="form-button"
+onclick="saveFinance()">
+
+💾 حفظ العملية
+
+</button>
+
+</div>
+
+
+<br>
+
+<h3>
+📋 سجل الخزينة
+</h3>
+
+<br>
+
+<div id="financeList"
+class="loading">
+
+جاري تحميل الخزينة...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     المنتجات
+================================ -->
+
+<div id="products"
+class="section">
+
+<div class="admin-box">
+
+<h2>🛒 المنتجات</h2>
+
+<div class="form-box">
+
+<h3>
+➕ إضافة منتج جديد
+</h3>
+
+<input
+type="text"
+id="productName"
+placeholder="اسم المنتج">
+
+<input
+type="number"
+id="productPrice"
+placeholder="السعر بالريال">
+
+<input
+type="text"
+id="productCategory"
+placeholder="القسم">
+
+<textarea
+id="productDescription"
+placeholder="وصف المنتج"></textarea>
+
+<input
+type="url"
+id="productImage"
+placeholder="رابط صورة المنتج">
+
+<button
+id="addProductButton"
+class="form-button">
+
+➕ إضافة المنتج
+
+</button>
+
+</div>
+
+
+<div id="productsList"
+class="loading">
+
+جاري تحميل المنتجات...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     المشاهدات
+================================ -->
+
+<div id="views"
+class="section">
+
+<div class="admin-box">
+
+<h2>👁️ مشاهدات المنتجات</h2>
+
+<div id="viewsList"
+class="loading">
+
+جاري تحميل المشاهدات...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     الأكثر مبيعًا
+================================ -->
+
+<div id="sales"
+class="section">
+
+<div class="admin-box">
+
+<h2>🔥 المنتجات الأكثر مبيعًا</h2>
+
+<div id="salesList"
+class="loading">
+
+جاري حساب المبيعات...
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===============================
+     المناطق
+================================ -->
+
+<div id="areas"
+class="section">
+
+<div class="admin-box">
+
+<h2>📍 المناطق الأكثر شراء</h2>
+
+<div id="areasList"
+class="loading">
+
+جاري حساب المناطق...
+
+</div>
+
+</div>
+
+</div>
+
+
+<button
+class="logout"
+id="logoutButton">
+
+🚪 تسجيل الخروج
+
+</button>
+
+</div>
+
+
+<script type="module">
+
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    deleteDoc,
+    addDoc,
+    updateDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================================
+   Firebase
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAXZqvb11VBhk7OfH68zY5VPQe01ZtKa-w",
+
+    authDomain:
+    "souq-mubasher-c9d87.firebaseapp.com",
+
+    projectId:
+    "souq-mubasher-c9d87",
+
+    storageBucket:
+    "souq-mubasher-c9d87.firebasestorage.app",
+
+    messagingSenderId:
+    "34321703167",
+
+    appId:
+    "1:34321703167:web:bbea33f93d9485fc97acca"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
+
+/* =========================================
+   المدير
+========================================= */
+
+const ADMIN_EMAILS = [
+
+    "waleedahmad@gmail.com",
+
+    "waleedahmadahmad@gmail.com",
+
+    "waleedahmad2031@gmail.com"
+
+];
+
+
+/* =========================================
+   البيانات
+========================================= */
+
+let orders = [];
+
+let archivedOrders = [];
+
+let accounts = [];
+
+let products = [];
+
+let events = [];
+
+let finance = [];
+
+let financeType = "deposit";
+
+
+/* =========================================
+   التحقق
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        if(!user){
+
+            window.location.href =
+            "admin-login.html";
+
+            return;
+
+        }
+
+
+        const email =
+        String(user.email || "")
+        .toLowerCase();
+
+
+        if(!ADMIN_EMAILS.includes(email)){
+
+            await signOut(auth);
+
+            window.location.href =
+            "admin-login.html";
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "adminEmail"
+        ).textContent =
+        "المدير: " + email;
+
+
+        await loadAll();
+
+    }
+);
+
+
+/* =========================================
+   تحميل البيانات
+========================================= */
+
+async function loadAll(){
+
+    /*
+       استخدمنا Promise.allSettled
+       حتى لا تتعطل الإدارة كلها
+       إذا فشلت مجموعة واحدة.
+    */
+
+    const results =
+    await Promise.allSettled([
+
+        getDocs(
+            collection(db,"orders")
+        ),
+
+        getDocs(
+            collection(db,"archivedOrders")
+        ),
+
+        getDocs(
+            collection(db,"accounts")
+        ),
+
+        getDocs(
+            collection(db,"products")
+        ),
+
+        getDocs(
+            collection(db,"productEvents")
+        ),
+
+        getDocs(
+            collection(db,"adminFinance")
+        )
+
+    ]);
+
+
+    const [
+        ordersResult,
+        archiveResult,
+        accountsResult,
+        productsResult,
+        eventsResult,
+        financeResult
+    ] = results;
+
+
+    /* الطلبات */
+
+    if(
+        ordersResult.status === "fulfilled"
+    ){
+
+        orders =
+        ordersResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+
+        orders.sort(
+            (a,b) => {
+
+                const dateA =
+                a.createdAt?.toMillis
+                ? a.createdAt.toMillis()
+                : 0;
+
+
+                const dateB =
+                b.createdAt?.toMillis
+                ? b.createdAt.toMillis()
+                : 0;
+
+
+                return dateB - dateA;
+
+            }
+        );
+
+    }else{
+
+        console.error(
+            "orders:",
+            ordersResult.reason
+        );
+
+        orders = [];
+
+    }
+
+
+    /* الأرشيف */
+
+    if(
+        archiveResult.status === "fulfilled"
+    ){
+
+        archivedOrders =
+        archiveResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+    }else{
+
+        archivedOrders = [];
+
+        console.error(
+            "archivedOrders:",
+            archiveResult.reason
+        );
+
+    }
+
+
+    /* الحسابات */
+
+    if(
+        accountsResult.status === "fulfilled"
+    ){
+
+        accounts =
+        accountsResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+    }else{
+
+        accounts = [];
+
+        console.error(
+            "accounts:",
+            accountsResult.reason
+        );
+
+    }
+
+
+    /* المنتجات */
+
+    if(
+        productsResult.status === "fulfilled"
+    ){
+
+        products =
+        productsResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+    }else{
+
+        products = [];
+
+        console.error(
+            "products:",
+            productsResult.reason
+        );
+
+    }
+
+
+    /* المشاهدات */
+
+    if(
+        eventsResult.status === "fulfilled"
+    ){
+
+        events =
+        eventsResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+    }else{
+
+        events = [];
+
+        console.error(
+            "productEvents:",
+            eventsResult.reason
+        );
+
+    }
+
+
+    /* الخزينة */
+
+    if(
+        financeResult.status === "fulfilled"
+    ){
+
+        finance =
+        financeResult.value.docs.map(
+            d => ({
+                id:d.id,
+                ...d.data()
+            })
+        );
+
+
+        finance.sort(
+            (a,b) => {
+
+                const dateA =
+                a.createdAt?.toMillis
+                ? a.createdAt.toMillis()
+                : 0;
+
+
+                const dateB =
+                b.createdAt?.toMillis
+                ? b.createdAt.toMillis()
+                : 0;
+
+
+                return dateB - dateA;
+
+            }
+        );
+
+    }else{
+
+        finance = [];
+
+        console.error(
+            "adminFinance:",
+            financeResult.reason
+        );
+
+    }
+
+
+    updateDashboard();
+
+    renderOrders();
+
+    renderArchive();
+
+    renderAccounts();
+
+    renderFinance();
+
+    renderProducts();
+
+    renderViews();
+
+    renderSales();
+
+    renderAreas();
+
+}
+
+
+/* =========================================
+   الرئيسية
+========================================= */
+
+function updateDashboard(){
+
+    document.getElementById(
+        "totalOrders"
+    ).textContent =
+    orders.length;
+
+
+    document.getElementById(
+        "totalProducts"
+    ).textContent =
+    products.length;
+
+
+    const views =
+    events.filter(
+        e => e.type === "view"
+    ).length;
+
+
+    document.getElementById(
+        "totalViews"
+    ).textContent =
+    views;
+
+
+    let sales = 0;
+
+
+    orders.forEach(
+        order => {
+
+            if(
+                order.status === "تم التوصيل" ||
+                order.status === "مكتمل"
+            ){
+
+                sales += Number(
+                    order.total ||
+                    order.finalTotal ||
+                    0
+                );
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "totalSales"
+    ).textContent =
+    sales + " ريال";
+
+}
+
+
+/* =========================================
+   الطلبات
+========================================= */
+
+function renderOrders(){
+
+    const box =
+    document.getElementById(
+        "ordersList"
+    );
+
+
+    if(!orders.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد طلبات حاليًا.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    orders.map(
+        order => {
+
+            const customer =
+            order.customerName ||
+            order.name ||
+            "عميل";
+
+
+            const phone =
+            order.customerPhone ||
+            order.phone ||
+            "";
+
+
+            const area =
+            order.deliveryArea ||
+            order.deliveryDistrict ||
+            order.customerAddress ||
+            order.address ||
+            "";
+
+
+            const total =
+            Number(
+                order.total ||
+                order.finalTotal ||
+                0
+            );
+
+
+            const status =
+            order.status ||
+            "جديد";
+
+
+            return `
+
+            <div class="item">
+
+                <h3>
+                📦 ${escapeHTML(customer)}
+                </h3>
+
+                <div>
+                📞 ${escapeHTML(phone)}
+                </div>
+
+                <div>
+                📍 ${escapeHTML(area)}
+                </div>
+
+                <div>
+                💰 ${total} ريال
+                </div>
+
+                <div style="margin-top:8px">
+
+                الحالة:
+
+                <span class="badge">
+                ${escapeHTML(status)}
+                </span>
+
+                </div>
+
+
+                <div style="margin-top:12px">
+
+                <button
+                class="action"
+                onclick="changeOrderStatus('${order.id}','جديد')">
+
+                🆕 جديد
+
+                </button>
+
+
+                <button
+                class="action warning"
+                onclick="changeOrderStatus('${order.id}','تم التجهيز')">
+
+                📦 تم التجهيز
+
+                </button>
+
+
+                <button
+                class="action success"
+                onclick="changeOrderStatus('${order.id}','تم التوصيل')">
+
+                🚚 تم التوصيل
+
+                </button>
+
+
+                <button
+                class="action success"
+                onclick="archiveOrder('${order.id}')">
+
+                🗄️ أرشفة
+
+                </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* =========================================
+   تغيير حالة الطلب
+========================================= */
+
+window.changeOrderStatus =
+async function(id,status){
+
+    try{
+
+        await updateDoc(
+
+            doc(
+                db,
+                "orders",
+                id
+            ),
+
+            {
+                status:status
+            }
+
+        );
+
+
+        const order =
+        orders.find(
+            item => item.id === id
+        );
+
+
+        if(order){
+
+            order.status =
+            status;
+
+        }
+
+
+        renderOrders();
+
+        updateDashboard();
+
+    }catch(error){
+
+        alert(
+            "تعذر تغيير حالة الطلب:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   الأرشيف
+========================================= */
+
+function renderArchive(){
+
+    const box =
+    document.getElementById(
+        "archiveList"
+    );
+
+
+    if(!archivedOrders.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد طلبات مؤرشفة.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    archivedOrders.map(
+        order => `
+
+        <div class="item">
+
+            <h3>
+            🗄️ ${
+                escapeHTML(
+                    order.customerName ||
+                    order.name ||
+                    "طلب"
+                )
+            }
+            </h3>
+
+            <div>
+            📞 ${
+                escapeHTML(
+                    order.customerPhone ||
+                    order.phone ||
+                    ""
+                )
+            }
+            </div>
+
+            <div>
+            📍 ${
+                escapeHTML(
+                    order.deliveryArea ||
+                    order.deliveryDistrict ||
+                    order.customerAddress ||
+                    ""
+                )
+            }
+            </div>
+
+            <div>
+            💰 ${
+                Number(
+                    order.total ||
+                    order.finalTotal ||
+                    0
+                )
+            } ريال
+            </div>
+
+            <button
+            class="action danger"
+            onclick="deleteArchive('${order.id}')">
+
+            🗑️ حذف
+
+            </button>
+
+        </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   حسابات البقالات
+========================================= */
+
+function renderAccounts(){
+
+    const box =
+    document.getElementById(
+        "accountsList"
+    );
+
+
+    if(!accounts.length){
+
+        box.innerHTML =
+        `<div class="empty">
+
+        لا توجد حسابات بقالات حاليًا.
+
+        <br><br>
+
+        يمكنك إضافة حركة من النموذج أعلاه.
+
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    accounts.map(
+        account => `
+
+        <div class="item">
+
+            <h3>
+            💰 ${
+                escapeHTML(
+                    account.shopName ||
+                    account.name ||
+                    "حساب"
+                )
+            }
+            </h3>
+
+            <div>
+            المنتج:
+            ${
+                escapeHTML(
+                    account.productName ||
+                    account.product ||
+                    ""
+                )
+            }
+            </div>
+
+            <div>
+            سعر الشراء:
+            ${
+                Number(
+                    account.buyPrice ||
+                    0
+                )
+            }
+            ريال
+            </div>
+
+            <div>
+            سعر البيع:
+            ${
+                Number(
+                    account.sellPrice ||
+                    0
+                )
+            }
+            ريال
+            </div>
+
+            <div>
+            الربح:
+            ${
+                Number(
+                    account.profit ||
+                    0
+                )
+            }
+            ريال
+            </div>
+
+            <button
+            class="action danger"
+            onclick="deleteAccount('${account.id}')">
+
+            🗑️ حذف
+
+            </button>
+
+        </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   إضافة حساب بقالة
+========================================= */
+
+window.addAccount =
+async function(){
+
+    const shop =
+    document.getElementById(
+        "accountShop"
+    ).value.trim();
+
+
+    const product =
+    document.getElementById(
+        "accountProduct"
+    ).value.trim();
+
+
+    const buy =
+    Number(
+        document.getElementById(
+            "accountBuy"
+        ).value
+    );
+
+
+    const sell =
+    Number(
+        document.getElementById(
+            "accountSell"
+        ).value
+    );
+
+
+    const profitInput =
+    document.getElementById(
+        "accountProfit"
+    ).value;
+
+
+    const profit =
+    profitInput === ""
+    ? sell - buy
+    : Number(profitInput);
+
+
+    if(!shop){
+
+        alert("اكتب اسم البقالة.");
+
+        return;
+
+    }
+
+
+    if(!product){
+
+        alert("اكتب اسم المنتج.");
+
+        return;
+
+    }
+
+
+    try{
+
+        await addDoc(
+
+            collection(
+                db,
+                "accounts"
+            ),
+
+            {
+
+                shopName:shop,
+
+                productName:product,
+
+                buyPrice:buy,
+
+                sellPrice:sell,
+
+                profit:profit,
+
+                createdAt:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+        document.getElementById(
+            "accountShop"
+        ).value = "";
+
+
+        document.getElementById(
+            "accountProduct"
+        ).value = "";
+
+
+        document.getElementById(
+            "accountBuy"
+        ).value = "";
+
+
+        document.getElementById(
+            "accountSell"
+        ).value = "";
+
+
+        document.getElementById(
+            "accountProfit"
+        ).value = "";
+
+
+        alert(
+            "تمت إضافة حساب البقالة ✅"
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر إضافة الحساب:\n" +
+            error.message
+        );
+
+        console.error(error);
+
+    }
+
+};
+
+
+/* =========================================
+   حذف حساب بقالة
+========================================= */
+
+window.deleteAccount =
+async function(id){
+
+    if(
+        !confirm(
+            "هل تريد حذف هذا الحساب؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "accounts",
+                id
+            )
+
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر حذف الحساب:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   الخزينة
+========================================= */
+
+function calculateBalance(){
+
+    let balance = 0;
+
+
+    finance.forEach(
+        item => {
+
+            const amount =
+            Number(
+                item.amount || 0
+            );
+
+
+            if(item.type === "deposit"){
+
+                balance += amount;
+
+            }
+
+
+            if(item.type === "withdraw"){
+
+                balance -= amount;
+
+            }
+
+        }
+    );
+
+
+    return balance;
+
+}
+
+
+function renderFinance(){
+
+    const balance =
+    calculateBalance();
+
+
+    document.getElementById(
+        "treasuryBalance"
+    ).textContent =
+    balance + " ريال";
+
+
+    const box =
+    document.getElementById(
+        "financeList"
+    );
+
+
+    if(!finance.length){
+
+        box.innerHTML =
+        `<div class="empty">
+
+        لا توجد عمليات مالية حتى الآن.
+
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    finance.map(
+        item => {
+
+            const amount =
+            Number(
+                item.amount || 0
+            );
+
+
+            const isDeposit =
+            item.type === "deposit";
+
+
+            return `
+
+            <div class="item">
+
+                <h3>
+                ${
+                    isDeposit
+                    ? "➕ إيداع"
+                    : "➖ سحب"
+                }
+                </h3>
+
+                <div>
+                المبلغ:
+                <b>
+                ${amount}
+                ريال
+                </b>
+                </div>
+
+                <div>
+                الملاحظة:
+                ${
+                    escapeHTML(
+                        item.note ||
+                        "بدون ملاحظة"
+                    )
+                }
+                </div>
+
+                <button
+                class="action danger"
+                onclick="deleteFinance('${item.id}')">
+
+                🗑️ حذف العملية
+
+                </button>
+
+            </div>
+
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* =========================================
+   فتح نموذج إيداع / سحب
+========================================= */
+
+window.openFinanceForm =
+function(type){
+
+    financeType =
+    type;
+
+
+    document.getElementById(
+        "financeForm"
+    ).style.display =
+    "block";
+
+
+    document.getElementById(
+        "financeTitle"
+    ).textContent =
+    type === "deposit"
+    ? "➕ تسجيل إيداع"
+    : "➖ تسجيل سحب";
+
+
+    document.getElementById(
+        "financeAmount"
+    ).value = "";
+
+
+    document.getElementById(
+        "financeNote"
+    ).value = "";
+
+};
+
+
+/* =========================================
+   حفظ الإيداع / السحب
+========================================= */
+
+window.saveFinance =
+async function(){
+
+    const amount =
+    Number(
+        document.getElementById(
+            "financeAmount"
+        ).value
+    );
+
+
+    const note =
+    document.getElementById(
+        "financeNote"
+    ).value.trim();
+
+
+    if(!amount || amount <= 0){
+
+        alert(
+            "اكتب مبلغًا صحيحًا."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       منع سحب مبلغ أكبر من الرصيد
+    */
+
+    if(financeType === "withdraw"){
+
+        const balance =
+        calculateBalance();
+
+
+        if(amount > balance){
+
+            alert(
+                "لا يمكن سحب مبلغ أكبر من الرصيد الحالي.\n" +
+                "الرصيد الحالي: " +
+                balance +
+                " ريال"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    try{
+
+        await addDoc(
+
+            collection(
+                db,
+                "adminFinance"
+            ),
+
+            {
+
+                type:
+                financeType,
+
+                amount:
+                amount,
+
+                note:
+                note,
+
+                createdAt:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+        document.getElementById(
+            "financeForm"
+        ).style.display =
+        "none";
+
+
+        alert(
+            financeType === "deposit"
+            ? "تم تسجيل الإيداع ✅"
+            : "تم تسجيل السحب ✅"
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر حفظ العملية:\n" +
+            error.message
+        );
+
+        console.error(error);
+
+    }
+
+};
+
+
+/* =========================================
+   حذف عملية خزينة
+========================================= */
+
+window.deleteFinance =
+async function(id){
+
+    if(
+        !confirm(
+            "هل تريد حذف هذه العملية؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "adminFinance",
+                id
+            )
+
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر حذف العملية:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   المنتجات
+========================================= */
+
+function renderProducts(){
+
+    const box =
+    document.getElementById(
+        "productsList"
+    );
+
+
+    if(!products.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد منتجات.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    products.map(
+        product => {
+
+            const image =
+            product.image ||
+            product.imageUrl ||
+            product.img ||
+            "";
+
+
+            const name =
+            product.name ||
+            product.اسم ||
+            "منتج";
+
+
+            const price =
+            Number(
+                product.price ||
+                product.سعر ||
+                0
+            );
+
+
+            const category =
+            product.category ||
+            product.القسم ||
+            "";
+
+
+            const description =
+            product.description ||
+            product.الوصف ||
+            "";
+
+
+            return `
+
+            <div class="item">
+
+                ${
+                    image
+                    ?
+                    `
+                    <img
+                    src="${escapeHTML(image)}"
+                    class="product-image"
+                    alt="${escapeHTML(name)}"
+                    >
+                    `
+                    :
+                    `
+                    <div class="no-image">
+                    🖼️ لا توجد صورة
+                    </div>
+                    `
+                }
+
+
+                <h3>
+                🛒 ${escapeHTML(name)}
+                </h3>
+
+
+                <div>
+                السعر:
+                <b>
+                ${price}
+                </b>
+                ريال
+                </div>
+
+
+                <div>
+                القسم:
+                ${escapeHTML(category)}
+                </div>
+
+
+                <div>
+                الوصف:
+                ${escapeHTML(
+                    description ||
+                    "لا يوجد وصف"
+                )}
+                </div>
+
+
+                <div>
+                البائع:
+                ${escapeHTML(
+                    product.shopName ||
+                    "مشتاق وليد"
+                )}
+                </div>
+
+
+                <div class="product-actions">
+
+                    <button
+                    class="action warning"
+                    onclick="toggleEdit('${product.id}')">
+
+                    ✏️ تعديل
+
+                    </button>
+
+
+                    <button
+                    class="action danger"
+                    onclick="deleteProduct('${product.id}')">
+
+                    🗑️ حذف
+
+                    </button>
+
+                </div>
+
+
+                <div
+                id="edit-${product.id}"
+                class="edit-form">
+
+                    <input
+                    type="text"
+                    id="edit-name-${product.id}"
+                    value="${escapeHTML(name)}"
+                    placeholder="اسم المنتج"
+                    >
+
+                    <input
+                    type="number"
+                    id="edit-price-${product.id}"
+                    value="${price}"
+                    placeholder="السعر"
+                    >
+
+                    <input
+                    type="text"
+                    id="edit-category-${product.id}"
+                    value="${escapeHTML(category)}"
+                    placeholder="القسم"
+                    >
+
+                    <textarea
+                    id="edit-description-${product.id}"
+                    placeholder="الوصف"
+                    >${escapeHTML(description)}</textarea>
+
+                    <input
+                    type="url"
+                    id="edit-image-${product.id}"
+                    value="${escapeHTML(image)}"
+                    placeholder="رابط صورة المنتج"
+                    >
+
+
+                    <div class="edit-buttons">
+
+                        <button
+                        class="action success"
+                        onclick="saveProduct('${product.id}')">
+
+                        💾 حفظ
+
+                        </button>
+
+
+                        <button
+                        class="action gray"
+                        onclick="toggleEdit('${product.id}')">
+
+                        إلغاء
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* =========================================
+   إضافة منتج
+========================================= */
+
+document
+.getElementById("addProductButton")
+.addEventListener(
+    "click",
+    async function(){
+
+        const name =
+        document.getElementById(
+            "productName"
+        ).value.trim();
+
+
+        const price =
+        Number(
+            document.getElementById(
+                "productPrice"
+            ).value
+        );
+
+
+        const category =
+        document.getElementById(
+            "productCategory"
+        ).value.trim();
+
+
+        const description =
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
+
+
+        const image =
+        document.getElementById(
+            "productImage"
+        ).value.trim();
+
+
+        if(!name){
+
+            alert(
+                "اكتب اسم المنتج."
+            );
+
+            return;
+
+        }
+
+
+        if(!price || price <= 0){
+
+            alert(
+                "اكتب سعر المنتج."
+            );
+
+            return;
+
+        }
+
+
+        if(!category){
+
+            alert(
+                "اكتب قسم المنتج."
+            );
+
+            return;
+
+        }
+
+
+        try{
+
+            const user =
+            auth.currentUser;
+
+
+            if(!user){
+
+                throw new Error(
+                    "لم يتم تسجيل الدخول."
+                );
+
+            }
+
+
+            await addDoc(
+
+                collection(
+                    db,
+                    "products"
+                ),
+
+                {
+
+                    name:name,
+
+                    price:price,
+
+                    category:category,
+
+                    description:description,
+
+                    image:image,
+
+                    shopName:
+                    "مشتاق وليد",
+
+                    sellerId:
+                    user.uid,
+
+                    createdAt:
+                    serverTimestamp()
+
+                }
+
+            );
+
+
+            document.getElementById(
+                "productName"
+            ).value = "";
+
+
+            document.getElementById(
+                "productPrice"
+            ).value = "";
+
+
+            document.getElementById(
+                "productCategory"
+            ).value = "";
+
+
+            document.getElementById(
+                "productDescription"
+            ).value = "";
+
+
+            document.getElementById(
+                "productImage"
+            ).value = "";
+
+
+            alert(
+                "تمت إضافة المنتج بنجاح ✅"
+            );
+
+
+            await loadAll();
+
+        }catch(error){
+
+            alert(
+                "تعذر إضافة المنتج:\n" +
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   تعديل المنتج
+========================================= */
+
+window.toggleEdit =
+function(id){
+
+    const form =
+    document.getElementById(
+        "edit-" + id
+    );
+
+
+    if(!form){
+
+        return;
+
+    }
+
+
+    form.style.display =
+    form.style.display === "block"
+    ? "none"
+    : "block";
+
+};
+
+
+window.saveProduct =
+async function(id){
+
+    const name =
+    document.getElementById(
+        "edit-name-" + id
+    ).value.trim();
+
+
+    const price =
+    Number(
+        document.getElementById(
+            "edit-price-" + id
+        ).value
+    );
+
+
+    const category =
+    document.getElementById(
+        "edit-category-" + id
+    ).value.trim();
+
+
+    const description =
+    document.getElementById(
+        "edit-description-" + id
+    ).value.trim();
+
+
+    const image =
+    document.getElementById(
+        "edit-image-" + id
+    ).value.trim();
+
+
+    if(!name || !price || !category){
+
+        alert(
+            "أكمل بيانات المنتج."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await updateDoc(
+
+            doc(
+                db,
+                "products",
+                id
+            ),
+
+            {
+
+                name:name,
+
+                price:price,
+
+                category:category,
+
+                description:description,
+
+                image:image
+
+            }
+
+        );
+
+
+        alert(
+            "تم تعديل المنتج بنجاح ✅"
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر تعديل المنتج:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   حذف المنتج
+========================================= */
+
+window.deleteProduct =
+async function(id){
+
+    const product =
+    products.find(
+        item => item.id === id
+    );
+
+
+    if(!product){
+
+        return;
+
+    }
+
+
+    const name =
+    product.name ||
+    product.اسم ||
+    "هذا المنتج";
+
+
+    if(
+        !confirm(
+            "هل تريد حذف المنتج:\n\n" +
+            name
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "products",
+                id
+            )
+
+        );
+
+
+        alert(
+            "تم حذف المنتج بنجاح ✅"
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر حذف المنتج:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   المشاهدات
+========================================= */
+
+function renderViews(){
+
+    const box =
+    document.getElementById(
+        "viewsList"
+    );
+
+
+    const views =
+    events.filter(
+        e => e.type === "view"
+    );
+
+
+    if(!views.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد مشاهدات مسجلة حتى الآن.
+        </div>`;
+
+        return;
+
+    }
+
+
+    const map = {};
+
+
+    views.forEach(
+        event => {
+
+            const id =
+            event.productId ||
+            event.productName ||
+            "unknown";
+
+
+            if(!map[id]){
+
+                map[id] = {
+
+                    name:
+                    event.productName ||
+                    "منتج",
+
+                    count:0
+
+                };
+
+            }
+
+
+            map[id].count++;
+
+        }
+    );
+
+
+    const list =
+    Object.values(map)
+    .sort(
+        (a,b) =>
+        b.count - a.count
+    );
+
+
+    box.innerHTML =
+    list.map(
+        item => `
+
+        <div class="item">
+
+            <h3>
+            👁️ ${escapeHTML(item.name)}
+            </h3>
+
+            <div>
+            عدد المشاهدات:
+            <b>${item.count}</b>
+            </div>
+
+        </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   المبيعات
+========================================= */
+
+function renderSales(){
+
+    const box =
+    document.getElementById(
+        "salesList"
+    );
+
+
+    const salesMap = {};
+
+
+    orders.forEach(
+        order => {
+
+            const list =
+            Array.isArray(
+                order.products
+            )
+            ? order.products
+            : [];
+
+
+            list.forEach(
+                product => {
+
+                    const id =
+                    product.id ||
+                    product.productId ||
+                    product.name ||
+                    "unknown";
+
+
+                    if(!salesMap[id]){
+
+                        salesMap[id] = {
+
+                            name:
+                            product.name ||
+                            product.productName ||
+                            "منتج",
+
+                            quantity:0
+
+                        };
+
+                    }
+
+
+                    salesMap[id].quantity +=
+                    Number(
+                        product.quantity ||
+                        product.qty ||
+                        1
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    const list =
+    Object.values(salesMap)
+    .sort(
+        (a,b) =>
+        b.quantity - a.quantity
+    );
+
+
+    if(!list.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد مبيعات مسجلة حتى الآن.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    list.map(
+        (item,index) => `
+
+        <div class="item">
+
+            <h3>
+            ${index + 1}. 🔥
+            ${escapeHTML(item.name)}
+            </h3>
+
+            <div>
+            إجمالي الكمية المباعة:
+            <b>${item.quantity}</b>
+            </div>
+
+        </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   المناطق
+========================================= */
+
+function renderAreas(){
+
+    const box =
+    document.getElementById(
+        "areasList"
+    );
+
+
+    const areaMap = {};
+
+
+    orders.forEach(
+        order => {
+
+            const area =
+            order.deliveryArea ||
+            order.deliveryDistrict ||
+            order.customerAddress ||
+            order.address ||
+            "غير محدد";
+
+
+            const cleanArea =
+            String(area).trim() ||
+            "غير محدد";
+
+
+            if(!areaMap[cleanArea]){
+
+                areaMap[cleanArea] = 0;
+
+            }
+
+
+            areaMap[cleanArea]++;
+
+        }
+    );
+
+
+    const list =
+    Object.entries(areaMap)
+    .map(
+        ([area,count]) => ({
+            area,
+            count
+        })
+    )
+    .sort(
+        (a,b) =>
+        b.count - a.count
+    );
+
+
+    if(!list.length){
+
+        box.innerHTML =
+        `<div class="empty">
+        لا توجد بيانات عن المناطق حتى الآن.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    list.map(
+        (item,index) => `
+
+        <div class="item">
+
+            <h3>
+            ${index + 1}. 📍
+            ${escapeHTML(item.area)}
+            </h3>
+
+            <div>
+            عدد الطلبات:
+            <b>${item.count}</b>
+            </div>
+
+        </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   أرشفة
+========================================= */
+
+window.archiveOrder =
+async function(id){
+
+    const order =
+    orders.find(
+        item => item.id === id
+    );
+
+
+    if(!order){
+
+        return;
+
+    }
+
+
+    try{
+
+        await addDoc(
+
+            collection(
+                db,
+                "archivedOrders"
+            ),
+
+            {
+                ...order
+            }
+
+        );
+
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "orders",
+                id
+            )
+
+        );
+
+
+        await loadAll();
+
+
+        alert(
+            "تم نقل الطلب إلى الأرشيف ✅"
+        );
+
+    }catch(error){
+
+        alert(
+            "تعذر أرشفة الطلب:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   حذف الأرشيف
+========================================= */
+
+window.deleteArchive =
+async function(id){
+
+    if(
+        !confirm(
+            "هل تريد حذف هذا الطلب نهائيًا؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "archivedOrders",
+                id
+            )
+
+        );
+
+
+        await loadAll();
+
+    }catch(error){
+
+        alert(
+            "تعذر الحذف:\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   التنقل
+========================================= */
+
+window.showSection =
+function(id,button){
+
+    document
+    .querySelectorAll(".section")
+    .forEach(
+        section => {
+
+            section.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    document
+    .querySelectorAll(".menu button")
+    .forEach(
+        btn => {
+
+            btn.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+
+    button.classList.add("active");
+
+};
+
+
+/* =========================================
+   حماية النصوص
+========================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+
+    .replace(/&/g,"&amp;")
+
+    .replace(/</g,"&lt;")
+
+    .replace(/>/g,"&gt;")
+
+    .replace(/"/g,"&quot;")
+
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
+   تسجيل الخروج
+========================================= */
+
+document
+.getElementById("logoutButton")
+.addEventListener(
+    "click",
+    async () => {
+
+        await signOut(auth);
+
+        window.location.href =
+        "admin-login.html";
+
+    }
+);
+
+</script>
+
+</body>
+
+  </html>
