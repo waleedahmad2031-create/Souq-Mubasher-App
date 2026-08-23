@@ -69,7 +69,7 @@ header p{
 
 .messages{
     min-height:250px;
-    max-height:400px;
+    max-height:450px;
     overflow-y:auto;
     margin-bottom:15px;
 }
@@ -78,7 +78,7 @@ header p{
     padding:12px;
     border-radius:12px;
     margin-bottom:10px;
-    line-height:1.7;
+    line-height:1.8;
 }
 
 .bot{
@@ -90,6 +90,37 @@ header p{
     background:#0d6efd;
     color:white;
     text-align:right;
+}
+
+.product-card{
+    background:white;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    margin-top:10px;
+}
+
+.product-name{
+    font-weight:bold;
+    font-size:16px;
+}
+
+.product-price{
+    margin-top:5px;
+    color:#0d6efd;
+    font-weight:bold;
+}
+
+.buy-btn{
+    width:100%;
+    margin-top:10px;
+    background:#198754;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    font-size:15px;
+    cursor:pointer;
 }
 
 .input-area{
@@ -127,13 +158,6 @@ input{
     cursor:pointer;
 }
 
-footer{
-    text-align:center;
-    color:#888;
-    font-size:13px;
-    margin-top:25px;
-}
-
 </style>
 
 </head>
@@ -144,7 +168,7 @@ footer{
 
 <h1>🤖 مساعد سوق مباشر</h1>
 
-<p>اسألني عن الأسعار والمنتجات</p>
+<p>اسأل عن الأسعار أو اطلب المنتجات</p>
 
 </header>
 
@@ -160,7 +184,7 @@ footer{
 <p>
 أنا مساعد سوق مباشر.
 <br>
-اسألني عن أي منتج موجود في السوق.
+اسألني عن السعر أو قل لي ماذا تريد شراءه.
 </p>
 
 </div>
@@ -169,11 +193,22 @@ footer{
 <div class="messages" id="messages">
 
 <div class="message bot">
+
 🤖 أهلاً بك في مساعد سوق مباشر.
-<br>
-اكتب اسم المنتج وسأبحث لك عنه.
+
 <br><br>
-مثال: <b>كم سعر الأرز؟</b>
+
+مثلاً اكتب:
+
+<br>
+<b>كم سعر السكر؟</b>
+
+<br>
+<b>اشتي أرز</b>
+
+<br>
+<b>أريد زيت</b>
+
 </div>
 
 </div>
@@ -184,8 +219,7 @@ footer{
 <input
 type="text"
 id="userInput"
-placeholder="مثلاً: كم سعر الأرز؟"
-onkeydown="if(event.key==='Enter') sendMessage()"
+placeholder="مثلاً: كم سعر السكر؟"
 >
 
 <button class="send" onclick="sendMessage()">
@@ -201,19 +235,15 @@ onkeydown="if(event.key==='Enter') sendMessage()"
 
 </div>
 
-
-<footer>
-
-سوق مباشر © 2026
-
-</footer>
-
 </div>
 
 
 <script type="module">
 
-import { collection, getDocs }
+import {
+    collection,
+    getDocs
+}
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import { db } from "./firebase.js";
@@ -222,142 +252,504 @@ import { db } from "./firebase.js";
 let products = [];
 
 
+/* مفتاح السلة */
+
+const CART_KEY = "cart";
+
+
 /* تحميل المنتجات */
 
 async function loadProducts(){
 
     try{
 
-        const snapshot = await getDocs(
-            collection(db, "products")
-        );
+        const snapshot =
+            await getDocs(
+                collection(db,"products")
+            );
 
         products = [];
 
         snapshot.forEach(doc => {
 
             products.push({
-                id: doc.id,
+
+                id:doc.id,
+
                 ...doc.data()
+
             });
 
         });
 
-        console.log("تم تحميل المنتجات:", products.length);
+        console.log(
+            "تم تحميل المنتجات:",
+            products.length
+        );
 
     }catch(error){
 
-        console.error("خطأ في تحميل المنتجات:", error);
+        console.error(
+            "خطأ في تحميل المنتجات:",
+            error
+        );
+
+        showBot(
+            "❌ حدث خطأ أثناء تحميل المنتجات."
+        );
 
     }
 
 }
 
 
-/* البحث عن المنتج */
+/* تنظيف النص */
 
-function searchProduct(question){
+function cleanText(text){
 
-    const text = question.toLowerCase();
+    return String(text || "")
 
-    const results = products.filter(product => {
+        .toLowerCase()
 
-        const name =
-            String(product.name || "").toLowerCase();
+        .replace(/[إأآ]/g,"ا")
 
-        return text.includes(name) || name.includes(text);
+        .replace(/ة/g,"ه")
 
-    });
+        .replace(/ى/g,"ي")
+
+        .replace(/ال/g,"")
+
+        .replace(/[؟?!.,،]/g,"")
+
+        .replace(/\s+/g," ")
+
+        .trim();
+
+}
+
+
+/* البحث الذكي */
+
+function searchProducts(question){
+
+    const q =
+        cleanText(question);
+
+    if(!q) return [];
+
+
+    const words =
+        q.split(" ");
+
+
+    const results =
+        products.filter(product => {
+
+            const name =
+                cleanText(
+                    product.name
+                );
+
+            if(!name) return false;
+
+
+            /* تطابق الاسم مع السؤال */
+
+            if(
+                q.includes(name) ||
+                name.includes(q)
+            ){
+
+                return true;
+
+            }
+
+
+            /* تطابق الكلمات */
+
+            return words.some(word =>
+
+                word.length >= 2 &&
+                name.includes(word)
+
+            );
+
+        });
+
 
     return results;
 
 }
 
 
-/* إرسال السؤال */
+/* هل المستخدم يريد شراء؟ */
 
-window.sendMessage = async function(){
+function wantsToBuy(text){
 
-    const input =
-        document.getElementById("userInput");
+    const words = [
+
+        "اشتي",
+        "أشتي",
+        "ابغى",
+        "أبغى",
+        "اريد",
+        "أريد",
+        "عايز",
+        "شراء",
+        "اشتري",
+        "أشتري",
+        "طلب",
+        "اطلب",
+        "جيب",
+        "هات"
+
+    ];
+
+
+    return words.some(word =>
+        text.includes(word)
+    );
+
+}
+
+
+/* عرض رسالة المساعد */
+
+function showBot(html){
 
     const messages =
-        document.getElementById("messages");
+        document.getElementById(
+            "messages"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+    message.className =
+        "message bot";
+
+
+    message.innerHTML =
+        html;
+
+
+    messages.appendChild(
+        message
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* عرض رسالة المستخدم */
+
+function showUser(text){
+
+    const messages =
+        document.getElementById(
+            "messages"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+    message.className =
+        "message user";
+
+
+    message.textContent =
+        text;
+
+
+    messages.appendChild(
+        message
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* إضافة المنتج للسلة */
+
+function addToCart(product){
+
+    let cart = [];
+
+
+    try{
+
+        cart =
+            JSON.parse(
+                localStorage.getItem(
+                    CART_KEY
+                )
+            ) || [];
+
+    }catch(error){
+
+        cart = [];
+
+    }
+
+
+    const existing =
+        cart.find(item =>
+            item.id === product.id
+        );
+
+
+    if(existing){
+
+        existing.quantity =
+            (existing.quantity || 1) + 1;
+
+    }else{
+
+        cart.push({
+
+            id:product.id,
+
+            name:product.name,
+
+            price:product.price,
+
+            quantity:1,
+
+            image:product.image || ""
+
+        });
+
+    }
+
+
+    localStorage.setItem(
+
+        CART_KEY,
+
+        JSON.stringify(cart)
+
+    );
+
+
+    showBot(
+        "✅ تمت إضافة <b>" +
+        (product.name || "المنتج") +
+        "</b> إلى السلة.<br><br>" +
+
+        "يمكنك الآن متابعة التسوق أو إتمام الطلب من السلة."
+    );
+
+}
+
+
+/* إرسال السؤال */
+
+window.sendMessage =
+async function(){
+
+    const input =
+        document.getElementById(
+            "userInput"
+        );
+
 
     const text =
         input.value.trim();
 
+
     if(!text) return;
 
 
-    /* رسالة المستخدم */
-
-    const userMessage =
-        document.createElement("div");
-
-    userMessage.className = "message user";
-
-    userMessage.textContent = text;
-
-    messages.appendChild(userMessage);
+    showUser(text);
 
 
     input.value = "";
 
 
-    /* البحث */
+    if(products.length === 0){
 
-    const results = searchProduct(text);
-
-
-    const botMessage =
-        document.createElement("div");
-
-    botMessage.className = "message bot";
-
-
-    if(results.length === 0){
-
-        botMessage.innerHTML =
-        "🤖 لم أجد هذا المنتج حالياً في سوق مباشر.<br><br>" +
-        "جرب كتابة اسم المنتج فقط، مثل:<br>" +
-        "الأرز<br>" +
-        "الدقيق<br>" +
-        "الزيت";
-
-    }else{
-
-        let html =
-        "🛒 <b>وجدت لك:</b><br><br>";
-
-
-        results.slice(0,5).forEach(product => {
-
-            const name =
-                product.name || "منتج";
-
-            const price =
-                product.price || "غير محدد";
-
-            html +=
-            "📦 <b>" + name + "</b><br>" +
-            "💰 السعر: <b>" + price + "</b> ريال<br><br>";
-
-        });
-
-
-        botMessage.innerHTML = html;
+        await loadProducts();
 
     }
 
 
-    messages.appendChild(botMessage);
+    const results =
+        searchProducts(text);
+
+
+    if(results.length === 0){
+
+        showBot(
+
+            "🤖 لم أجد المنتج حالياً في سوق مباشر.<br><br>" +
+
+            "جرب كتابة اسم المنتج فقط، مثل:<br>" +
+
+            "السكر<br>" +
+
+            "الأرز<br>" +
+
+            "الدقيق<br>" +
+
+            "الزيت"
+
+        );
+
+        return;
+
+    }
+
+
+    const buying =
+        wantsToBuy(text);
+
+
+    if(buying){
+
+        showBot(
+
+            "🛒 فهمت أنك تريد الشراء.<br><br>" +
+
+            "اختر المنتج الذي تريده:"
+
+        );
+
+    }else{
+
+        showBot(
+
+            "🔎 وجدت لك هذه المنتجات:"
+
+        );
+
+    }
+
+
+    results
+        .slice(0,5)
+        .forEach(product => {
+
+            const messages =
+                document.getElementById(
+                    "messages"
+                );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "message bot product-card";
+
+
+            const name =
+                product.name ||
+                "منتج";
+
+
+            const price =
+                product.price ??
+                "غير محدد";
+
+
+            card.innerHTML =
+
+                "<div class='product-name'>" +
+
+                "📦 " +
+                name +
+
+                "</div>" +
+
+                "<div class='product-price'>" +
+
+                "💰 " +
+                price +
+                " ريال" +
+
+                "</div>" +
+
+                "<button class='buy-btn'>" +
+
+                "🛒 أضف إلى السلة" +
+
+                "</button>";
+
+
+            const button =
+                card.querySelector(
+                    ".buy-btn"
+                );
+
+
+            button.onclick =
+                function(){
+
+                    addToCart(
+                        product
+                    );
+
+                };
+
+
+            messages.appendChild(
+                card
+            );
+
+
+        });
+
+
+    const messages =
+        document.getElementById(
+            "messages"
+        );
+
 
     messages.scrollTop =
         messages.scrollHeight;
 
 };
 
+
+/* زر Enter */
+
+document
+    .getElementById(
+        "userInput"
+    )
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key === "Enter"
+            ){
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+/* تشغيل تحميل المنتجات */
 
 loadProducts();
 
