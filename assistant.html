@@ -242,7 +242,9 @@ placeholder="مثلاً: كم سعر السكر؟"
 
 import {
     collection,
-    getDocs
+    getDocs,
+    addDoc,
+    serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -298,6 +300,54 @@ async function loadProducts(){
 
         showBot(
             "❌ حدث خطأ أثناء تحميل المنتجات."
+        );
+
+    }
+
+}
+
+
+/*
+========================================
+تسجيل مشاهدة المنتج من المساعد فقط
+========================================
+*/
+
+async function recordAssistantView(product){
+
+    try{
+
+        await addDoc(
+            collection(db,"productEvents"),
+            {
+
+                type:"assistant_view",
+
+                productId:product.id,
+
+                productName:product.name || "",
+
+                price:product.price ?? 0,
+
+                category:product.category || "",
+
+                shopName:product.shopName || "",
+
+                createdAt:serverTimestamp()
+
+            }
+        );
+
+        console.log(
+            "تم تسجيل مشاهدة من المساعد:",
+            product.name
+        );
+
+    }catch(error){
+
+        console.error(
+            "خطأ في تسجيل مشاهدة المساعد:",
+            error
         );
 
     }
@@ -628,6 +678,19 @@ async function(){
     }
 
 
+    /*
+    تسجيل المشاهدات فقط
+    */
+
+    results
+        .slice(0,5)
+        .forEach(product => {
+
+            recordAssistantView(product);
+
+        });
+
+
     const buying =
         wantsToBuy(text);
 
@@ -778,4 +841,4 @@ loadProducts();
 
 </body>
 
-    </html>
+</html>
