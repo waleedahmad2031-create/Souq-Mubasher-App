@@ -252,9 +252,11 @@ import { db } from "./firebase.js";
 let products = [];
 
 
-/* مفتاح السلة */
+/*
+نفس مفتاح السلة الموجود في cart.html
+*/
 
-const CART_KEY = "cart";
+const CART_KEY = "souqMubasherCart";
 
 
 /* تحميل المنتجات */
@@ -317,7 +319,7 @@ function cleanText(text){
 
         .replace(/ى/g,"ي")
 
-        .replace(/ال/g,"")
+        .replace(/\bال/g,"")
 
         .replace(/[؟?!.,،]/g,"")
 
@@ -328,7 +330,7 @@ function cleanText(text){
 }
 
 
-/* البحث الذكي */
+/* البحث عن المنتجات */
 
 function searchProducts(question){
 
@@ -346,14 +348,11 @@ function searchProducts(question){
         products.filter(product => {
 
             const name =
-                cleanText(
-                    product.name
-                );
+                cleanText(product.name);
+
 
             if(!name) return false;
 
-
-            /* تطابق الاسم مع السؤال */
 
             if(
                 q.includes(name) ||
@@ -364,8 +363,6 @@ function searchProducts(question){
 
             }
 
-
-            /* تطابق الكلمات */
 
             return words.some(word =>
 
@@ -382,22 +379,22 @@ function searchProducts(question){
 }
 
 
-/* هل المستخدم يريد شراء؟ */
+/* معرفة هل المستخدم يريد الشراء */
 
 function wantsToBuy(text){
+
+    const q =
+        cleanText(text);
+
 
     const words = [
 
         "اشتي",
-        "أشتي",
-        "ابغى",
-        "أبغى",
+        "ابغي",
         "اريد",
-        "أريد",
         "عايز",
         "شراء",
         "اشتري",
-        "أشتري",
         "طلب",
         "اطلب",
         "جيب",
@@ -407,13 +404,15 @@ function wantsToBuy(text){
 
 
     return words.some(word =>
-        text.includes(word)
+        q.includes(
+            cleanText(word)
+        )
     );
 
 }
 
 
-/* عرض رسالة المساعد */
+/* رسالة المساعد */
 
 function showBot(html){
 
@@ -427,6 +426,7 @@ function showBot(html){
         document.createElement(
             "div"
         );
+
 
     message.className =
         "message bot";
@@ -447,7 +447,7 @@ function showBot(html){
 }
 
 
-/* عرض رسالة المستخدم */
+/* رسالة المستخدم */
 
 function showUser(text){
 
@@ -461,6 +461,7 @@ function showUser(text){
         document.createElement(
             "div"
         );
+
 
     message.className =
         "message user";
@@ -523,16 +524,18 @@ function addToCart(product){
 
             name:product.name,
 
-            price:product.price,
+            price:Number(product.price) || 0,
 
-            quantity:1,
-
-            image:product.image || ""
+            quantity:1
 
         });
 
     }
 
+
+    /*
+    حفظ السلة بنفس طريقة cart.html
+    */
 
     localStorage.setItem(
 
@@ -543,13 +546,16 @@ function addToCart(product){
     );
 
 
-    showBot(
-        "✅ تمت إضافة <b>" +
-        (product.name || "المنتج") +
-        "</b> إلى السلة.<br><br>" +
+    /*
+    الانتقال إلى السلة
+    */
 
-        "يمكنك الآن متابعة التسوق أو إتمام الطلب من السلة."
-    );
+    setTimeout(() => {
+
+        location.href =
+            "cart.html";
+
+    },500);
 
 }
 
@@ -578,6 +584,10 @@ async function(){
     input.value = "";
 
 
+    /*
+    إذا المنتجات لم تحمل بعد
+    */
+
     if(products.length === 0){
 
         await loadProducts();
@@ -589,21 +599,27 @@ async function(){
         searchProducts(text);
 
 
+    /*
+    المنتج غير موجود
+    */
+
     if(results.length === 0){
 
         showBot(
 
-            "🤖 لم أجد المنتج حالياً في سوق مباشر.<br><br>" +
+            "🤖 لم أجد هذا المنتج حالياً في سوق مباشر." +
 
-            "جرب كتابة اسم المنتج فقط، مثل:<br>" +
+            "<br><br>" +
 
-            "السكر<br>" +
+            "جرب كتابة اسم المنتج فقط، مثل:" +
 
-            "الأرز<br>" +
+            "<br>السكر" +
 
-            "الدقيق<br>" +
+            "<br>الأرز" +
 
-            "الزيت"
+            "<br>الدقيق" +
+
+            "<br>الزيت"
 
         );
 
@@ -616,11 +632,17 @@ async function(){
         wantsToBuy(text);
 
 
+    /*
+    إذا كان يريد الشراء
+    */
+
     if(buying){
 
         showBot(
 
-            "🛒 فهمت أنك تريد الشراء.<br><br>" +
+            "🛒 فهمت أنك تريد الشراء." +
+
+            "<br><br>" +
 
             "اختر المنتج الذي تريده:"
 
@@ -711,7 +733,6 @@ async function(){
                 card
             );
 
-
         });
 
 
@@ -757,4 +778,4 @@ loadProducts();
 
 </body>
 
-</html>
+    </html>
