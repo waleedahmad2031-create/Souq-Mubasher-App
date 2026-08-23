@@ -160,7 +160,7 @@ footer{
 <p>
 أنا مساعد سوق مباشر.
 <br>
-اكتب سؤالك وسأساعدك قدر الإمكان.
+اسألني عن أي منتج موجود في السوق.
 </p>
 
 </div>
@@ -171,13 +171,9 @@ footer{
 <div class="message bot">
 🤖 أهلاً بك في مساعد سوق مباشر.
 <br>
-يمكنك أن تسألني مثل:
-<br>
-«كم سعر الدقيق؟»
-<br>
-«كم سعر الأرز؟»
-<br>
-«ما المنتجات الموجودة؟»
+اكتب اسم المنتج وسأبحث لك عنه.
+<br><br>
+مثال: <b>كم سعر الأرز؟</b>
 </div>
 
 </div>
@@ -188,7 +184,7 @@ footer{
 <input
 type="text"
 id="userInput"
-placeholder="اكتب سؤالك هنا..."
+placeholder="مثلاً: كم سعر الأرز؟"
 onkeydown="if(event.key==='Enter') sendMessage()"
 >
 
@@ -215,47 +211,155 @@ onkeydown="if(event.key==='Enter') sendMessage()"
 </div>
 
 
-<script>
+<script type="module">
 
-function sendMessage(){
+import { collection, getDocs }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const input = document.getElementById("userInput");
-const messages = document.getElementById("messages");
-
-const text = input.value.trim();
-
-if(!text) return;
+import { db } from "./firebase.js";
 
 
-/* رسالة المستخدم */
-
-const userMessage = document.createElement("div");
-
-userMessage.className = "message user";
-
-userMessage.textContent = text;
-
-messages.appendChild(userMessage);
+let products = [];
 
 
-/* رد المساعد */
+/* تحميل المنتجات */
 
-const botMessage = document.createElement("div");
+async function loadProducts(){
 
-botMessage.className = "message bot";
+    try{
 
-botMessage.innerHTML =
-"🤖 وصلتني رسالتك.<br>" +
-"المساعد حالياً في نسخته الأولى، وسنربطه قريباً بأسعار ومنتجات سوق مباشر.";
+        const snapshot = await getDocs(
+            collection(db, "products")
+        );
 
-messages.appendChild(botMessage);
+        products = [];
 
+        snapshot.forEach(doc => {
 
-input.value = "";
+            products.push({
+                id: doc.id,
+                ...doc.data()
+            });
 
-messages.scrollTop = messages.scrollHeight;
+        });
+
+        console.log("تم تحميل المنتجات:", products.length);
+
+    }catch(error){
+
+        console.error("خطأ في تحميل المنتجات:", error);
+
+    }
 
 }
+
+
+/* البحث عن المنتج */
+
+function searchProduct(question){
+
+    const text = question.toLowerCase();
+
+    const results = products.filter(product => {
+
+        const name =
+            String(product.name || "").toLowerCase();
+
+        return text.includes(name) || name.includes(text);
+
+    });
+
+    return results;
+
+}
+
+
+/* إرسال السؤال */
+
+window.sendMessage = async function(){
+
+    const input =
+        document.getElementById("userInput");
+
+    const messages =
+        document.getElementById("messages");
+
+    const text =
+        input.value.trim();
+
+    if(!text) return;
+
+
+    /* رسالة المستخدم */
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className = "message user";
+
+    userMessage.textContent = text;
+
+    messages.appendChild(userMessage);
+
+
+    input.value = "";
+
+
+    /* البحث */
+
+    const results = searchProduct(text);
+
+
+    const botMessage =
+        document.createElement("div");
+
+    botMessage.className = "message bot";
+
+
+    if(results.length === 0){
+
+        botMessage.innerHTML =
+        "🤖 لم أجد هذا المنتج حالياً في سوق مباشر.<br><br>" +
+        "جرب كتابة اسم المنتج فقط، مثل:<br>" +
+        "الأرز<br>" +
+        "الدقيق<br>" +
+        "الزيت";
+
+    }else{
+
+        let html =
+        "🛒 <b>وجدت لك:</b><br><br>";
+
+
+        results.slice(0,5).forEach(product => {
+
+            const name =
+                product.name || "منتج";
+
+            const price =
+                product.price || "غير محدد";
+
+            html +=
+            "📦 <b>" + name + "</b><br>" +
+            "💰 السعر: <b>" + price + "</b> ريال<br><br>";
+
+        });
+
+
+        botMessage.innerHTML = html;
+
+    }
+
+
+    messages.appendChild(botMessage);
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+};
+
+
+loadProducts();
 
 </script>
 
