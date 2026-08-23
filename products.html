@@ -48,6 +48,7 @@ header p{
     opacity:.9;
 }
 
+
 /* =========================
    زر السلة
 ========================= */
@@ -74,6 +75,7 @@ header p{
     margin-right:5px;
 }
 
+
 /* =========================
    المحتوى
 ========================= */
@@ -83,6 +85,7 @@ header p{
     margin:auto;
     padding:20px 15px;
 }
+
 
 /* =========================
    البحث
@@ -108,6 +111,30 @@ header p{
 .search-box input:focus{
     border-color:#0d6efd;
 }
+
+
+/* =========================
+   حالة الاتصال
+========================= */
+
+.connection-status{
+    background:white;
+    padding:10px 12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    text-align:center;
+    font-size:13px;
+    color:#666;
+}
+
+.connection-status.online{
+    color:#198754;
+}
+
+.connection-status.offline{
+    color:#dc3545;
+}
+
 
 /* =========================
    المنتجات
@@ -181,6 +208,7 @@ header p{
     transform:scale(.98);
 }
 
+
 /* =========================
    لا توجد منتجات
 ========================= */
@@ -193,6 +221,7 @@ header p{
     color:#777;
     grid-column:1/-1;
 }
+
 
 /* =========================
    خطأ التحميل
@@ -207,6 +236,7 @@ header p{
     grid-column:1/-1;
 }
 
+
 /* =========================
    الرجوع
 ========================= */
@@ -219,6 +249,7 @@ header p{
     text-decoration:none;
     font-size:15px;
 }
+
 
 /* =========================
    الجوال
@@ -288,6 +319,19 @@ class="cart-count">
 
 
 <!-- =========================
+     حالة الاتصال
+========================= -->
+
+<div
+id="connectionStatus"
+class="connection-status">
+
+⏳ جاري التحقق من الاتصال...
+
+</div>
+
+
+<!-- =========================
      البحث
 ========================= -->
 
@@ -340,6 +384,7 @@ class="back">
 
 <script type="module">
 
+
 /* =========================================
    Firebase
 ========================================= */
@@ -354,6 +399,15 @@ import {
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+/* =========================================
+   إعداد التخزين المحلي
+========================================= */
+
+const PRODUCTS_CACHE_KEY =
+    "souqMubasherProductsCache";
 
 
 /* =========================================
@@ -400,6 +454,7 @@ function updateCartCount(){
 }
 
 
+
 /* =========================================
    المنتجات
 ========================================= */
@@ -408,16 +463,198 @@ let allProducts = [];
 
 
 /* =========================================
+   حالة الاتصال
+========================================= */
+
+function updateConnectionStatus(){
+
+    const element =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+
+    if(navigator.onLine){
+
+        element.className =
+            "connection-status online";
+
+        element.textContent =
+            "🟢 متصل بالإنترنت — الأسعار محدثة تلقائيًا";
+
+    }else{
+
+        element.className =
+            "connection-status offline";
+
+        element.textContent =
+            "🔴 بدون إنترنت — نعرض آخر أسعار محفوظة";
+
+    }
+
+}
+
+
+window.addEventListener(
+    "online",
+    updateConnectionStatus
+);
+
+
+window.addEventListener(
+    "offline",
+    updateConnectionStatus
+);
+
+
+
+/* =========================================
+   حفظ المنتجات في الهاتف
+========================================= */
+
+function saveProductsToCache(products){
+
+    try{
+
+        localStorage.setItem(
+
+            PRODUCTS_CACHE_KEY,
+
+            JSON.stringify({
+
+                products:products,
+
+                savedAt:Date.now()
+
+            })
+
+        );
+
+
+        console.log(
+            "تم حفظ المنتجات في الهاتف"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "خطأ حفظ المنتجات:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   قراءة المنتجات المحفوظة
+========================================= */
+
+function getProductsFromCache(){
+
+    try{
+
+        const data =
+            localStorage.getItem(
+                PRODUCTS_CACHE_KEY
+            );
+
+
+        if(!data){
+
+            return null;
+
+        }
+
+
+        const parsed =
+            JSON.parse(data);
+
+
+        if(
+            !parsed ||
+            !Array.isArray(
+                parsed.products
+            )
+        ){
+
+            return null;
+
+        }
+
+
+        return parsed;
+
+    }catch(error){
+
+        console.error(
+            "خطأ قراءة المنتجات المحفوظة:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+
+/* =========================================
+   عرض وقت آخر تحديث
+========================================= */
+
+function showCacheTime(savedAt){
+
+    if(!savedAt){
+
+        return;
+
+    }
+
+
+    const element =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+
+    if(!navigator.onLine){
+
+        const date =
+            new Date(savedAt);
+
+
+        const time =
+            date.toLocaleString(
+                "ar-SA"
+            );
+
+
+        element.className =
+            "connection-status offline";
+
+
+        element.textContent =
+            "🔴 بدون إنترنت — آخر تحديث: " +
+            time;
+
+    }
+
+}
+
+
+
+/* =========================================
    إعداد المشاهدات
 ========================================= */
 
-/*
-   نفس المنتج لا يحسب مرة أخرى
-   من نفس الجهاز لمدة 30 دقيقة
-*/
-
 const VIEW_COOLDOWN =
     30 * 60 * 1000;
+
 
 
 /* =========================================
@@ -430,8 +667,21 @@ async function recordProductView(
 
     try{
 
+        /*
+           إذا لا يوجد إنترنت
+           لا نحاول إرسال Firebase
+        */
+
+        if(!navigator.onLine){
+
+            return;
+
+        }
+
+
         const productId =
             String(product.id || "");
+
 
         if(!productId){
 
@@ -456,11 +706,6 @@ async function recordProductView(
             Date.now();
 
 
-        /*
-           منع تكرار المشاهدة
-           خلال 30 دقيقة
-        */
-
         if(
             lastView &&
             now - lastView <
@@ -472,19 +717,11 @@ async function recordProductView(
         }
 
 
-        /*
-           حفظ وقت آخر مشاهدة
-        */
-
         localStorage.setItem(
             storageKey,
             String(now)
         );
 
-
-        /*
-           تسجيل المشاهدة في Firebase
-        */
 
         await addDoc(
 
@@ -550,8 +787,9 @@ async function recordProductView(
 }
 
 
+
 /* =========================================
-   مراقبة ظهور المنتجات على الشاشة
+   مراقبة ظهور المنتجات
 ========================================= */
 
 function observeProductViews(){
@@ -568,12 +806,6 @@ function observeProductViews(){
 
     }
 
-
-    /*
-       IntersectionObserver
-       يحسب المنتج عندما يظهر
-       أمام الزائر
-    */
 
     const observer =
         new IntersectionObserver(
@@ -624,11 +856,6 @@ function observeProductViews(){
                         );
 
 
-                        /*
-                           نراقب البطاقة مرة واحدة
-                           في هذه الزيارة
-                        */
-
                         observer.unobserve(
                             entry.target
                         );
@@ -658,6 +885,73 @@ function observeProductViews(){
 }
 
 
+
+/* =========================================
+   تحميل المنتجات من Firebase
+========================================= */
+
+async function loadProductsFromFirebase(){
+
+    console.log(
+        "جاري الاتصال بـ Firebase..."
+    );
+
+
+    const snapshot =
+        await getDocs(
+
+            collection(
+                db,
+                "products"
+            )
+
+        );
+
+
+    console.log(
+        "عدد المنتجات:",
+        snapshot.size
+    );
+
+
+    const products = [];
+
+
+    snapshot.forEach(
+        docSnapshot => {
+
+            const data =
+                docSnapshot.data();
+
+
+            products.push({
+
+                id:
+                    docSnapshot.id,
+
+                ...data
+
+            });
+
+        }
+    );
+
+
+    /*
+       حفظ نسخة جديدة
+    */
+
+    saveProductsToCache(
+        products
+    );
+
+
+    return products;
+
+}
+
+
+
 /* =========================================
    تحميل المنتجات
 ========================================= */
@@ -670,51 +964,19 @@ async function loadProducts(){
         );
 
 
-    try{
+    /*
+       أولاً نحاول عرض النسخة المحفوظة
+       حتى لا ينتظر المستخدم
+    */
 
-        console.log(
-            "جاري الاتصال بـ Firebase..."
-        );
-
-
-        const snapshot =
-            await getDocs(
-
-                collection(
-                    db,
-                    "products"
-                )
-
-            );
+    const cached =
+        getProductsFromCache();
 
 
-        console.log(
-            "عدد المنتجات:",
-            snapshot.size
-        );
+    if(cached){
 
-
-        allProducts = [];
-
-
-        snapshot.forEach(
-            docSnapshot => {
-
-                const data =
-                    docSnapshot.data();
-
-
-                allProducts.push({
-
-                    id:
-                        docSnapshot.id,
-
-                    ...data
-
-                });
-
-            }
-        );
+        allProducts =
+            cached.products;
 
 
         displayProducts(
@@ -722,39 +984,130 @@ async function loadProducts(){
         );
 
 
-    }catch(error){
-
-        console.error(
-            "Products Error:",
-            error
+        showCacheTime(
+            cached.savedAt
         );
 
+    }
 
-        container.innerHTML = `
 
-        <div class="error">
 
-            ❌
+    /*
+       إذا يوجد إنترنت
+       نحاول تحديث البيانات
+    */
 
-            <h3 style="margin:12px 0;">
+    if(navigator.onLine){
 
-                تعذر تحميل المنتجات
+        try{
 
-            </h3>
+            const freshProducts =
+                await loadProductsFromFirebase();
 
-            <p style="line-height:1.8;">
 
-                ${error.message}
+            allProducts =
+                freshProducts;
 
-            </p>
 
-        </div>
+            displayProducts(
+                allProducts
+            );
 
-        `;
+
+            updateConnectionStatus();
+
+
+            console.log(
+                "تم تحديث المنتجات من Firebase"
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "Products Error:",
+                error
+            );
+
+
+            /*
+               إذا عندنا نسخة محفوظة
+               لا نظهر خطأ للمستخدم
+            */
+
+            if(cached){
+
+                console.log(
+                    "تعذر التحديث، نستخدم النسخة المحفوظة"
+                );
+
+
+                return;
+
+            }
+
+
+            container.innerHTML = `
+
+            <div class="error">
+
+                ❌
+
+                <h3 style="margin:12px 0;">
+
+                    تعذر تحميل المنتجات
+
+                </h3>
+
+                <p style="line-height:1.8;">
+
+                    تحقق من اتصال الإنترنت ثم حاول مرة أخرى.
+
+                </p>
+
+            </div>
+
+            `;
+
+        }
+
+    }else{
+
+        /*
+           لا يوجد إنترنت
+        */
+
+        if(!cached){
+
+            container.innerHTML = `
+
+            <div class="error">
+
+                🔴
+
+                <h3 style="margin:12px 0;">
+
+                    لا توجد بيانات محفوظة
+
+                </h3>
+
+                <p style="line-height:1.8;">
+
+                    افتح سوق مباشر مرة واحدة بالإنترنت
+                    لتحميل المنتجات والأسعار.
+
+                </p>
+
+            </div>
+
+            `;
+
+        }
 
     }
 
 }
+
 
 
 /* =========================================
@@ -935,6 +1288,7 @@ function displayProducts(products){
         html;
 
 
+
     /* =====================================
        أزرار إضافة للسلة
     ===================================== */
@@ -974,13 +1328,15 @@ function displayProducts(products){
         });
 
 
+
     /* =====================================
-       تشغيل مراقبة المشاهدات
+       مراقبة المشاهدات
     ===================================== */
 
     observeProductViews();
 
 }
+
 
 
 /* =========================================
@@ -1083,6 +1439,7 @@ function addToCart(product){
 }
 
 
+
 /* =========================================
    البحث
 ========================================= */
@@ -1166,12 +1523,14 @@ function searchProducts(){
 }
 
 
+
 document.getElementById(
     "search"
 ).addEventListener(
     "input",
     searchProducts
 );
+
 
 
 /* =========================================
@@ -1210,6 +1569,7 @@ function escapeHTML(value){
 }
 
 
+
 function escapeAttribute(value){
 
     return String(value ?? "")
@@ -1242,17 +1602,19 @@ function escapeAttribute(value){
 }
 
 
+
 /* =========================================
    تشغيل
 ========================================= */
 
 updateCartCount();
 
+updateConnectionStatus();
+
 loadProducts();
 
-    </script>
 
-
+</script>
 
 
 </body>
