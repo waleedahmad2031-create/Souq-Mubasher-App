@@ -2,10 +2,17 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>سوق مباشر</title>
+
+<!-- تشغيل كتطبيق -->
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0d6efd">
 
 <style>
 
@@ -109,6 +116,7 @@ footer{
 
 </head>
 
+
 <body>
 
 <header>
@@ -135,8 +143,6 @@ footer{
 
 <div class="buttons">
 
-<div class="buttons">
-
 <button class="btn-main" onclick="location.href='products.html'">
 🛍️ ابدأ التسوق
 </button>
@@ -148,8 +154,6 @@ footer{
 <button class="btn-secondary" onclick="showMessage()">
 ℹ️ عن سوق مباشر
 </button>
-
-</div>
 
 </div>
 
@@ -167,19 +171,41 @@ footer{
 
 <script>
 
-function startShopping(){
-
-alert("سيتم فتح المتجر قريباً 🛒");
-
-}
+/* رسالة عن سوق مباشر */
 
 function showMessage(){
 
-alert("سوق مباشر — منصة تسوق بسيطة وسهلة.");
+    alert("سوق مباشر — منصة تسوق بسيطة وسهلة.");
+
+}
+
+
+/* تشغيل وضع عدم الاتصال */
+
+if ("serviceWorker" in navigator){
+
+    window.addEventListener("load", function(){
+
+        navigator.serviceWorker.register("./sw.js")
+
+        .then(function(){
+
+            console.log("تم تشغيل وضع عدم الاتصال لسوق مباشر");
+
+        })
+
+        .catch(function(error){
+
+            console.log("تعذر تشغيل وضع عدم الاتصال:", error);
+
+        });
+
+    });
 
 }
 
 </script>
+
 
 </body>
 
