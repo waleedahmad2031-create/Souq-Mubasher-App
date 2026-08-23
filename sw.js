@@ -1,4 +1,4 @@
-const CACHE_NAME = "souq-mubasher-v1";
+const CACHE_NAME = "souq-mubasher-v2";
 
 const FILES_TO_CACHE = [
     "./",
@@ -8,8 +8,6 @@ const FILES_TO_CACHE = [
     "./manifest.json"
 ];
 
-
-// تثبيت Service Worker
 self.addEventListener("install", event => {
 
     event.waitUntil(
@@ -28,7 +26,6 @@ self.addEventListener("install", event => {
 });
 
 
-// تفعيل Service Worker
 self.addEventListener("activate", event => {
 
     event.waitUntil(
@@ -58,35 +55,90 @@ self.addEventListener("activate", event => {
 });
 
 
-// التعامل مع طلبات الصفحات
 self.addEventListener("fetch", event => {
+
+    const request = event.request;
+
+
+    /*
+       صفحات HTML:
+       نحاول أخذ النسخة الجديدة من الإنترنت أولاً،
+       وإذا لا يوجد إنترنت نستخدم النسخة المحفوظة.
+    */
+
+    if(
+        request.method === "GET" &&
+        request.headers.get("accept") &&
+        request.headers.get("accept").includes("text/html")
+    ){
+
+        event.respondWith(
+
+            fetch(request)
+
+                .then(response => {
+
+                    const copy =
+                        response.clone();
+
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+
+                            cache.put(
+                                request,
+                                copy
+                            );
+
+                        });
+
+                    return response;
+
+                })
+
+                .catch(() => {
+
+                    return caches.match(request);
+
+                })
+
+        );
+
+        return;
+
+    }
+
+
+    /*
+       الملفات الأخرى:
+       الكاش أولاً ثم الإنترنت.
+    */
 
     event.respondWith(
 
-        caches.match(event.request)
+        caches.match(request)
+
             .then(cachedResponse => {
 
-                // إذا الصفحة موجودة في الهاتف
-                if (cachedResponse) {
+                if(cachedResponse){
 
                     return cachedResponse;
 
                 }
 
-                // إذا الإنترنت موجود
-                return fetch(event.request)
+
+                return fetch(request)
 
                     .then(response => {
 
-                        // حفظ نسخة للاستخدام لاحقاً
-                        const responseClone = response.clone();
+                        const copy =
+                            response.clone();
 
                         caches.open(CACHE_NAME)
                             .then(cache => {
 
                                 cache.put(
-                                    event.request,
-                                    responseClone
+                                    request,
+                                    copy
                                 );
 
                             });
@@ -97,8 +149,9 @@ self.addEventListener("fetch", event => {
 
                     .catch(() => {
 
-                        // إذا لا يوجد إنترنت
-                        return caches.match("./index.html");
+                        return caches.match(
+                            "./index.html"
+                        );
 
                     });
 
