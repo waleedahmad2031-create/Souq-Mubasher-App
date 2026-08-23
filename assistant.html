@@ -307,46 +307,131 @@ async function loadProducts(){
 }
 
 
-/*
-========================================
-تسجيل مشاهدة المنتج من المساعد فقط
-========================================
-*/
+/* =========================================
+   تسجيل مشاهدة المنتج من المساعد فقط
+========================================= */
+
+const ASSISTANT_VIEW_COOLDOWN =
+    30 * 60 * 1000;
+
 
 async function recordAssistantView(product){
 
     try{
 
+        const productId =
+            String(product.id || "");
+
+        if(!productId){
+
+            return;
+
+        }
+
+
+        const storageKey =
+            "souq_assistant_view_" +
+            productId;
+
+
+        const lastView =
+            Number(
+                localStorage.getItem(
+                    storageKey
+                ) || 0
+            );
+
+
+        const now =
+            Date.now();
+
+
+        /*
+        منع تكرار المشاهدة
+        لمدة 30 دقيقة
+        */
+
+        if(
+            lastView &&
+            now - lastView <
+            ASSISTANT_VIEW_COOLDOWN
+        ){
+
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            storageKey,
+            String(now)
+        );
+
+
+        /*
+        نفس مجموعة المشاهدات الموجودة
+        في products.html
+        */
+
         await addDoc(
-            collection(db,"productEvents"),
+
+            collection(
+                db,
+                "productEvents"
+            ),
+
             {
 
-                type:"assistant_view",
+                type:
+                    "view",
 
-                productId:product.id,
+                source:
+                    "assistant",
 
-                productName:product.name || "",
+                productId:
+                    productId,
 
-                price:product.price ?? 0,
+                productName:
+                    String(
+                        product.name ||
+                        product.اسم ||
+                        "منتج"
+                    ),
 
-                category:product.category || "",
+                price:
+                    Number(
+                        product.price ??
+                        product.سعر ??
+                        0
+                    ),
 
-                shopName:product.shopName || "",
+                category:
+                    String(
+                        product.category ||
+                        product.القسم ||
+                        ""
+                    ),
 
-                createdAt:serverTimestamp()
+                createdAt:
+                    serverTimestamp()
 
             }
+
         );
 
+
         console.log(
-            "تم تسجيل مشاهدة من المساعد:",
-            product.name
+            "تم تسجيل مشاهدة المساعد:",
+            product.name ||
+            product.اسم ||
+            productId
         );
+
 
     }catch(error){
 
         console.error(
-            "خطأ في تسجيل مشاهدة المساعد:",
+            "خطأ تسجيل مشاهدة المساعد:",
             error
         );
 
@@ -679,14 +764,16 @@ async function(){
 
 
     /*
-    تسجيل المشاهدات فقط
+    تسجيل المشاهدات من المساعد فقط
     */
 
     results
         .slice(0,5)
         .forEach(product => {
 
-            recordAssistantView(product);
+            recordAssistantView(
+                product
+            );
 
         });
 
@@ -841,4 +928,4 @@ loadProducts();
 
 </body>
 
-</html>
+    </html>
