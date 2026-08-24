@@ -1008,12 +1008,6 @@ onAuthStateChanged(
 
 async function loadAll(){
 
-    /*
-       استخدمنا Promise.allSettled
-       حتى لا تتعطل الإدارة كلها
-       إذا فشلت مجموعة واحدة.
-    */
-
     const results =
     await Promise.allSettled([
 
@@ -1053,8 +1047,6 @@ async function loadAll(){
         financeResult
     ] = results;
 
-
-    /* الطلبات */
 
     if(
         ordersResult.status === "fulfilled"
@@ -1101,8 +1093,6 @@ async function loadAll(){
     }
 
 
-    /* الأرشيف */
-
     if(
         archiveResult.status === "fulfilled"
     ){
@@ -1126,8 +1116,6 @@ async function loadAll(){
 
     }
 
-
-    /* الحسابات */
 
     if(
         accountsResult.status === "fulfilled"
@@ -1153,8 +1141,6 @@ async function loadAll(){
     }
 
 
-    /* المنتجات */
-
     if(
         productsResult.status === "fulfilled"
     ){
@@ -1179,8 +1165,6 @@ async function loadAll(){
     }
 
 
-    /* المشاهدات */
-
     if(
         eventsResult.status === "fulfilled"
     ){
@@ -1204,8 +1188,6 @@ async function loadAll(){
 
     }
 
-
-    /* الخزينة */
 
     if(
         financeResult.status === "fulfilled"
@@ -1475,10 +1457,6 @@ function renderOrders(){
 }
 
 
-/* =========================================
-   تغيير حالة الطلب
-========================================= */
-
 window.changeOrderStatus =
 async function(id,status){
 
@@ -1528,10 +1506,6 @@ async function(id,status){
 
 };
 
-
-/* =========================================
-   الأرشيف
-========================================= */
 
 function renderArchive(){
 
@@ -1614,12 +1588,6 @@ function renderArchive(){
     ).join("");
 
 }
-
-
-/* =========================================
-   حسابات البقالات
-========================================= */
-
 function renderAccounts(){
 
     const box =
@@ -1721,10 +1689,6 @@ function renderAccounts(){
 
 }
 
-
-/* =========================================
-   إضافة حساب بقالة
-========================================= */
 
 window.addAccount =
 async function(){
@@ -1862,10 +1826,6 @@ async function(){
 };
 
 
-/* =========================================
-   حذف حساب بقالة
-========================================= */
-
 window.deleteAccount =
 async function(id){
 
@@ -1906,10 +1866,6 @@ async function(id){
 
 };
 
-
-/* =========================================
-   الخزينة
-========================================= */
 
 function calculateBalance(){
 
@@ -2041,10 +1997,6 @@ function renderFinance(){
 }
 
 
-/* =========================================
-   فتح نموذج إيداع / سحب
-========================================= */
-
 window.openFinanceForm =
 function(type){
 
@@ -2078,10 +2030,6 @@ function(type){
 };
 
 
-/* =========================================
-   حفظ الإيداع / السحب
-========================================= */
-
 window.saveFinance =
 async function(){
 
@@ -2109,10 +2057,6 @@ async function(){
 
     }
 
-
-    /*
-       منع سحب مبلغ أكبر من الرصيد
-    */
 
     if(financeType === "withdraw"){
 
@@ -2192,10 +2136,6 @@ async function(){
 
 };
 
-
-/* =========================================
-   حذف عملية خزينة
-========================================= */
 
 window.deleteFinance =
 async function(id){
@@ -2347,16 +2287,6 @@ function renderProducts(){
                 ${escapeHTML(
                     description ||
                     "لا يوجد وصف"
-                )}
-                </div>
-
-
-                <div>
-                البائع:
-                ${escapeHTML(
-                 product.shopName ||
-"غير محدد"   
-                
                 )}
                 </div>
 
@@ -2563,12 +2493,6 @@ document
 
                     image:image,
 
-                    shopName:
-                    "مشتاق وليد",
-
-                    sellerId:
-                    user.uid,
-
                     createdAt:
                     serverTimestamp()
 
@@ -2740,8 +2664,6 @@ async function(id){
     }
 
 };
-
-
 /* =========================================
    حذف المنتج
 ========================================= */
@@ -3307,4 +3229,6 @@ document
 
 </body>
 
-  </html>
+</html>
+    
+    
